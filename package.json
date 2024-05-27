@@ -1,0 +1,24 @@
+{
+  "name": "main_project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon ./src/server.js"
+  },
+  "author": "brian",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "dotenv": "16.0.3",
+    "ejs": "3.1.8",
+    "express": "4.18.2",
+    "express-session": "^1.18.0",
+    "msnodesqlv8": "^4.2.1",
+    "mssql": "^10.0.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  }
+}
