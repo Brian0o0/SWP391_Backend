@@ -76,40 +76,25 @@ const insertCostGems = async (price) => {
     }
 }
 //update product on database function
-const updateCostGemById = async (req, res) => {
+const updateCostGemByIds = async (costGemID, dateOfPrice, priceOfGem) => {
     try {
-        // const { productID } = req.body;
-        const productID = 14;
-        const { Name, MaterialID, GemID, CategoryID, MaterialCost, GemCost, ProductCost, Image, QuantityGame, Size, WarrantyCard, Description } = req.body;
         await pool.connect();
         const sqlString = `
-            UPDATE Product
-            SET Name = @Name, MaterialID = @MaterialID, GemID = @GemID, CategoryID = @CategoryID
-            , MaterialCost = @MaterialCost, GemCost = @GemCost, ProductCost = @ProductCost, Image = @Image
-            , QuantityGame = @QuantityGame,Size = @Size, [warranty card] = @WarrantyCard, Description = @Description
-            WHERE ProductID = @productID
+            UPDATE CostGem
+            SET DateOfPrice = @dateOfPrice, PriceOfGem = @priceOfGem
+            WHERE CostIDGem = @costGemID
         `;
         const request = pool.request();
-        request.input('Name', Name);
-        request.input('MaterialID', MaterialID);
-        request.input('GemID', GemID);
-        request.input('CategoryID', CategoryID);
-        request.input('MaterialCost', MaterialCost);
-        request.input('GemCost', GemCost);
-        request.input('ProductCost', ProductCost);
-        request.input('Image', Image);
-        request.input('QuantityGame', QuantityGame);
-        request.input('Size', Size);
-        request.input('WarrantyCard', WarrantyCard);
-        request.input('Description', Description);
-        request.input('productID', productID);
+        request.input('dateOfPrice', dateOfPrice);
+        request.input('priceOfGem', priceOfGem);
+        request.input('costGemID', costGemID);
         // Thực hiện truy vấn
         await request.query(sqlString);
         // Gửi phản hồi
-        res.status(200).json({ message: "Update Product sucessful" });
+        return true;
     } catch (error) {
-        // Xử lý bất kỳ lỗi nào
-        res.status(500).json({ error: error.message });
+        console.log(error.message);
+        return false;
     }
 }
 //delete product by id on database function
@@ -134,6 +119,6 @@ module.exports = {
     getAllCostGems,
     getCostGemByIds,
     insertCostGems,
-    updateCostGemById,
+    updateCostGemByIds,
     deleteCostGemByIds,
 }

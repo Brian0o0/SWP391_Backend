@@ -1,5 +1,5 @@
 //Gem functionality handles receiving and sending data from the database to the user
-const { getAllCostGems, getCostGemByIds, insertCostGems, updateCostGemById, deleteCostGemByIds } = require('../services/gemServices');
+const { getAllCostGems, getCostGemByIds, insertCostGems, updateCostGemByIds, deleteCostGemByIds } = require('../services/gemServices');
 
 const getAllCostGem = async (req, res) => {
     try {
@@ -91,9 +91,34 @@ const deleteCostGemById = async (req, res) => {
         })
     }
 }
+
+const updateCostGemById = async (req, res) => {
+    try {
+        const { costGemID, dateOfPrice, priceOfGem } = req.body
+        const check = await updateCostGemByIds(costGemID, dateOfPrice, priceOfGem);
+        if (check == false) {
+            return res.json({
+                status: 'error',
+                message: 'Update cost gem fail'
+            });
+        } else {
+            return res.json({
+                status: 'success',
+                message: 'Update cost gem successfully'
+            });
+        }
+    } catch (error) {
+        console.log(error);
+        return res.json({
+            status: 'error',
+            message: error.message
+        })
+    }
+}
 module.exports = {
     getAllCostGem,
     getCostGemById,
     insertCostGem,
     deleteCostGemById,
+    updateCostGemById
 }
