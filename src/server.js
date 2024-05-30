@@ -14,9 +14,10 @@ app.use(express.json()) // for json
 
 
 app.use(session({
-    secret: process.env.SESSION_SECRET,
-    resave: true,
-    saveUninitialized: true
+    secret: process.env.SESSION_SECRET,//secret là một chuỗi bí mật được sử dụng để ký và mã hóa các phiên làm việc. Điều này giúp bảo vệ dữ liệu session khỏi các tấn công bên ngoài.
+    resave: false,
+    cookie: { maxAge: 300000 },
+    saveUninitialized: true,
 }));
 
 

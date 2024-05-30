@@ -1,7 +1,10 @@
+//CRUD of User with database
+
+
 const express = require('express');
 const { pool } = require('../config/database');
 
-
+//get user from database function
 const getUser = async (req, res) => {
     try {
         await pool.connect();
@@ -15,7 +18,7 @@ const getUser = async (req, res) => {
         res.status(500).json(error);
     }
 }
-
+//get user by id from database function
 const getUserById = async (userId) => {
     try {
         await pool.connect();
@@ -33,7 +36,7 @@ const getUserById = async (userId) => {
         pool.close();
     }
 }
-
+//get user by username from database function
 const getUserByUserName = async (userName) => {
     try {
         await pool.connect();
@@ -51,7 +54,7 @@ const getUserByUserName = async (userName) => {
         pool.close();
     }
 }
-
+//check email valid function
 const checkEmailValid = async (email) => {
     try {
         await pool.connect();
@@ -72,7 +75,7 @@ const checkEmailValid = async (email) => {
 
 
 
-
+//update user by id on database function
 const updateUserById = async (req, res) => {
     try {
         // Lấy ID người dùng từ tham số yêu cầu
@@ -96,14 +99,14 @@ const updateUserById = async (req, res) => {
         // Thực hiện truy vấn
         await request.query(sqlString);
         // Gửi phản hồi
-        res.status(200).json({ message: "Cập nhật người dùng thành công" });
+        res.status(200).json({ message: "Update user sucessful" });
     } catch (error) {
         // Xử lý bất kỳ lỗi nào
         res.status(500).json({ error: error.message });
     }
 }
 
-
+//delete user by id on database function
 const deleteUserById = async (req, res) => {
     try {
         // Lấy ID người dùng từ tham số yêu cầu
@@ -120,13 +123,13 @@ const deleteUserById = async (req, res) => {
         // Thực hiện truy vấn
         await request.query(sqlString);
         // Gửi phản hồi
-        res.status(200).json({ message: "Xóa người dùng thành công" });
+        res.status(200).json({ message: "Delete user sucessful" });
     } catch (error) {
         // Xử lý bất kỳ lỗi nào
         res.status(500).json({ error: error.message });
     }
 }
-
+//insert user to database function
 const insertUser = async (user) => {
     user.PassWord
     try {

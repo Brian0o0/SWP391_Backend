@@ -1,9 +1,11 @@
+//User functionality handles receiving and sending data from the database to the user
+
 const express = require('express');
-const { getUser, getUserById, updateUserById, deleteUserById, insertUser, getUserByUserName } = require('../controllers/homeController');
+const { getUser, getUserById, updateUserById, deleteUserById, insertUser, getUserByUserName } = require('../services/userServices');
 const bcrypt = require('bcrypt');
 
-
-const createUserController = async (req, res) => {
+//User creation function
+const createUser = async (req, res) => {
     const { PassWord, Name, Phone, Address, Email, UserName } = req.body;
     let userNameTemp = await getUserByUserName(UserName);
     // let emailTemp = await checkEmailValid(Email);
@@ -70,7 +72,7 @@ const createUserController = async (req, res) => {
 }
 
 
-
+//Login function
 const login = async (req, res) => {
     const { PassWord, UserName } = req.body;
     let userIdTemp = await getUserByUserName(UserName);
@@ -110,5 +112,5 @@ const login = async (req, res) => {
     }
 }
 module.exports = {
-    createUserController, login
+    createUser, login
 }
