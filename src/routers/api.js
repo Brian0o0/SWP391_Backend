@@ -5,7 +5,7 @@ const router = express.Router();
 const { getUser, getUserById, updateUserById, deleteUserById, insertUser } = require('../services/userServices');
 const { createUser, login } = require('../controllers/userController');
 const { getAllProduct, getProductById, deleteProductById, updateProductById } = require('../services/productServices');
-const { getAllCostGem, getCostGemById, insertCostGem, deleteCostGemById, updateCostGemById } = require('../controllers/gemController');
+const { getAllCostGem, getCostGemById, insertCostGem, deleteCostGemById, updateCostGemById, getAllGem, getGemById } = require('../controllers/gemController');
 
 router.get('/test/getProductById', getProductById);
 router.get('/test/getAllProduct', getAllProduct);
@@ -18,11 +18,14 @@ router.post('/test/createUser', createUser)
 router.put('/test/login', login);
 router.delete('/test/deleteProductById', deleteProductById);
 router.put('/test/updateProductById', updateProductById);
-
+//api cost gem
 router.get('/test/getAllCostGem', getAllCostGem);
 router.get('/test/getCostGemById', getCostGemById);
 router.post('/test/insertCostGem', insertCostGem);
 router.delete('/test/deleteCostGemById', deleteCostGemById);
 router.put('/test/updateCostGemById', updateCostGemById);
+//api gem
 
+router.get('/test/getAllGem', getAllGem);
+router.get('/test/getGemById', getGemById);
 module.exports = router;

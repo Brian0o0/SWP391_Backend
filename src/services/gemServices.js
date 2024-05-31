@@ -114,6 +114,41 @@ const deleteCostGemByIds = async (costGemID) => {
     }
 }
 
+// get all gem function
+const getAllGems = async () => {
+    try {
+        await pool.connect();
+        var sqlString = "select * from Gem";
+        const result = await pool.request().query(sqlString);
+        const gem = result.recordset;
+        console.log(gem);
+        return gem;
+    } catch (error) {
+        console.log(error);
+        return null;
+    } finally {
+        pool.close();
+    }
+}
+
+//get gem by id from database function
+const getGemByIds = async (gemId) => {
+    try {
+        await pool.connect();
+        var sqlString = "select * from Gem where GemID = @gemId;"
+        const request = pool.request();
+        request.input('gemId', gemId);
+        const result = await request.query(sqlString);
+        const gem = result.recordset;
+        console.log(gem);
+        return gem;
+    } catch (error) {
+        console.log("Error:", error);
+        return null;
+    } finally {
+        pool.close();
+    }
+}
 
 module.exports = {
     getAllCostGems,
@@ -121,4 +156,6 @@ module.exports = {
     insertCostGems,
     updateCostGemByIds,
     deleteCostGemByIds,
+    getAllGems,
+    getGemByIds,
 }
