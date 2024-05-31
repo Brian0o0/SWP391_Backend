@@ -6,6 +6,7 @@ const { getUser, getUserById, updateUserById, deleteUserById, insertUser } = req
 const { createUser, login } = require('../controllers/userController');
 const { getAllProduct, getProductById, deleteProductById, updateProductById } = require('../services/productServices');
 const { getAllCostGem, getCostGemById, insertCostGem, deleteCostGemById, updateCostGemById } = require('../controllers/gemController');
+const { getCategoryById, getAllCategories, insertCategory, updateCategoryById, deleteCategoryById } = require('../services/categoryServices');
 
 router.get('/test/getProductById', getProductById);
 router.get('/test/getAllProduct', getAllProduct);
@@ -25,4 +26,9 @@ router.post('/test/insertCostGem', insertCostGem);
 router.delete('/test/deleteCostGemById', deleteCostGemById);
 router.put('/test/updateCostGemById', updateCostGemById);
 
+router.get('/test/getAllCategories', getAllCategories);
+router.get('/test/getCategoryById', getCategoryById);
+router.post('/test/insertCategory', insertCategory);
+router.delete('/test/deleteCategoryById', deleteCategoryById);
+router.put('/test/updateCategoryById',  updateCategoryById);
 module.exports = router;
