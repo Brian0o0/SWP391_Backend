@@ -1,4 +1,5 @@
 //CRUD of gem with database
+var sql = require('mssql/msnodesqlv8');
 
 const express = require('express');
 const { pool } = require('../config/database');
@@ -38,7 +39,7 @@ const getCostGemByIds = async (costIDGem) => {
         pool.close();
     }
 }
-// ham lay ngay hien tai cua he thong
+// get day of system
 const getDayNow = () => {
     try {
         const currentDate = new Date();
@@ -55,7 +56,7 @@ const getDayNow = () => {
 
 
 
-//insert product to database function
+//insert cost gem to database function
 const insertCostGems = async (price) => {
     try {
         await pool.connect();
@@ -75,7 +76,7 @@ const insertCostGems = async (price) => {
         return false;
     }
 }
-//update product on database function
+//update cost gem on database function
 const updateCostGemByIds = async (costGemID, dateOfPrice, priceOfGem) => {
     try {
         await pool.connect();
@@ -97,7 +98,7 @@ const updateCostGemByIds = async (costGemID, dateOfPrice, priceOfGem) => {
         return false;
     }
 }
-//delete product by id on database function
+//delete cost gem by id on database function
 const deleteCostGemByIds = async (costGemID) => {
     try {
         await pool.connect();
@@ -135,7 +136,7 @@ const getAllGems = async () => {
 const getGemByIds = async (gemId) => {
     try {
         await pool.connect();
-        var sqlString = "select * from Gem where GemID = @gemId;"
+        var sqlString = `select * from Gem where GemID = @gemId;`
         const request = pool.request();
         request.input('gemId', gemId);
         const result = await request.query(sqlString);
@@ -149,7 +150,86 @@ const getGemByIds = async (gemId) => {
         pool.close();
     }
 }
+//insert gem to database function
+const insertGems = async (gem) => {
+    try {
+        await pool.connect();
+        const sqlString = `
+        INSERT INTO Gem (Name, Color, CaraWeight, Clarity, Cut, CostIDGem, AddedDate, Origin, Image,Identification) 
+VALUES (@name, @color, @caraWeight, @clarity, @cut, @costIdGem, @addedDate, @origin, @image, @identification)
+        `;
+        const request = pool.request();
+        request.input('name', gem.Name);
+        request.input('color', gem.Color);
+        request.input('caraWeight', gem.CaraWeight);
+        request.input('clarity', gem.Clarity);
+        request.input('cut', gem.Cut);
+        request.input('costIdGem', gem.CostIDGem);
+        request.input('addedDate', gem.AddedDate);
+        request.input('origin', gem.Origin);
+        request.input('image', gem.Image);
+        request.input('identification', gem.Identification);
+        // Thực hiện truy vấn
+        await request.query(sqlString);
+        // Gửi phản hồi
+        return true;
+    } catch (error) {
+        // Xử lý bất kỳ lỗi nào
+        throw new Error("Error inserting user: " + error.message);
+        return false;
+    }
+}
 
+
+//update gem on database function
+const updateGemByIds = async (gem) => {
+    try {
+        await pool.connect();
+        const sqlString = `
+            UPDATE Gem
+            SET Name = @name, Color = @color, CaraWeight = @caraWeight, Clarity = @clarity, Cut = @cut, CostIDGem = @costIdGem, 
+            AddedDate = @addedDate, Origin = @origin, Image = @image,Identification = @identification
+            WHERE GemID = @gemId
+        `;
+        const request = pool.request();
+        request.input('name', gem.Name);
+        request.input('color', gem.Color);
+        request.input('caraWeight', gem.CaraWeight);
+        request.input('clarity', gem.Clarity);
+        request.input('cut', gem.Cut);
+        request.input('costIdGem', gem.CostIDGem);
+        request.input('addedDate', gem.AddedDate);
+        request.input('origin', gem.Origin);
+        request.input('image', gem.Image);
+        request.input('identification', gem.Identification);
+        request.input('gemId', gem.GemId);
+        // Thực hiện truy vấn
+        await request.query(sqlString);
+        // Gửi phản hồi
+        return true;
+    } catch (error) {
+        console.log(error.message);
+        return false;
+    }
+}
+
+
+//delete gem by id on database function
+const deleteGemByIds = async (gemId) => {
+    try {
+        await pool.connect();
+        const sqlString = `
+        DELETE FROM Gem WHERE GemID = @gemId
+        `;
+        const request = pool.request();
+        request.input('gemId', gemId);
+        await request.query(sqlString);
+        return true;
+    } catch (error) {
+        console.log(error.message);
+        return false;
+    }
+}
 module.exports = {
     getAllCostGems,
     getCostGemByIds,
@@ -158,4 +238,7 @@ module.exports = {
     deleteCostGemByIds,
     getAllGems,
     getGemByIds,
+    insertGems,
+    updateGemByIds,
+    deleteGemByIds,
 }

@@ -131,7 +131,6 @@ const deleteUserById = async (req, res) => {
 }
 //insert user to database function
 const insertUser = async (user) => {
-    user.PassWord
     try {
         await pool.connect();
         const sqlString = `

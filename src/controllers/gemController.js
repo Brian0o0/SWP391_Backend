@@ -1,5 +1,5 @@
 //Gem functionality handles receiving and sending data from the database to the user
-const { getAllCostGems, getCostGemByIds, insertCostGems, updateCostGemByIds, deleteCostGemByIds, getAllGems, getGemByIds } = require('../services/gemServices');
+const { getAllCostGems, getCostGemByIds, insertCostGems, updateCostGemByIds, deleteCostGemByIds, getAllGems, getGemByIds, insertGems, updateGemByIds, deleteGemByIds } = require('../services/gemServices');
 
 const getAllCostGem = async (req, res) => {
     try {
@@ -151,6 +151,119 @@ const getGemById = async (req, res) => {
         res.status(500).json(error);
     }
 }
+
+const insertGem = async (req, res) => {
+    try {
+        const { Name, Color, CaraWeight, Clarity, Cut, CostIDGem, AddedDate, Origin, Image, Identification } = req.body
+        if (Name && Color && CaraWeight && Clarity && Cut && CostIDGem && AddedDate && Origin && Image && Identification) {
+            const gem = {
+                Name: Name,
+                Color: Color,
+                CaraWeight: parseFloat(CaraWeight),
+                Clarity: Clarity,
+                Cut: Cut,
+                CostIDGem: parseInt(CostIDGem),
+                AddedDate: AddedDate,
+                Origin: Origin,
+                Image: Image,
+                Identification: Identification,
+            };
+            const check = await insertGems(gem);
+            if (check == false) {
+                return res.json({
+                    status: 'error',
+                    message: 'Insert cost gem fail'
+                });
+            } else {
+                return res.json({
+                    status: 'success',
+                    message: 'Insert cost gem successfully'
+                });
+            }
+        } else {
+            return res.json({
+                status: 'err',
+                message: 'Name, Color, CaraWeight, Clarity, Cut, CostIDGem, AddedDate, Origin and Identification is required'
+            })
+        }
+
+    } catch (error) {
+        console.log(error);
+        return res.json({
+            status: 'error',
+            message: error.message
+        })
+    }
+}
+
+const updateGemById = async (req, res) => {
+    try {
+        const { GemId, Name, Color, CaraWeight, Clarity, Cut, CostIDGem, AddedDate, Origin, Image, Identification } = req.body
+        const gem = {
+            GemId: parseInt(GemId),
+            Name: Name,
+            Color: Color,
+            CaraWeight: parseFloat(CaraWeight),
+            Clarity: Clarity,
+            Cut: Cut,
+            CostIDGem: parseInt(CostIDGem),
+            AddedDate: AddedDate,
+            Origin: Origin,
+            Image: Image,
+            Identification: Identification,
+        };
+        const check = await updateGemByIds(gem);
+        if (check == false) {
+            return res.json({
+                status: 'error',
+                message: 'Update gem fail'
+            });
+        } else {
+            return res.json({
+                status: 'success',
+                message: 'Update gem successfully'
+            });
+        }
+    } catch (error) {
+        console.log(error);
+        return res.json({
+            status: 'error',
+            message: error.message
+        })
+    }
+}
+
+const deleteGemById = async (req, res) => {
+    try {
+        const { gemId } = req.body
+        if (gemId) {
+            const check = await deleteGemByIds(gemId);
+            if (check == false) {
+                return res.json({
+                    status: 'error',
+                    message: 'Delete gem fail'
+                });
+            } else {
+                return res.json({
+                    status: 'success',
+                    message: 'Delete gem successfully'
+                });
+            }
+        } else {
+            return res.json({
+                status: 'error',
+                message: 'gemId is required'
+            });
+        }
+
+    } catch (error) {
+        console.log(error);
+        return res.json({
+            status: 'error',
+            message: error.message
+        })
+    }
+}
 module.exports = {
     getAllCostGem,
     getCostGemById,
@@ -159,4 +272,7 @@ module.exports = {
     updateCostGemById,
     getAllGem,
     getGemById,
+    insertGem,
+    updateGemById,
+    deleteGemById
 }
