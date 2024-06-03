@@ -18,9 +18,6 @@ const getAllCostGem = async (req, res) => {
         res.status(500).json(error);
     }
 }
-module.exports = {
-    getAllCostGem,
-}
 
 
 const getCostGemById = async (req, res) => {
@@ -48,18 +45,26 @@ const getCostGemById = async (req, res) => {
 const insertCostGem = async (req, res) => {
     try {
         const { costGem } = req.body
-        const check = await insertCostGems(costGem);
-        if (check == false) {
-            return res.json({
-                status: 'error',
-                message: 'Insert cost gem fail'
-            });
+        if (costGem) {
+            const check = await insertCostGems(costGem);
+            if (check == false) {
+                return res.json({
+                    status: 'error',
+                    message: 'Insert cost gem fail'
+                });
+            } else {
+                return res.json({
+                    status: 'success',
+                    message: 'Insert cost gem successfully'
+                });
+            }
         } else {
             return res.json({
-                status: 'success',
-                message: 'Insert cost gem successfully'
-            });
+                status: 'err',
+                message: 'CostGem is required'
+            })
         }
+
     } catch (error) {
         console.log(error);
         return res.json({

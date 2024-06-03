@@ -1,5 +1,4 @@
 //CRUD of gem with database
-var sql = require('mssql/msnodesqlv8');
 
 const express = require('express');
 const { pool } = require('../config/database');
@@ -53,8 +52,6 @@ const getDayNow = () => {
         return null;
     }
 }
-
-
 
 //insert cost gem to database function
 const insertCostGems = async (price) => {
@@ -180,7 +177,6 @@ VALUES (@name, @color, @caraWeight, @clarity, @cut, @costIdGem, @addedDate, @ori
     }
 }
 
-
 //update gem on database function
 const updateGemByIds = async (gem) => {
     try {
@@ -212,7 +208,6 @@ const updateGemByIds = async (gem) => {
         return false;
     }
 }
-
 
 //delete gem by id on database function
 const deleteGemByIds = async (gemId) => {
