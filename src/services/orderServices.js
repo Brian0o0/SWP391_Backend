@@ -329,7 +329,7 @@ const getOrderDetailByIds = async (orderDetailId) => {
     }
 }
 //insert OrderDetail to database function
-const insertOrderDetails = async (Description, ProductID, Status, ProductName, CategoryID, CategoryName, MaterialID, MaterialName, GemID, GemName, QuantityGem, QuantityMaterial, OrderDate, OrderID) => {
+const insertOrderDetails = async (description, productId, status, productName, categoryId, categoryName, materialId, materialName, gemId, gemName, quantityGem, quantityMaterial, orderDate, orderId) => {
     try {
         await pool.connect();
         const sqlString = `

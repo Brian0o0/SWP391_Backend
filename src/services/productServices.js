@@ -7,121 +7,120 @@ const { pool } = require('../config/database');
 
 
 //get all product from database function
-const getAllProduct = async (req, res) => {
+const getAllProducts = async () => {
     try {
         await pool.connect();
         var sqlString = "select * from Product";
         const result = await pool.request().query(sqlString);
-        const test = result.recordset;
-        console.log(test);
-        res.json(test);
+        const product = result.recordset;
+        console.log(product);
+        return product;
     } catch (error) {
-        console.log("4")
-        res.status(500).json(error);
+        console.log(error);
+        return null;
+    } finally {
+        pool.close();
     }
 }
-
 //get product by id from database function
-const getProductById = async (req, res) => {
+const getProductByIds = async (productId) => {
     try {
-        const { productID } = req.body;
         await pool.connect();
-        var sqlString = "select * from Product where ProductID = @productID;";
+        var sqlString = "select * from Product where ProductID = @productId;";
         const request = pool.request();
-        request.input('productID', productID);
+        request.input('productId', productId);
         const result = await request.query(sqlString);
         const product = result.recordset;
         console.log(product);
-        res.json(product);
+        return product;
     } catch (error) {
-        // Handle any errors
-        console.log("Error:", error);
-        res.status(500).json(error);
+        console.log(error);
+        return null;
     } finally {
         pool.close();
     }
 }
 //insert product to database function
-const insertProduct = async (req, res) => {
-    user.PassWord
+const insertProducts = async (name, materialId, gemId, categoryId, materialCost, gemCost, productCost, image, quantityGem, size, warrantyCard, description) => {
     try {
         await pool.connect();
         const sqlString = `
-        INSERT INTO Product (Name, MaterialID, GemID, CategoryID, MaterialCost, GemCost, ProductCost, Image, QuantityGame, Size, WarrantyCard, Description) 
-        VALUES (@Name, @MaterialID, @GemID, @CategoryID, @MaterialCost, @GemCost, @ProductCost, @Image, @QuantityGame, @Size, @WarrantyCard, @Description)
+        INSERT INTO Product (Name, MaterialID, GemID, CategoryID, MaterialCost, GemCost, ProductCost, Image, QuantityGem, Size, warranty card, Description) 
+        VALUES (@name, @materialId, @gemId, @categoryId, @materialCost, @gemCost, @productCost, @image, @quantityGem, @size, @warrantyCard, @description)
         `;
         const request = pool.request();
-        request.input('PassWord', user.PassWord);
-        request.input('Name', user.Name);
-        request.input('Phone', user.Phone);
-        request.input('Address', user.Address);
-        request.input('Email', user.Email);
-        request.input('Role', 2);
-        request.input('UserName', user.UserName);
+        request.input('name', name);
+        request.input('materialId', materialId);
+        request.input('gemId', gemId);
+        request.input('categoryId', categoryId);
+        request.input('materialCost', materialCost);
+        request.input('gemCost', gemCost);
+        request.input('productCost', productCost);
+        request.input('image', image);
+        request.input('quantityGem', quantityGem);
+        request.input('size', size);
+        request.input('warrantyCard', warrantyCard);
+        request.input('description', description);
         // Thực hiện truy vấn
         await request.query(sqlString);
         // Gửi phản hồi
         return true;
     } catch (error) {
         // Xử lý bất kỳ lỗi nào
-        throw new Error("Error inserting user: " + error.message);
+        throw new Error("Error inserting product: " + error.message);
         return false;
     }
 }
 //update product on database function
-const updateProductById = async (req, res) => {
+const updateProductByIds = async (name, materialId, gemId, categoryId, materialCost, gemCost, productCost, image, quantityGem, size, warrantyCard, description, productId) => {
     try {
-        // const { productID } = req.body;
-        const productID = 14;
-        const { Name, MaterialID, GemID, CategoryID, MaterialCost, GemCost, ProductCost, Image, QuantityGame, Size, WarrantyCard, Description } = req.body;
         await pool.connect();
         const sqlString = `
             UPDATE Product
-            SET Name = @Name, MaterialID = @MaterialID, GemID = @GemID, CategoryID = @CategoryID
-            , MaterialCost = @MaterialCost, GemCost = @GemCost, ProductCost = @ProductCost, Image = @Image
-            , QuantityGame = @QuantityGame,Size = @Size, [warranty card] = @WarrantyCard, Description = @Description
-            WHERE ProductID = @productID
+            SET Name = @name, MaterialID = @materialId, GemID = @gemId, CategoryID = @categoryId
+            , MaterialCost = @materialCost, GemCost = @gemCost, ProductCost = @productCost, Image = @image
+            , QuantityGame = @quantityGem, Size = @size, [warranty card] = @warrantyCard, Description = @description
+            WHERE ProductID = @productId
         `;
         const request = pool.request();
-        request.input('Name', Name);
-        request.input('MaterialID', MaterialID);
-        request.input('GemID', GemID);
-        request.input('CategoryID', CategoryID);
-        request.input('MaterialCost', MaterialCost);
-        request.input('GemCost', GemCost);
-        request.input('ProductCost', ProductCost);
-        request.input('Image', Image);
-        request.input('QuantityGame', QuantityGame);
-        request.input('Size', Size);
-        request.input('WarrantyCard', WarrantyCard);
-        request.input('Description', Description);
-        request.input('productID', productID);
+        request.input('name', name);
+        request.input('materialId', materialId);
+        request.input('gemId', gemId);
+        request.input('categoryId', categoryId);
+        request.input('materialCost', materialCost);
+        request.input('gemCost', gemCost);
+        request.input('productCost', productCost);
+        request.input('image', image);
+        request.input('quantityGem', quantityGem);
+        request.input('size', size);
+        request.input('warrantyCard', warrantyCard);
+        request.input('description', description);
+        request.input('productId', productId);
         // Thực hiện truy vấn
         await request.query(sqlString);
-        // Gửi phản hồi
-        res.status(200).json({ message: "Update Product sucessful" });
+        return true;
     } catch (error) {
-        // Xử lý bất kỳ lỗi nào
-        res.status(500).json({ error: error.message });
+        console.log(error.message);
+        return false;
     }
 }
 //delete product by id on database function
-const deleteProductById = async (req, res) => {
+const deleteProductByIds = async (productId) => {
     try {
-        const { productID } = req.body;
         await pool.connect();
         const sqlString = `
         DELETE FROM Product WHERE ProductID = @productId
         `;
         const request = pool.request();
-        request.input('productId', productID);
+        request.input('productId', productId);
         await request.query(sqlString);
-        res.status(200).json({ message: "Delete product successful" });
+        return true;
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        console.log(error.message);
+        return false;
     }
 }
 
 module.exports = {
-    getAllProduct, getProductById, insertProduct, deleteProductById, updateProductById
+    getAllProducts, getProductByIds, insertProducts, deleteProductByIds, updateProductByIds
 }
