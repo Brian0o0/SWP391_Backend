@@ -7,11 +7,15 @@ const { createUser, login } = require('../controllers/userController');
 const { getAllProduct, getProductById, deleteProductById, updateProductById } = require('../services/productServices');
 const { getAllCostGem, getCostGemById, insertCostGem, deleteCostGemById, updateCostGemById, getAllGem, getGemById, insertGem, updateGemById, deleteGemById } = require('../controllers/gemController');
 const { getAllCostMaterial, getCostMaterialById, insertCostMaterial, deleteCostMaterialById, updateCostMaterialById, getAllMaterial, getMaterialById, insertMaterial, updateMaterialById, deleteMaterialById } = require('../controllers/materialController');
-const { getAllStep, getStepById, insertStep, deleteStepById, updateStepById, getAllOrderProgress, getOrderProgressById, insertOrderProgress, deleteOrderProgressById, updateOrderProgressById } = require('../controllers/orderController');
+const { getAllStep, getStepById, insertStep, deleteStepById, updateStepById, getAllOrderProgress, getOrderProgressById, insertOrderProgress, deleteOrderProgressById, updateOrderProgressById, getAllOrder, getOrderById, insertOrder, deleteOrderById, updateOrderById, getAllOrderDetail, getOrderDetailById, insertOrderDetail, updateOrderDetailById, deleteOrderDetailById } = require('../controllers/orderController');
 
-
+//api prodcuct
 router.get('/test/getProductById', getProductById);
 router.get('/test/getAllProduct', getAllProduct);
+router.delete('/test/deleteProductById', deleteProductById);
+router.put('/test/updateProductById', updateProductById);
+
+//api user
 router.get('/', getUser);
 router.get('/test/get', getUserById);
 router.put('/test/update', updateUserById);
@@ -19,8 +23,6 @@ router.delete('/test/delete', deleteUserById);
 router.post('/test/insert', insertUser);
 router.post('/test/createUser', createUser)
 router.put('/test/login', login);
-router.delete('/test/deleteProductById', deleteProductById);
-router.put('/test/updateProductById', updateProductById);
 
 //api cost gem
 router.get('/test/getAllCostGem', getAllCostGem);
@@ -63,6 +65,21 @@ router.get('/test/getOrderProgressById', getOrderProgressById);
 router.post('/test/insertOrderProgress', insertOrderProgress);
 router.put('/test/updateOrderProgressById', updateOrderProgressById);
 router.delete('/test/deleteOrderProgressById', deleteOrderProgressById);
+
+//api order progress
+router.get('/test/getAllOrder', getAllOrder);
+router.get('/test/getOrderById', getOrderById);
+router.post('/test/insertOrder', insertOrder);
+router.put('/test/updateOrderById', updateOrderById);
+router.delete('/test/deleteOrderById', deleteOrderById);
+
+//api order progress
+router.get('/test/getAllOrderDetail', getAllOrderDetail);
+router.get('/test/getOrderDetailById', getOrderDetailById);
+router.post('/test/insertOrderDetail', insertOrderDetail);
+router.put('/test/updateOrderDetailById', updateOrderDetailById);
+router.delete('/test/deleteOrderDetailById', deleteOrderDetailById);
+
 
 //api category
 // router.get('/test/getAllCategories', getAllCategories);

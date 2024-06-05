@@ -59,7 +59,7 @@ const createUser = async (req, res) => {
         } else {
             return res.json({
                 status: 'err',
-                message: 'UserID PassWord Name Phone Address Email Role and UserName is required'
+                message: 'PassWord Name Phone Address Email Role and UserName is required'
             })
         }
     } catch (err) {
@@ -72,7 +72,10 @@ const createUser = async (req, res) => {
 }
 
 
-//Login function
+//Login function  
+// account to test 
+//  "UserName": "admin",
+//  "PassWord": "123"
 const login = async (req, res) => {
     const { PassWord, UserName } = req.body;
     let userIdTemp = await getUserByUserName(UserName);
