@@ -22,11 +22,11 @@ const getUser = async (req, res) => {
 const getUserById = async (userId) => {
     try {
         await pool.connect();
-        var sqlString = "select * from [User] where UserID = @id";
+        var sqlString = "select top 1 * from [User] where UserID = @id";
         const request = pool.request();
         request.input('id', userId);
         const result = await request.query(sqlString);
-        const user = result.recordset;
+        const user = result.recordset[0];
         return user;
     } catch (error) {
         // Handle any errors
@@ -40,11 +40,11 @@ const getUserById = async (userId) => {
 const getUserByUserName = async (userName) => {
     try {
         await pool.connect();
-        var sqlString = "select * from [User] where UserName = @userName";
+        var sqlString = "SELECT TOP 1 * FROM [User] WHERE UserName = @UserName";
         const request = pool.request();
         request.input('userName', userName);
         const result = await request.query(sqlString);
-        const user = result.recordset;
+        const user = result.recordset[0];
         return user;
     } catch (error) {
         // Handle any errors
@@ -56,13 +56,18 @@ const getUserByUserName = async (userName) => {
 }
 //check email valid function
 const checkEmailValid = async (email) => {
+    const isEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email);
+    if (!isEmail) {
+        console.log("Email is not valid");
+        return null;
+    }
     try {
         await pool.connect();
-        var sqlString = "select * from [User] where Email = @email";
+        var sqlString = "SELECT TOP 1 * FROM [User] WHERE Email = @email";
         const request = pool.request();
         request.input('email', email);
         const result = await request.query(sqlString);
-        const user = result.recordset;
+        const user = result.recordset[0];
         return user;
     } catch (error) {
         // Handle any errors
@@ -72,9 +77,34 @@ const checkEmailValid = async (email) => {
         pool.close();
     }
 }
-
-
-
+const checkUserNameValid = async (userName) => {
+    try {
+        await pool.connect();
+        var sqlString = "SELECT TOP 1 * FROM [User] WHERE UserName = @UserName";
+        const request = pool.request();
+        request.input('userName', userName);
+        const result = await request.query(sqlString);
+        const user = result.recordset[0];
+        return user;
+    } catch (error) {
+        // Handle any errors
+        console.error('Error getting user by ID:', error);
+        return null;
+    } finally {
+        pool.close();
+    }
+}
+const checkLogin = async (user) => {
+    const userEmailTemp = await checkEmailValid(user);
+    const userNameTemp = await checkUserNameValid(user);
+    if ((userEmailTemp == null) && (userNameTemp == null)) {
+        return null;
+    } else if ((userEmailTemp != null) && (userNameTemp == null)) {
+        return userEmailTemp;
+    } else {
+        return userNameTemp;
+    };
+}
 //update user by id on database function
 const updateUserById = async (req, res) => {
     try {
@@ -157,4 +187,13 @@ const insertUser = async (user) => {
 }
 
 
-module.exports = { getUser, getUserById, updateUserById, deleteUserById, insertUser, checkEmailValid, getUserByUserName }
+module.exports = {
+    getUser,
+    getUserById,
+    updateUserById,
+    deleteUserById,
+    insertUser,
+    checkEmailValid,
+    getUserByUserName,
+    checkLogin
+}

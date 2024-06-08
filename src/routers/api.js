@@ -3,17 +3,18 @@
 const express = require('express');
 const router = express.Router();
 const { getUser, getUserById, updateUserById, deleteUserById, insertUser } = require('../services/userServices');
-const { createUser, login } = require('../controllers/userController');
-const { getAllProduct, getProductById, deleteProductById, updateProductById } = require('../services/productServices');
+const { register, login } = require('../controllers/userController');
+const { getAllProduct, getProductById, insertProduct, updateProductById, deleteProductById } = require('../controllers/productController');
 const { getAllCostGem, getCostGemById, insertCostGem, deleteCostGemById, updateCostGemById, getAllGem, getGemById, insertGem, updateGemById, deleteGemById } = require('../controllers/gemController');
 const { getAllCostMaterial, getCostMaterialById, insertCostMaterial, deleteCostMaterialById, updateCostMaterialById, getAllMaterial, getMaterialById, insertMaterial, updateMaterialById, deleteMaterialById } = require('../controllers/materialController');
 const { getAllStep, getStepById, insertStep, deleteStepById, updateStepById, getAllOrderProgress, getOrderProgressById, insertOrderProgress, deleteOrderProgressById, updateOrderProgressById, getAllOrder, getOrderById, insertOrder, deleteOrderById, updateOrderById, getAllOrderDetail, getOrderDetailById, insertOrderDetail, updateOrderDetailById, deleteOrderDetailById } = require('../controllers/orderController');
 
 //api prodcuct
-router.get('/test/getProductById', getProductById);
 router.get('/test/getAllProduct', getAllProduct);
-router.delete('/test/deleteProductById', deleteProductById);
+router.get('/test/getProductById', getProductById);
+router.delete('/test/insertProduct', insertProduct);
 router.put('/test/updateProductById', updateProductById);
+router.put('/test/deleteProductById', deleteProductById);
 
 //api user
 router.get('/', getUser);
@@ -21,7 +22,7 @@ router.get('/test/get', getUserById);
 router.put('/test/update', updateUserById);
 router.delete('/test/delete', deleteUserById);
 router.post('/test/insert', insertUser);
-router.post('/test/createUser', createUser)
+router.post('/test/register', register)
 router.put('/test/login', login);
 
 //api cost gem

@@ -99,17 +99,17 @@ const deleteProductById = async (req, res) => {
 
 const updateProductById = async (req, res) => {
     try {
-        const { description, productId, status, productName, categoryId, categoryName, materialId, materialName, gemId, gemName, quantityGem, quantityMaterial, orderDate, orderId, orderDetailId } = req.body
-        const check = await updateOrderDetailByIds(description, productId, status, productName, categoryId, categoryName, materialId, materialName, gemId, gemName, quantityGem, quantityMaterial, orderDate, orderId, orderDetailId);
+        const { name, materialId, gemId, categoryId, materialCost, gemCost, productCost, image, quantityGem, size, warrantyCard, description, productId } = req.body
+        const check = await updateProductByIds(name, materialId, gemId, categoryId, materialCost, gemCost, productCost, image, quantityGem, size, warrantyCard, description, productId);
         if (check == false) {
             return res.json({
                 status: 'error',
-                message: 'Update order detail fail'
+                message: 'Update product fail'
             });
         } else {
             return res.json({
                 status: 'success',
-                message: 'Update order detail successfully'
+                message: 'Update product successfully'
             });
         }
     } catch (error) {
@@ -126,6 +126,6 @@ module.exports = {
     getAllProduct,
     getProductById,
     insertProduct,
-    updateProductById,
-    deleteProductById
+    deleteProductById,
+    updateProductById
 }
