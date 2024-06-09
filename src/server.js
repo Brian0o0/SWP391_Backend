@@ -1,7 +1,7 @@
 require('dotenv').config();
 let express = require('express');
 let app = express();
-let port = process.env.POST || 8082;
+let port = process.env.PORT || 8082;
 let hostname = process.env.HOST_NAME;
 const webRouter = require('./routers/api');
 const session = require('express-session');

@@ -3,18 +3,18 @@
 const express = require('express');
 const router = express.Router();
 const { getUser, getUserById, updateUserById, deleteUserById, insertUser } = require('../services/userServices');
-const { register, login } = require('../controllers/userController');
+const { register, login, logout } = require('../controllers/userController');
 const { getAllProduct, getProductById, insertProduct, updateProductById, deleteProductById } = require('../controllers/productController');
 const { getAllCostGem, getCostGemById, insertCostGem, deleteCostGemById, updateCostGemById, getAllGem, getGemById, insertGem, updateGemById, deleteGemById } = require('../controllers/gemController');
 const { getAllCostMaterial, getCostMaterialById, insertCostMaterial, deleteCostMaterialById, updateCostMaterialById, getAllMaterial, getMaterialById, insertMaterial, updateMaterialById, deleteMaterialById } = require('../controllers/materialController');
 const { getAllStep, getStepById, insertStep, deleteStepById, updateStepById, getAllOrderProgress, getOrderProgressById, insertOrderProgress, deleteOrderProgressById, updateOrderProgressById, getAllOrder, getOrderById, insertOrder, deleteOrderById, updateOrderById, getAllOrderDetail, getOrderDetailById, insertOrderDetail, updateOrderDetailById, deleteOrderDetailById } = require('../controllers/orderController');
-
+const { getAllCategory, getCategoryById, insertCategory, updateCategoryById, deleteCategoryById, } = require("../controllers/categoryController")
 //api prodcuct
 router.get('/test/getAllProduct', getAllProduct);
 router.get('/test/getProductById', getProductById);
-router.delete('/test/insertProduct', insertProduct);
+router.post('/test/insertProduct', insertProduct);
 router.put('/test/updateProductById', updateProductById);
-router.put('/test/deleteProductById', deleteProductById);
+router.delete('/test/deleteProductById', deleteProductById);
 
 //api user
 router.get('/', getUser);
@@ -24,7 +24,7 @@ router.delete('/test/delete', deleteUserById);
 router.post('/test/insert', insertUser);
 router.post('/test/register', register)
 router.put('/test/login', login);
-
+router.post('/test/logout', logout);
 //api cost gem
 router.get('/test/getAllCostGem', getAllCostGem);
 router.get('/test/getCostGemById', getCostGemById);
@@ -60,21 +60,21 @@ router.post('/test/insertStep', insertStep);
 router.put('/test/updateStepById', updateStepById);
 router.delete('/test/deleteStepById', deleteStepById);
 
-//api order progress
+//api order progress 
 router.get('/test/getAllOrderProgress', getAllOrderProgress);
 router.get('/test/getOrderProgressById', getOrderProgressById);
 router.post('/test/insertOrderProgress', insertOrderProgress);
 router.put('/test/updateOrderProgressById', updateOrderProgressById);
 router.delete('/test/deleteOrderProgressById', deleteOrderProgressById);
 
-//api order progress
+//api order 
 router.get('/test/getAllOrder', getAllOrder);
 router.get('/test/getOrderById', getOrderById);
 router.post('/test/insertOrder', insertOrder);
 router.put('/test/updateOrderById', updateOrderById);
 router.delete('/test/deleteOrderById', deleteOrderById);
 
-//api order progress
+//api order detail progress
 router.get('/test/getAllOrderDetail', getAllOrderDetail);
 router.get('/test/getOrderDetailById', getOrderDetailById);
 router.post('/test/insertOrderDetail', insertOrderDetail);
@@ -83,11 +83,11 @@ router.delete('/test/deleteOrderDetailById', deleteOrderDetailById);
 
 
 //api category
-// router.get('/test/getAllCategories', getAllCategories);
-// router.get('/test/getCategoryById', getCategoryById);
-// router.post('/test/insertCategory', insertCategory);
-// router.delete('/test/deleteCategoryById', deleteCategoryById);
-// router.put('/test/updateCategoryById', updateCategoryById);
+router.get('/test/getAllCategory', getAllCategory);
+router.get('/test/getCategoryById', getCategoryById);
+router.post('/test/insertCategory', insertCategory);
+router.delete('/test/deleteCategoryById', deleteCategoryById);
+router.put('/test/updateCategoryById', updateCategoryById);
 
 
 module.exports = router;

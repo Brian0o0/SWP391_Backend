@@ -27,7 +27,6 @@ const getStepById = async (req, res) => {
     try {
         const { stepId } = req.body
         const step = await getStepByIds(stepId);
-        console.log(step);
         if (step == null) {
             return res.json({
                 status: 'err',
@@ -225,6 +224,7 @@ const updateOrderProgressById = async (req, res) => {
     try {
         const { img, note, stepId, orderId, date, orderProgressId } = req.body
         const check = await updateOrderProgressByIds(img, note, stepId, orderId, date, orderProgressId);
+        console.log(check);
         if (check == false) {
             return res.json({
                 status: 'error',
@@ -385,7 +385,7 @@ const getAllOrderDetail = async (req, res) => {
 
 const getOrderDetailById = async (req, res) => {
     try {
-        const { orderId } = req.body
+        const { orderDetailId } = req.body;
         const order = await getOrderDetailByIds(orderDetailId);
         console.log(order);
         if (order == null) {
@@ -426,7 +426,7 @@ const insertOrderDetail = async (req, res) => {
             return res.json({
                 status: 'err',
                 message: 'Description, productId, status, productName, categoryId, categoryName, materialId, materialName, gemId, gemName, quantityGem, quantityMaterial, orderDate and orderId is required'
-            })
+            });
         }
 
     } catch (error) {
@@ -440,7 +440,7 @@ const insertOrderDetail = async (req, res) => {
 
 const deleteOrderDetailById = async (req, res) => {
     try {
-        const { orderId } = req.body
+        const { orderDetailId } = req.body
         const check = await deleteOrderDetailByIds(orderDetailId);
         if (check == false) {
             return res.json({

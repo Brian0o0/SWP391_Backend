@@ -3,14 +3,14 @@ const express = require('express');
 const { pool } = require('../config/database');
 
 
-const getAllCategories = async () => {
+const getAllCategorys = async () => {
     try {
         await pool.connect();
-        var sqlString = "select * from Categories";
+        var sqlString = "select * from Category";
         const result = await pool.request().query(sqlString);
-        const categories = result.recordset;
-        console.log(cost);
-        return cost;
+        const category = result.recordset;
+        console.log(category);
+        return category;
     } catch (error) {
         console.log(error);
         return null;
@@ -20,12 +20,12 @@ const getAllCategories = async () => {
 }
 
 // lấy category theo ID
-const getCategoryById = async (categoryId) => {
+const getCategoryByIds = async (categoryId) => {
     try {
         await pool.connect();
-        const sqlString = "SELECT * FROM Category WHERE categoryID = @categoryID";
+        const sqlString = "SELECT * FROM Category WHERE CategoryID = @categoryId";
         const request = pool.request();
-        request.input('categoryID', categoryId);
+        request.input('categoryId', categoryId);
         const result = await request.query(sqlString);
         const category = result.recordset;
         console.log(category);
@@ -39,13 +39,13 @@ const getCategoryById = async (categoryId) => {
 }
 
 // Thêm Category Mới
-const insertCategory = async (name, description) => {
+const insertCategorys = async (name, description) => {
     try {
         await pool.connect();
-        const sqlString = "INSERT INTO Category (name, description) VALUES (@name, @description)";
+        const sqlString = "INSERT INTO Category (Description, Name) VALUES (@description, @name)";
         const request = pool.request();
-        request.input('name', name);
-        request.input('description', description);
+        request.input('description', name);
+        request.input('name', description);
         await request.query(sqlString);
         return true;
     } catch (error) {
@@ -57,7 +57,7 @@ const insertCategory = async (name, description) => {
 }
 
 //Cập Nhật Category Theo ID
-const updateCategoryById = async (categoryId, name, description) => {
+const updateCategoryByIds = async (categoryId, name, description) => {
     try {
         await pool.connect();
         const sqlString = `
@@ -81,12 +81,12 @@ const updateCategoryById = async (categoryId, name, description) => {
 
 
 //Xóa Category Theo ID
-const deleteCategoryById = async (categoryId) => {
+const deleteCategoryByIds = async (categoryId) => {
     try {
         await pool.connect();
-        const sqlString = "DELETE FROM Category WHERE categoryID = @categoryID";
+        const sqlString = "DELETE FROM Category WHERE CategoryID = @categoryId";
         const request = pool.request();
-        request.input('categoryID', categoryId);
+        request.input('categoryId', categoryId);
         await request.query(sqlString);
         return true;
     } catch (error) {
@@ -98,10 +98,10 @@ const deleteCategoryById = async (categoryId) => {
 }
 //
 module.exports = {
-    getAllCategories,
-    getCategoryById,
-    insertCategory,
-    updateCategoryById,
-    deleteCategoryById,
+    getAllCategorys,
+    getCategoryByIds,
+    insertCategorys,
+    updateCategoryByIds,
+    deleteCategoryByIds,
 }
 

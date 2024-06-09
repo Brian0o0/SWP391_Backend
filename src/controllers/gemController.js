@@ -45,6 +45,7 @@ const getCostGemById = async (req, res) => {
 const insertCostGem = async (req, res) => {
     try {
         const { costGem } = req.body
+
         if (costGem) {
             const check = await insertCostGems(costGem);
             if (check == false) {
@@ -159,36 +160,36 @@ const getGemById = async (req, res) => {
 
 const insertGem = async (req, res) => {
     try {
-        const { Name, Color, CaraWeight, Clarity, Cut, CostIDGem, AddedDate, Origin, Image, Identification } = req.body
-        if (Name && Color && CaraWeight && Clarity && Cut && CostIDGem && AddedDate && Origin && Image && Identification) {
+        const { name, color, caraWeight, clarity, cut, costIdGem, addedDate, origin, image, identification } = req.body
+        if (name && color && caraWeight && clarity && cut && costIdGem && addedDate && origin && image && identification) {
             const gem = {
-                Name: Name,
-                Color: Color,
-                CaraWeight: parseFloat(CaraWeight),
-                Clarity: Clarity,
-                Cut: Cut,
-                CostIDGem: parseInt(CostIDGem),
-                AddedDate: AddedDate,
-                Origin: Origin,
-                Image: Image,
-                Identification: Identification,
+                Name: name,
+                Color: color,
+                CaraWeight: parseFloat(caraWeight),
+                Clarity: clarity,
+                Cut: cut,
+                CostIDGem: parseInt(costIdGem),
+                AddedDate: addedDate,
+                Origin: origin,
+                Image: image,
+                Identification: identification,
             };
             const check = await insertGems(gem);
             if (check == false) {
                 return res.json({
                     status: 'error',
-                    message: 'Insert cost gem fail'
+                    message: 'Insert gem fail'
                 });
             } else {
                 return res.json({
                     status: 'success',
-                    message: 'Insert cost gem successfully'
+                    message: 'Insert gem successfully'
                 });
             }
         } else {
             return res.json({
                 status: 'err',
-                message: 'Name, Color, CaraWeight, Clarity, Cut, CostIDGem, AddedDate, Origin and Identification is required'
+                message: 'Name, Color, CaraWeight, Clarity, Cut, CostIDGem, AddedDate, Origin, Image and Identification is required'
             })
         }
 
@@ -203,19 +204,19 @@ const insertGem = async (req, res) => {
 
 const updateGemById = async (req, res) => {
     try {
-        const { GemId, Name, Color, CaraWeight, Clarity, Cut, CostIDGem, AddedDate, Origin, Image, Identification } = req.body
+        const { gemId, name, color, caraWeight, clarity, cut, costIdGem, addedDate, origin, image, identification } = req.body
         const gem = {
-            GemId: parseInt(GemId),
-            Name: Name,
-            Color: Color,
-            CaraWeight: parseFloat(CaraWeight),
-            Clarity: Clarity,
-            Cut: Cut,
-            CostIDGem: parseInt(CostIDGem),
-            AddedDate: AddedDate,
-            Origin: Origin,
-            Image: Image,
-            Identification: Identification,
+            GemId: parseInt(gemId),
+            Name: name,
+            Color: color,
+            CaraWeight: parseFloat(caraWeight),
+            Clarity: clarity,
+            Cut: cut,
+            CostIDGem: parseInt(costIdGem),
+            AddedDate: addedDate,
+            Origin: origin,
+            Image: image,
+            Identification: identification,
         };
         const check = await updateGemByIds(gem);
         if (check == false) {

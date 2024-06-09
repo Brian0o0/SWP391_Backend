@@ -169,6 +169,7 @@ const insertMaterials = async (material) => {
 //update Material on database function
 const updateMaterialByIds = async (material) => {
     try {
+        console.log(material);
         await pool.connect();
         const sqlString = `
             UPDATE Material

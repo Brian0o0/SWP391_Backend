@@ -5,7 +5,7 @@ const { getAllProducts, getProductByIds, insertProducts, updateProductByIds, del
 const getAllProduct = async (req, res) => {
     try {
         const product = await getAllProducts();
-        if (order == null) {
+        if (product == null) {
             return res.json({
                 status: 'err',
                 message: 'Empty product list'
@@ -101,6 +101,7 @@ const updateProductById = async (req, res) => {
     try {
         const { name, materialId, gemId, categoryId, materialCost, gemCost, productCost, image, quantityGem, size, warrantyCard, description, productId } = req.body
         const check = await updateProductByIds(name, materialId, gemId, categoryId, materialCost, gemCost, productCost, image, quantityGem, size, warrantyCard, description, productId);
+        console.log(check);
         if (check == false) {
             return res.json({
                 status: 'error',

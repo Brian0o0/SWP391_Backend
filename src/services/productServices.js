@@ -45,7 +45,7 @@ const insertProducts = async (name, materialId, gemId, categoryId, materialCost,
     try {
         await pool.connect();
         const sqlString = `
-        INSERT INTO Product (Name, MaterialID, GemID, CategoryID, MaterialCost, GemCost, ProductCost, Image, QuantityGem, Size, warranty card, Description) 
+        INSERT INTO Product (Name, MaterialID, GemID, CategoryID, MaterialCost, GemCost, ProductCost, Image, QuantityGem, Size, [warranty card], Description) 
         VALUES (@name, @materialId, @gemId, @categoryId, @materialCost, @gemCost, @productCost, @image, @quantityGem, @size, @warrantyCard, @description)
         `;
         const request = pool.request();
@@ -79,7 +79,7 @@ const updateProductByIds = async (name, materialId, gemId, categoryId, materialC
             UPDATE Product
             SET Name = @name, MaterialID = @materialId, GemID = @gemId, CategoryID = @categoryId
             , MaterialCost = @materialCost, GemCost = @gemCost, ProductCost = @productCost, Image = @image
-            , QuantityGame = @quantityGem, Size = @size, [warranty card] = @warrantyCard, Description = @description
+            , QuantityGem = @quantityGem, Size = @size, [warranty card] = @warrantyCard, Description = @description
             WHERE ProductID = @productId
         `;
         const request = pool.request();

@@ -3,17 +3,17 @@
 const express = require('express');
 const router = express.Router();
 const {
-    getAllCategories,
-    getCategoryById,
-    insertCategory,
-    updateCategoryById,
-    deleteCategoryById,
-} = require('../services/categoryService');
+    getAllCategorys,
+    getCategoryByIds,
+    insertCategorys,
+    updateCategoryByIds,
+    deleteCategoryByIds,
+} = require('../services/categoryServices');
 
 // Lấy tất cả các category
-router.get('/categories', async (req, res) => {
+const getAllCategory = async (req, res) => {
     try {
-        const categories = await getAllCategories();
+        const categories = await getAllCategorys();
         if (categories) {
             res.status(200).json(categories);
         } else {
@@ -22,13 +22,13 @@ router.get('/categories', async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: 'Internal Server Error', error: error.message });
     }
-});
+}
 
 // Lấy category theo ID
-router.get('/categories/:id', async (req, res) => {
+const getCategoryById = async (req, res) => {
     try {
-        const categoryId = req.params.id;
-        const category = await getCategoryById(categoryId);
+        const { categoryId } = req.body;
+        const category = await getCategoryByIds(categoryId);
         if (category) {
             res.status(200).json(category);
         } else {
@@ -37,30 +37,37 @@ router.get('/categories/:id', async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: 'Internal Server Error', error: error.message });
     }
-});
+}
 
 // Thêm category mới
-router.post('/categories', async (req, res) => {
+const insertCategory = async (req, res) => {
     try {
         const { name, description } = req.body;
-        const success = await insertCategory(name, description);
-        if (success) {
-            res.status(201).json({ message: 'Category created successfully' });
+        if (name && description) {
+            const check = await insertCategorys(name, description);
+            if (check == true) {
+                res.status(201).json({ message: 'Category created successfully' });
+            } else {
+                res.status(400).json({ message: 'Failed to create category' });
+            }
         } else {
-            res.status(400).json({ message: 'Failed to create category' });
+            return res.json({
+                status: 'err',
+                message: 'Description, productId, status, productName, categoryId, categoryName, materialId, materialName, gemId, gemName, quantityGem, quantityMaterial, orderDate and orderId is required'
+            });
         }
+
     } catch (error) {
         res.status(500).json({ message: 'Internal Server Error', error: error.message });
     }
-});
+}
 
 // Cập nhật category theo ID
-router.put('/categories/:id', async (req, res) => {
+const updateCategoryById = async (req, res) => {
     try {
-        const categoryId = req.params.id;
-        const { name, description } = req.body;
-        const success = await updateCategoryById(categoryId, name, description);
-        if (success) {
+        const { categoryId, name, description } = req.body;
+        const check = await updateCategoryByIds(categoryId, name, description);
+        if (check) {
             res.status(200).json({ message: 'Category updated successfully' });
         } else {
             res.status(400).json({ message: 'Failed to update category' });
@@ -68,14 +75,14 @@ router.put('/categories/:id', async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: 'Internal Server Error', error: error.message });
     }
-});
+}
 
 // Xóa category theo ID
-router.delete('/categories/:id', async (req, res) => {
+const deleteCategoryById = async (req, res) => {
     try {
-        const categoryId = req.params.id;
-        const success = await deleteCategoryById(categoryId);
-        if (success) {
+        const { categoryId } = req.body;
+        const check = await deleteCategoryByIds(categoryId);
+        if (check) {
             res.status(200).json({ message: 'Category deleted successfully' });
         } else {
             res.status(400).json({ message: 'Failed to delete category' });
@@ -83,6 +90,12 @@ router.delete('/categories/:id', async (req, res) => {
     } catch (error) {
         res.status(500).json({ message: 'Internal Server Error', error: error.message });
     }
-});
+}
 
-module.exports = router;
+module.exports = {
+    getAllCategory,
+    getCategoryById,
+    insertCategory,
+    updateCategoryById,
+    deleteCategoryById,
+};

@@ -180,8 +180,13 @@ const login = async (req, res) => {
     });
 };
 
+const logout = async (req, res) => {
+    // Clear the refresh token cookie
+    res.clearCookie('refreshToken', { httpOnly: true, secure: true });
+    return res.status(200).send('Đăng xuất thành công.');
+};
 
 
 module.exports = {
-    register, login
+    register, login, logout
 }
