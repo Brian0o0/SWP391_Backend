@@ -6,15 +6,14 @@ const getAllProduct = async (req, res) => {
     try {
         const product = await getAllProducts();
         if (product == null) {
-            return res.json({
-                status: 'err',
-                message: 'Empty product list'
-            });
+            return res
+                .status(404)
+                .sen('Empty product list')
         } else {
-            res.json(product);
+            res.status(200).json(product);
         }
     } catch (error) {
-        res.status(500).json(error);
+        res.status(500).sen(error);
     }
 }
 
@@ -24,19 +23,15 @@ const getProductById = async (req, res) => {
         const product = await getProductByIds(productId);
         console.log(product);
         if (product == null) {
-            return res.json({
-                status: 'err',
-                message: 'Empty product list'
-            });
+            return res
+                .status(404)
+                .sen('Empty product list')
         } else {
-            res.json(product);
+            res.status(200).json(product);
         }
 
     } catch (error) {
-        return res.json({
-            status: 'error',
-            message: error.message
-        });
+        res.status(500).sen(error);
     }
 }
 
@@ -47,29 +42,21 @@ const insertProduct = async (req, res) => {
 
             const check = await insertProducts(name, materialId, gemId, categoryId, materialCost, gemCost, productCost, image, quantityGem, size, warrantyCard, description);
             if (check == false) {
-                return res.json({
-                    status: 'error',
-                    message: 'Insert product  fail'
-                });
+                return res
+                    .status(500)
+                    .sen('Insert product  fail')
             } else {
-                return res.json({
-                    status: 'success',
-                    message: 'Insert product successfully'
-                });
+                return res
+                    .status(200)
+                    .status('Insert product successfully')
             }
         } else {
-            return res.json({
-                status: 'err',
-                message: 'name, materialId, gemId, categoryId, materialCost, gemCost, productCost, image, quantityGem, size, warrantyCard and description is required'
-            })
+            return res.status(400).sen('name, materialId, gemId, categoryId, materialCost, gemCost, productCost, image, quantityGem, size, warrantyCard and description is required')
         }
 
     } catch (error) {
         console.log(error);
-        return res.json({
-            status: 'error',
-            message: error.message
-        })
+        res.status(500).sen(error);
     }
 }
 
@@ -78,22 +65,19 @@ const deleteProductById = async (req, res) => {
         const { productId } = req.body
         const check = await deleteProductByIds(productId);
         if (check == false) {
-            return res.json({
-                status: 'error',
-                message: 'Delete product fail'
-            });
+            return res
+                .status(500)
+                .sen('Delete product fail')
         } else {
-            return res.json({
-                status: 'success',
-                message: 'Delete product successfully'
-            });
+            return res
+                .status(200)
+                .sen('Delete product successfully')
         }
     } catch (error) {
         console.log(error);
-        return res.json({
-            status: 'error',
-            message: error.message
-        })
+        return res
+            .status(500)
+            .sen(error)
     }
 }
 
@@ -103,22 +87,19 @@ const updateProductById = async (req, res) => {
         const check = await updateProductByIds(name, materialId, gemId, categoryId, materialCost, gemCost, productCost, image, quantityGem, size, warrantyCard, description, productId);
         console.log(check);
         if (check == false) {
-            return res.json({
-                status: 'error',
-                message: 'Update product fail'
-            });
+            return res
+                .status(500)
+                .sen('Update product fail')
         } else {
-            return res.json({
-                status: 'success',
-                message: 'Update product successfully'
-            });
+            return res
+                .status(200)
+                .sen('Update product successfully')
         }
     } catch (error) {
         console.log(error);
-        return res.json({
-            status: 'error',
-            message: error.message
-        })
+        return res
+            .status(500)
+            .sen(error)
     }
 }
 

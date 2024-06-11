@@ -24,7 +24,7 @@ const register = async (req, res) => {
                     });
                 } else {
                     if (phone.length == 10) {
-                        const hashPassword = bcrypt.hashSync(passWord, 10);
+                        const hashPassword = bcrypt.hashSync(password, 10);
                         console.log(hashPassword);
                         const user = {
                             PassWord: hashPassword,

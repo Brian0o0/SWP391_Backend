@@ -10,16 +10,15 @@ const getAllStep = async (req, res) => {
         const step = await getAllSteps();
 
         if (step == null) {
-            return res.json({
-                status: 'err',
-                message: 'Empty step list'
-            });
+            return res
+                .status(404)
+                .sen('Empty step list')
         } else {
-            res.json(step);
+            res.status(200).json(step);
         }
 
     } catch (error) {
-        res.status(500).json(error);
+        res.status(500).sen(error);
     }
 }
 
@@ -28,19 +27,17 @@ const getStepById = async (req, res) => {
         const { stepId } = req.body
         const step = await getStepByIds(stepId);
         if (step == null) {
-            return res.json({
-                status: 'err',
-                message: 'Empty step list'
-            });
+            return res
+                .status(404)
+                .sen('Empty step list')
         } else {
-            res.json(step);
+            res.status(200).json(step);
         }
 
     } catch (error) {
-        return res.json({
-            status: 'error',
-            message: error.message
-        });
+        return res
+            .status(500)
+            .sen(error)
     }
 }
 
@@ -50,29 +47,24 @@ const insertStep = async (req, res) => {
         if (description && etimatedTime) {
             const check = await insertSteps(description, etimatedTime);
             if (check == false) {
-                return res.json({
-                    status: 'error',
-                    message: 'Insert step  fail'
-                });
+                return res
+                    .status(500)
+                    .sen('Insert step  fail')
             } else {
-                return res.json({
-                    status: 'success',
-                    message: 'Insert step successfully'
-                });
+                return res
+                    .status(200)
+                    .sen('Insert step successfully')
             }
         } else {
-            return res.json({
-                status: 'err',
-                message: 'Description and etimatedTime is required'
-            })
+            return res
+                .status(400)
+                .sen('Description and etimatedTime is required')
         }
-
     } catch (error) {
         console.log(error);
-        return res.json({
-            status: 'error',
-            message: error.message
-        })
+        return res
+            .status(500)
+            .sen(error)
     }
 }
 
@@ -81,22 +73,19 @@ const deleteStepById = async (req, res) => {
         const { stepId } = req.body
         const check = await deleteStepByIds(stepId);
         if (check == false) {
-            return res.json({
-                status: 'error',
-                message: 'Delete step fail'
-            });
+            return res
+                .status(500)
+                .sen('Delete step fail')
         } else {
-            return res.json({
-                status: 'success',
-                message: 'Delete step successfully'
-            });
+            return res
+                .status(200)
+                .sen('Delete step successfully')
         }
     } catch (error) {
         console.log(error);
-        return res.json({
-            status: 'error',
-            message: error.message
-        })
+        return res
+            .status(500)
+            .sen(error)
     }
 }
 
@@ -105,22 +94,19 @@ const updateStepById = async (req, res) => {
         const { stepId, description, etimatedTime } = req.body
         const check = await updateStepByIds(description, etimatedTime, stepId);
         if (check == false) {
-            return res.json({
-                status: 'error',
-                message: 'Update step fail'
-            });
+            return res
+                .status(500)
+                .sen('Update step fail')
         } else {
-            return res.json({
-                status: 'success',
-                message: 'Update step successfully'
-            });
+            return res
+                .status(200)
+                .sen('Update step successfully')
         }
     } catch (error) {
         console.log(error);
-        return res.json({
-            status: 'error',
-            message: error.message
-        })
+        return res
+            .status(500)
+            .sen(error)
     }
 }
 
@@ -134,7 +120,7 @@ const getAllOrderProgress = async (req, res) => {
                 message: 'Empty order progress list'
             });
         } else {
-            res.json(orderProgress);
+            res.status(200).json(orderProgress);
         }
 
     } catch (error) {
@@ -148,19 +134,17 @@ const getOrderProgressById = async (req, res) => {
         const orderProgress = await getOrderProgressByIds(orderProgressId);
         console.log(orderProgress);
         if (orderProgressId == null) {
-            return res.json({
-                status: 'err',
-                message: 'Empty order progress list'
-            });
+            return res
+                .status(404)
+                .sen('Empty order progress list')
         } else {
-            res.json(orderProgress);
+            res.status(200).json(orderProgress);
         }
 
     } catch (error) {
-        return res.json({
-            status: 'error',
-            message: error.message
-        });
+        return res
+            .status(500)
+            .sen(error)
     }
 }
 
@@ -170,29 +154,24 @@ const insertOrderProgress = async (req, res) => {
         if (img && note && stepId && orderId && date) {
             const check = await insertOrderProgresss(img, note, stepId, orderId, date);
             if (check == false) {
-                return res.json({
-                    status: 'error',
-                    message: 'Insert order progress fail'
-                });
+                return res
+                    .status(500)
+                    .sen('Insert order progress fail')
             } else {
-                return res.json({
-                    status: 'success',
-                    message: 'Insert order progress successfully'
-                });
+                return res
+                    .status(200)
+                    .sen('Insert order progress successfully')
             }
         } else {
-            return res.json({
-                status: 'err',
-                message: 'Img, note, stepId, orderId and date is required'
-            })
+            return res
+                .status(400)
+                .sen('Img, note, stepId, orderId and date is required')
         }
-
     } catch (error) {
         console.log(error);
-        return res.json({
-            status: 'error',
-            message: error.message
-        })
+        return res
+            .status(500)
+            .sen(error)
     }
 }
 
@@ -208,7 +187,7 @@ const deleteOrderProgressById = async (req, res) => {
         } else {
             return res.json({
                 status: 'success',
-                message: 'Delete  order progress successfully'
+                message: 'Delete order progress successfully'
             });
         }
     } catch (error) {
@@ -226,22 +205,19 @@ const updateOrderProgressById = async (req, res) => {
         const check = await updateOrderProgressByIds(img, note, stepId, orderId, date, orderProgressId);
         console.log(check);
         if (check == false) {
-            return res.json({
-                status: 'error',
-                message: 'Update step fail'
-            });
+            return res
+                .status(500)
+                .sen('Update order progress fail')
         } else {
-            return res.json({
-                status: 'success',
-                message: 'Update step successfully'
-            });
+            return res
+                .status(200)
+                .sen('Update order progress successfully')
         }
     } catch (error) {
         console.log(error);
-        return res.json({
-            status: 'error',
-            message: error.message
-        })
+        return res
+            .status(500)
+            .sen(error)
     }
 }
 
@@ -269,19 +245,17 @@ const getOrderById = async (req, res) => {
         const order = await getOrderByIds(orderId);
         console.log(order);
         if (order == null) {
-            return res.json({
-                status: 'err',
-                message: 'Empty order list'
-            });
+            return res
+                .status(404)
+                .sen('Empty order list')
         } else {
-            res.json(order);
+            res.status(200).json(order);
         }
 
     } catch (error) {
-        return res.json({
-            status: 'error',
-            message: error.message
-        });
+        return res
+            .status(500)
+            .sen(error)
     }
 }
 
@@ -291,29 +265,25 @@ const insertOrder = async (req, res) => {
         if (paymentMethods && phone && address && orderDetailId && status && userId && description && userName) {
             const check = await insertOrders(paymentMethods, phone, address, orderDetailId, status, userId, description, userName);
             if (check == false) {
-                return res.json({
-                    status: 'error',
-                    message: 'Insert order fail'
-                });
+                return res
+                    .status(500)
+                    .sen('Insert order fail')
             } else {
-                return res.json({
-                    status: 'success',
-                    message: 'Insert order successfully'
-                });
+                return res
+                    .status(200)
+                    .sen('Insert order successfully')
             }
         } else {
-            return res.json({
-                status: 'err',
-                message: 'PaymentMethods, phone, address, orderDetailId, status, userId, description and userName is required'
-            })
+            return res
+                .status(400)
+                .sen('PaymentMethods, phone, address, orderDetailId, status, userId, description and userName is required')
         }
 
     } catch (error) {
         console.log(error);
-        return res.json({
-            status: 'error',
-            message: error.message
-        })
+        return res
+            .status(500)
+            .sen(error)
     }
 }
 
@@ -322,22 +292,19 @@ const deleteOrderById = async (req, res) => {
         const { orderId } = req.body
         const check = await deleteOrderByIds(orderId);
         if (check == false) {
-            return res.json({
-                status: 'error',
-                message: 'Delete order fail'
-            });
+            return res.json
+                .status(500)
+                .sen('Delete order fail')
         } else {
-            return res.json({
-                status: 'success',
-                message: 'Delete order successfully'
-            });
+            return res
+                .status(200)
+                .sen('Delete order successfully')
         }
     } catch (error) {
         console.log(error);
-        return res.json({
-            status: 'error',
-            message: error.message
-        })
+        return res
+            .status(500)
+            .sen(error)
     }
 }
 
@@ -346,22 +313,19 @@ const updateOrderById = async (req, res) => {
         const { paymentMethods, phone, address, orderDetailId, status, userId, description, userName, orderId } = req.body
         const check = await updateOrderByIds(paymentMethods, phone, address, orderDetailId, status, userId, description, userName, orderId);
         if (check == false) {
-            return res.json({
-                status: 'error',
-                message: 'Update order fail'
-            });
+            return res
+                .status(500)
+                .sen('Update order fail')
         } else {
-            return res.json({
-                status: 'success',
-                message: 'Update order successfully'
-            });
+            return res
+                .status(200)
+                .sen('Update order successfully')
         }
     } catch (error) {
         console.log(error);
-        return res.json({
-            status: 'error',
-            message: error.message
-        })
+        return res
+            .status(500)
+            .sen(error)
     }
 }
 
@@ -370,16 +334,15 @@ const getAllOrderDetail = async (req, res) => {
         const order = await getAllOrderDetails();
 
         if (order == null) {
-            return res.json({
-                status: 'err',
-                message: 'Empty order detail list'
-            });
+            return res
+                .status(404)
+                .sen('Empty order detail list')
         } else {
-            res.json(order);
+            res.status(200).json(order);
         }
 
     } catch (error) {
-        res.status(500).json(error);
+        res.status(500).sen(error);
     }
 }
 
@@ -389,19 +352,17 @@ const getOrderDetailById = async (req, res) => {
         const order = await getOrderDetailByIds(orderDetailId);
         console.log(order);
         if (order == null) {
-            return res.json({
-                status: 'err',
-                message: 'Empty order detail list'
-            });
+            return res
+                .status(404)
+                .sen('Empty order detail list')
         } else {
-            res.json(order);
+            res.status(200).json(order);
         }
 
     } catch (error) {
-        return res.json({
-            status: 'error',
-            message: error.message
-        });
+        return res
+            .status(500)
+            .sen(error)
     }
 }
 
@@ -412,29 +373,25 @@ const insertOrderDetail = async (req, res) => {
 
             const check = await insertOrderDetails(description, productId, status, productName, categoryId, categoryName, materialId, materialName, gemId, gemName, quantityGem, quantityMaterial, orderDate, orderId);
             if (check == false) {
-                return res.json({
-                    status: 'error',
-                    message: 'Insert order detail fail'
-                });
+                return res
+                    .status(500)
+                    .sen('Insert order detail fail')
             } else {
-                return res.json({
-                    status: 'success',
-                    message: 'Insert order  detail successfully'
-                });
+                return res
+                    .status(200)
+                    .sen('Insert order  detail successfully')
             }
         } else {
-            return res.json({
-                status: 'err',
-                message: 'Description, productId, status, productName, categoryId, categoryName, materialId, materialName, gemId, gemName, quantityGem, quantityMaterial, orderDate and orderId is required'
-            });
+            return res
+                .status(400)
+                .sen('Description, productId, status, productName, categoryId, categoryName, materialId, materialName, gemId, gemName, quantityGem, quantityMaterial, orderDate and orderId is required')
         }
 
     } catch (error) {
         console.log(error);
-        return res.json({
-            status: 'error',
-            message: error.message
-        })
+        return res
+            .status(500)
+            .sen(error)
     }
 }
 
@@ -443,22 +400,19 @@ const deleteOrderDetailById = async (req, res) => {
         const { orderDetailId } = req.body
         const check = await deleteOrderDetailByIds(orderDetailId);
         if (check == false) {
-            return res.json({
-                status: 'error',
-                message: 'Delete order detailId fail'
-            });
+            return res
+                .status(500)
+                .sen('Delete order detailId fail')
         } else {
-            return res.json({
-                status: 'success',
-                message: 'Delete order detailId successfully'
-            });
+            return res
+                .status(200)
+                .sen('Delete order detailId successfully')
         }
     } catch (error) {
         console.log(error);
-        return res.json({
-            status: 'error',
-            message: error.message
-        })
+        return res
+            .status(500)
+            .sen(error)
     }
 }
 
@@ -467,22 +421,19 @@ const updateOrderDetailById = async (req, res) => {
         const { description, productId, status, productName, categoryId, categoryName, materialId, materialName, gemId, gemName, quantityGem, quantityMaterial, orderDate, orderId, orderDetailId } = req.body
         const check = await updateOrderDetailByIds(description, productId, status, productName, categoryId, categoryName, materialId, materialName, gemId, gemName, quantityGem, quantityMaterial, orderDate, orderId, orderDetailId);
         if (check == false) {
-            return res.json({
-                status: 'error',
-                message: 'Update order detail fail'
-            });
+            return res
+                .status(500)
+                .sen('Update order detail fail')
         } else {
-            return res.json({
-                status: 'success',
-                message: 'Update order detail successfully'
-            });
+            return res
+                .status(200)
+                .sen('Update order detail successfully')
         }
     } catch (error) {
         console.log(error);
-        return res.json({
-            status: 'error',
-            message: error.message
-        })
+        return res
+            .status(500)
+            .sen(error)
     }
 }
 module.exports = {
