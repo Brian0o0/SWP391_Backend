@@ -8,7 +8,8 @@ const { getAllProduct, getProductById, insertProduct, updateProductById, deleteP
 const { getAllCostGem, getCostGemById, insertCostGem, deleteCostGemById, updateCostGemById, getAllGem, getGemById, insertGem, updateGemById, deleteGemById } = require('../controllers/gemController');
 const { getAllCostMaterial, getCostMaterialById, insertCostMaterial, deleteCostMaterialById, updateCostMaterialById, getAllMaterial, getMaterialById, insertMaterial, updateMaterialById, deleteMaterialById } = require('../controllers/materialController');
 const { getAllStep, getStepById, insertStep, deleteStepById, updateStepById, getAllOrderProgress, getOrderProgressById, insertOrderProgress, deleteOrderProgressById, updateOrderProgressById, getAllOrder, getOrderById, insertOrder, deleteOrderById, updateOrderById, getAllOrderDetail, getOrderDetailById, insertOrderDetail, updateOrderDetailById, deleteOrderDetailById } = require('../controllers/orderController');
-const { getAllCategory, getCategoryById, insertCategory, updateCategoryById, deleteCategoryById, } = require("../controllers/categoryController")
+const { getAllCategory, getCategoryById, insertCategory, updateCategoryById, deleteCategoryById, } = require("../controllers/categoryController");
+const { getAllBlogs, getBlogById, insertBlog, updateBlogById, deleteBlogById } = require('../services/blogServices');
 //api prodcuct
 router.get('/test/getAllProduct', getAllProduct);
 router.get('/test/getProductById', getProductById);
@@ -89,5 +90,11 @@ router.post('/test/insertCategory', insertCategory);
 router.delete('/test/deleteCategoryById', deleteCategoryById);
 router.put('/test/updateCategoryById', updateCategoryById);
 
+//api blog
+router.get('/test/getAllBlogs', getAllBlogs);
+router.get('/test/getBlogById/:id', getBlogById);
+router.post('/test/insertBlog', insertBlog);
+router.put('/test/updateBlogById/:id', updateBlogById);
+router.delete('/test/deleteBlogById/:id', deleteBlogById);
 
 module.exports = router;
