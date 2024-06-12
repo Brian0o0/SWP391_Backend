@@ -1,11 +1,171 @@
 //User functionality handles receiving and sending data from the database to the user
 
 const express = require('express');
-const { getUser, getUserById, updateUserById, deleteUserById, insertUser, getUserByUserName, checkLogin } = require('../services/userServices');
+const { getAllUsers, getUserByIds, updateUserByIds, deleteUserByIds, insertUsers, getUserByUserNames, checkLogin, getUserByNames } = require('../services/userServices');
 const { generateToken } = require('../authen/methods');
 const bcrypt = require('bcrypt');
 const { use } = require('../routers/api');
 const randToken = require('rand-token');
+
+const getAllUser = async (req, res) => {
+    try {
+        const user = await getAllUsers();
+        if (user.length <= 0) {
+            return res
+                .status(404)
+                .send('Empty user list')
+        } else {
+            res.status(200).json(user);
+        }
+    } catch (error) {
+        return res
+            .status(500)
+            .send(error)
+    }
+}
+
+const getUserById = async (req, res) => {
+    try {
+        const { userId } = req.body
+        const user = await getUserByIds(userId);
+        if (user.length <= 0) {
+            return res
+                .status(404)
+                .send('Empty user list')
+        } else {
+            res.status(200).json(user);
+        }
+    } catch (error) {
+        return res
+            .status(500)
+            .send(error)
+    }
+}
+
+const getUserByUserName = async (req, res) => {
+    try {
+        const { userName } = req.body
+        const user = await getUserByUserNames(userName);
+        if (user.length <= 0) {
+            return res
+                .status(404)
+                .send('Empty user list')
+        } else {
+            res.status(200).json(user);
+        }
+    } catch (error) {
+        return res
+            .status(500)
+            .send(error)
+    }
+}
+
+const getUserByName = async (req, res) => {
+    try {
+        const { name } = req.body
+        const user = await getUserByNames(name);
+        if (user.length <= 0) {
+            return res
+                .status(404)
+                .send('Empty user list')
+        } else {
+            res.status(200).json(user);
+        }
+    } catch (error) {
+        return res
+            .status(500)
+            .send(error)
+    }
+}
+
+// const insertUser = async (req, res) => {
+//     try {
+//         const { name, unit, buyPrice, costIdMaterial } = req.body
+//         if (name && unit && buyPrice && costIdMaterial) {
+//             const material = {
+//                 Name: name,
+//                 Unit: unit,
+//                 BuyPrice: parseFloat(buyPrice),
+//                 CostIDMaterial: parseInt(costIdMaterial)
+
+//             }
+//             const check = await insertMaterials(material);
+//             if (check == false) {
+//                 return res
+//                     .status(500)
+//                     .sen('Insert material fail')
+//             } else {
+//                 return res
+//                     .status(200)
+//                     .sen('Insert material successfully')
+//             }
+//         } else {
+//             return res
+//                 .status(400)
+//                 .sen('Material is required')
+//         }
+
+//     } catch (error) {
+//         console.log(error);
+//         return res
+//             .status(500)
+//             .sen(error)
+//     }
+// }
+
+const deleteUserById = async (req, res) => {
+    try {
+        const { userId } = req.body
+        const check = await deleteUserByIds(userId);
+        if (check == false) {
+            return res
+                .status(500)
+                .send('Delete user fail')
+        } else {
+            return res
+                .status(200)
+                .send('Delete user successfully')
+        }
+    } catch (error) {
+        console.log(error);
+        return res
+            .status(500)
+            .send(error)
+    }
+}
+
+const updateUserById = async (req, res) => {
+    try {
+        const { name, phone, address, role, userId } = req.body
+        const user = {
+            Name: name,
+            Phone: phone,
+            Address: address,
+            Role: parseInt(role),
+            UserId: parseInt(userId)
+
+        }
+        const check = await updateUserByIds(user);
+        if (check == false) {
+            return res
+                .status(500)
+                .sen('Update user fail')
+        } else {
+            return res
+                .status(200)
+                .sen('Update user successfully')
+        }
+    } catch (error) {
+        console.log(error);
+        return res
+            .status(500)
+            .sen(error)
+    }
+}
+
+
+
+
 //User creation function
 const register = async (req, res) => {
     const { password, name, phone, address, email, username } = req.body;
@@ -33,7 +193,7 @@ const register = async (req, res) => {
                             Email: email,
                             UserName: userNametemp
                         };
-                        const checkInsert = await insertUser(user);
+                        const checkInsert = await insertUsers(user);
                         if (checkInsert) {
                             return res
                                 .status(201)
@@ -66,7 +226,6 @@ const register = async (req, res) => {
             .send(err)
     }
 }
-
 
 //Login function  
 // account to test 
@@ -113,7 +272,6 @@ const register = async (req, res) => {
 const jwtVariable = {
     refreshTokenSize: 200 // do dai ki cu cua refereshtoken
 };
-
 
 const login = async (req, res) => {
     const { username, email, password } = req.body;
@@ -179,7 +337,15 @@ const logout = async (req, res) => {
     return res.status(200).send('Signed out successfully.');
 };
 
-
 module.exports = {
-    register, login, logout
+    register,
+    login,
+    logout,
+    getAllUser,
+    getUserById,
+    getUserByUserName,
+    // insertUser,
+    deleteUserById,
+    updateUserById,
+    getUserByName,
 }

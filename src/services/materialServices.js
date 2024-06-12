@@ -57,9 +57,10 @@ const insertCostMaterials = async (price) => {
         const sqlString = `
         INSERT INTO CostMaterial (DateOfPrice, PriceOfmaterial) VALUES (@dateOfPrice, @priceOfmaterial)
         `;
+        let priceTemp = parseInt(price, 10)
         const request = pool.request();
         request.input('dateOfPrice', getDayNow());
-        request.input('priceOfmaterial', price);
+        request.input('priceOfmaterial', priceTemp);
         // Thực hiện truy vấn
         await request.query(sqlString);
         // Gửi phản hồi

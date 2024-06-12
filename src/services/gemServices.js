@@ -60,9 +60,10 @@ const insertCostGems = async (price) => {
         const sqlString = `
         INSERT INTO CostGem (DateOfPrice, PriceOfGem) VALUES (@dateOfPrice, @priceOfgem)
         `;
+        let priceTemp = parseInt(price, 10)
         const request = pool.request();
         request.input('dateOfPrice', getDayNow());
-        request.input('priceOfgem', price);
+        request.input('priceOfgem', priceTemp);
         // Thực hiện truy vấn
         await request.query(sqlString);
         // Gửi phản hồi
@@ -225,6 +226,61 @@ const deleteGemByIds = async (gemId) => {
         return false;
     }
 }
+
+const getGemByCostId = async (costId) => {
+    try {
+        await pool.connect();
+        var sqlString = `select * from Gem where CostIDGem = @costId`
+        const request = pool.request();
+        request.input('costId', costId);
+        const result = await request.query(sqlString);
+        const gem = result.recordset;
+        // console.log(gem);
+        return gem;
+    } catch (error) {
+        console.log("Error:", error);
+        return null;
+    } finally {
+        pool.close();
+    }
+}
+
+const getGemByPrices = async (firstPrice, secondPrice) => {
+    try {
+        await pool.connect();
+        var sqlString = `SELECT * FROM CostGem WHERE PriceOfGem BETWEEN @firstPrice AND @secondPrice;`
+        const request = pool.request();
+        request.input('firstPrice', firstPrice);
+        request.input('secondPrice', secondPrice);
+        const result = await request.query(sqlString);
+        const costGemTemp = result.recordset;
+        console.log(costGemTemp)
+        const gemDetails = [];
+        for (const costGem of costGemTemp) {
+            const gemTemp = await getGemByCostId(costGem.CostIDGem);
+            for (const gem of gemTemp) {
+                const gemDetail = {
+                    Name: gem.Name,
+                    Color: gem.Color,
+                    CaraWeight: gem.CaraWeight,
+                    Clarity: gem.Clarity,
+                    Cut: gem.Cut,
+                    Origin: gem.Origin,
+
+                };
+                gemDetails.push(gemDetail);
+            }
+        }
+        return gemDetails;
+    } catch (error) {
+        console.log("Error:", error);
+        return null;
+    } finally {
+        pool.close();
+    }
+}
+
+
 module.exports = {
     getAllCostGems,
     getCostGemByIds,
@@ -236,4 +292,5 @@ module.exports = {
     insertGems,
     updateGemByIds,
     deleteGemByIds,
+    getGemByPrices,
 }

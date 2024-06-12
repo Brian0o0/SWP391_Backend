@@ -1,5 +1,5 @@
 //Gem functionality handles receiving and sending data from the database to the user
-const { getAllCostGems, getCostGemByIds, insertCostGems, updateCostGemByIds, deleteCostGemByIds, getAllGems, getGemByIds, insertGems, updateGemByIds, deleteGemByIds } = require('../services/gemServices');
+const { getAllCostGems, getCostGemByIds, insertCostGems, updateCostGemByIds, deleteCostGemByIds, getAllGems, getGemByIds, insertGems, updateGemByIds, deleteGemByIds, getGemByPrices } = require('../services/gemServices');
 
 const getAllCostGem = async (req, res) => {
     try {
@@ -243,6 +243,24 @@ const deleteGemById = async (req, res) => {
         })
     }
 }
+
+const getGemByPrice = async (req, res) => {
+    try {
+        const { firstPrice, secondPrice } = req.body;
+        const gem = await getGemByPrices(firstPrice, secondPrice);
+        console.log(gem)
+        if (gem.length <= 0) {
+            return res
+                .status(404)
+                .send('Empty gem list')
+        } else {
+            res.status(200).json(gem);
+        }
+    } catch (error) {
+        res.status(500).send(error);
+    }
+}
+
 module.exports = {
     getAllCostGem,
     getCostGemById,
@@ -253,5 +271,6 @@ module.exports = {
     getGemById,
     insertGem,
     updateGemById,
-    deleteGemById
+    deleteGemById,
+    getGemByPrice
 }

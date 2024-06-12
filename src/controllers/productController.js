@@ -107,7 +107,7 @@ const getProductByNameOrId = async (req, res) => {
     try {
         const { name } = req.body
         const product = await getProductByNameOrIds(name);
-        if (product == null) {
+        if (product.length <= 0) {
             return res
                 .status(404)
                 .sen('Empty product list')
@@ -124,7 +124,7 @@ const getProductByCategory = async (req, res) => {
     try {
         const { categoryName } = req.body
         const product = await getProductByCategorys(categoryName);
-        if (product == null) {
+        if (product.length <= 0) {
             return res
                 .status(404)
                 .send('Empty product list')

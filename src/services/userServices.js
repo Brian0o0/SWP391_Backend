@@ -1,25 +1,23 @@
 //CRUD of User with database
-
-
 const express = require('express');
 const { pool } = require('../config/database');
 
 //get user from database function
-const getUser = async (req, res) => {
+const getAllUsers = async (req, res) => {
     try {
         await pool.connect();
         var sqlString = "select * from [User]";
         const result = await pool.request().query(sqlString);
-        const test = result.recordset;
-        console.log(test);
-        res.json(test);
+        const user = result.recordset;
+        console.log(user);
+        return user;
     } catch (error) {
-        console.log("4")
-        res.status(500).json(error);
+        console.log(error.message)
+        return null;
     }
 }
 //get user by id from database function
-const getUserById = async (userId) => {
+const getUserByIds = async (userId) => {
     try {
         await pool.connect();
         var sqlString = "select top 1 * from [User] where UserID = @id";
@@ -37,7 +35,7 @@ const getUserById = async (userId) => {
     }
 }
 //get user by username from database function
-const getUserByUserName = async (userName) => {
+const getUserByUserNames = async (userName) => {
     try {
         await pool.connect();
         var sqlString = "SELECT TOP 1 * FROM [User] WHERE UserName = @UserName";
@@ -49,6 +47,26 @@ const getUserByUserName = async (userName) => {
     } catch (error) {
         // Handle any errors
         console.error('Error getting user by ID:', error);
+        return null;
+    } finally {
+        pool.close();
+    }
+}
+//get user by name from database function
+const getUserByNames = async (name) => {
+    try {
+        console.log(name);
+        await pool.connect();
+        var sqlString = "SELECT * FROM [User] WHERE Name like @name";
+        const request = pool.request();
+        request.input('name', '%' + name + '%');
+        const result = await request.query(sqlString);
+        const user = result.recordset;
+        console.log(user);
+        return user;
+    } catch (error) {
+        // Handle any errors
+        console.error('Error getting user by name:', error);
         return null;
     } finally {
         pool.close();
@@ -106,61 +124,47 @@ const checkLogin = async (user) => {
     };
 }
 //update user by id on database function
-const updateUserById = async (req, res) => {
+const updateUserByIds = async (user) => {
     try {
-        // Lấy ID người dùng từ tham số yêu cầu
-        const userId = 'pnha22';//req.params.id;
-        // Lấy dữ liệu người dùng từ thân yêu cầu
-        const { Name, Phone, Address, Email } = req.body;
-        // Kết nối đến cơ sở dữ liệu
         await pool.connect();
-        // Chuỗi truy vấn SQL để cập nhật người dùng
         const sqlString = `
             UPDATE [User]
-            SET Name = @Name, Phone = @Phone, Address = @Address, Email = @Email
+            SET Name = @name, Phone = @phone, Address = @address, Role = @role
             WHERE UserID = @userId
         `;
         const request = pool.request();
-        request.input('Name', Name);
-        request.input('Phone', Phone);
-        request.input('Address', Address);
-        request.input('Email', Email);
-        request.input('userId', userId);
-        // Thực hiện truy vấn
+        request.input('name', user.Name);
+        request.input('phone', user.Phone);
+        request.input('address', user.Address);
+        request.input('role', user.Role);
+        request.input('userId', user.UserId);
         await request.query(sqlString);
-        // Gửi phản hồi
-        res.status(200).json({ message: "Update user sucessful" });
+        return true;
     } catch (error) {
-        // Xử lý bất kỳ lỗi nào
-        res.status(500).json({ error: error.message });
+        console.log(error.message);
+        return false;
     }
 }
-
 //delete user by id on database function
-const deleteUserById = async (req, res) => {
+const deleteUserByIds = async (userId) => {
     try {
-        // Lấy ID người dùng từ tham số yêu cầu
-        const userId = 'pnha22'//req.params.id;
-        // Kết nối đến cơ sở dữ liệu
+
         await pool.connect();
-        // Chuỗi truy vấn SQL để xóa người dùng
         const sqlString = `
             DELETE FROM [User]
             WHERE UserID = @id
         `;
         const request = pool.request();
         request.input('id', userId);
-        // Thực hiện truy vấn
         await request.query(sqlString);
-        // Gửi phản hồi
-        res.status(200).json({ message: "Delete user sucessful" });
+        return true;
     } catch (error) {
-        // Xử lý bất kỳ lỗi nào
-        res.status(500).json({ error: error.message });
+        console.log(error.message);
+        return false;
     }
 }
 //insert user to database function
-const insertUser = async (user) => {
+const insertUsers = async (user) => {
     try {
         await pool.connect();
         const sqlString = `
@@ -188,12 +192,13 @@ const insertUser = async (user) => {
 
 
 module.exports = {
-    getUser,
-    getUserById,
-    updateUserById,
-    deleteUserById,
-    insertUser,
+    getAllUsers,
+    getUserByIds,
+    updateUserByIds,
+    deleteUserByIds,
+    insertUsers,
     checkEmailValid,
-    getUserByUserName,
+    getUserByUserNames,
+    getUserByNames,
     checkLogin
 }
