@@ -38,6 +38,25 @@ const getCategoryByIds = async (categoryId) => {
     }
 }
 
+
+const getCategoryByNames = async (name) => {
+    try {
+        await pool.connect();
+        const sqlString = "SELECT * FROM Category WHERE Name = @name";
+        const request = pool.request();
+        request.input('name', name);
+        const result = await request.query(sqlString);
+        const category = result.recordset;
+        console.log(category);
+        return category;
+    } catch (error) {
+        console.error(error);
+        return null;
+    } finally {
+        pool.close();
+    }
+}
+
 // Thêm Category Mới
 const insertCategorys = async (name, description) => {
     try {
@@ -103,5 +122,6 @@ module.exports = {
     insertCategorys,
     updateCategoryByIds,
     deleteCategoryByIds,
+    getCategoryByNames,
 }
 

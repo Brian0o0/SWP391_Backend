@@ -1,5 +1,5 @@
 //Product functionality handles receiving and sending data from the database to the user
-const { getAllProducts, getProductByIds, insertProducts, updateProductByIds, deleteProductByIds } = require('../services/productServices')
+const { getAllProducts, getProductByIds, insertProducts, updateProductByIds, deleteProductByIds, getProductByNameOrIds, getProductByCategorys } = require('../services/productServices')
 
 
 const getAllProduct = async (req, res) => {
@@ -103,11 +103,45 @@ const updateProductById = async (req, res) => {
     }
 }
 
+const getProductByNameOrId = async (req, res) => {
+    try {
+        const { name } = req.body
+        const product = await getProductByNameOrIds(name);
+        if (product == null) {
+            return res
+                .status(404)
+                .sen('Empty product list')
+        } else {
+            res.status(200).json(product);
+        }
 
+    } catch (error) {
+        res.status(500).send(error);
+    }
+}
+
+const getProductByCategory = async (req, res) => {
+    try {
+        const { categoryName } = req.body
+        const product = await getProductByCategorys(categoryName);
+        if (product == null) {
+            return res
+                .status(404)
+                .send('Empty product list')
+        } else {
+            res.status(200).json(product);
+        }
+
+    } catch (error) {
+        res.status(500).send(error);
+    }
+}
 module.exports = {
     getAllProduct,
     getProductById,
     insertProduct,
     deleteProductById,
-    updateProductById
+    updateProductById,
+    getProductByNameOrId,
+    getProductByCategory,
 }

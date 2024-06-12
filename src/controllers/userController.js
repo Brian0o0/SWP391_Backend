@@ -20,7 +20,7 @@ const register = async (req, res) => {
                 if ((checkUserName != null) || (checkEmail != null)) {
                     return res
                         .status(400)
-                        .sen('The user name or email is existed!!!')
+                        .send('The user name or email is existed!!!')
                 } else {
                     if (phone.length < 6 || phone.length > 10) {
                         const hashPassword = bcrypt.hashSync(password, 10);
@@ -37,33 +37,33 @@ const register = async (req, res) => {
                         if (checkInsert) {
                             return res
                                 .status(201)
-                                .sen('User created successfully')
+                                .send('User created successfully')
                         } else {
                             return res
                                 .status(500)
-                                .sen('User created fail')
+                                .send('User created fail')
                         }
                     } else {
                         return res
                             .status(400)
-                            .sen('Invalid phone number')
+                            .send('Invalid phone number')
                     }
                 }
             } else {
                 return res
                     .status(400)
-                    .sen('The email invalid')
+                    .send('The email invalid')
             }
         } else {
             return res
                 .status(400)
-                .sen('PassWord Name Phone Address Email Role and UserName is required')
+                .send('PassWord Name Phone Address Email Role and UserName is required')
         }
     } catch (err) {
         console.log(err);
         return res
             .status(500)
-            .sen(err)
+            .send(err)
     }
 }
 

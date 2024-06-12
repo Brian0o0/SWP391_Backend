@@ -4,7 +4,7 @@ const express = require('express');
 const router = express.Router();
 const { getUser, getUserById, updateUserById, deleteUserById, insertUser } = require('../services/userServices');
 const { register, login, logout } = require('../controllers/userController');
-const { getAllProduct, getProductById, insertProduct, updateProductById, deleteProductById } = require('../controllers/productController');
+const { getAllProduct, getProductById, insertProduct, updateProductById, deleteProductById, getProductByNameOrId, getProductByCategory } = require('../controllers/productController');
 const { getAllCostGem, getCostGemById, insertCostGem, deleteCostGemById, updateCostGemById, getAllGem, getGemById, insertGem, updateGemById, deleteGemById } = require('../controllers/gemController');
 const { getAllCostMaterial, getCostMaterialById, insertCostMaterial, deleteCostMaterialById, updateCostMaterialById, getAllMaterial, getMaterialById, insertMaterial, updateMaterialById, deleteMaterialById } = require('../controllers/materialController');
 const { getAllStep, getStepById, insertStep, deleteStepById, updateStepById, getAllOrderProgress, getOrderProgressById, insertOrderProgress, deleteOrderProgressById, updateOrderProgressById, getAllOrder, getOrderById, insertOrder, deleteOrderById, updateOrderById, getAllOrderDetail, getOrderDetailById, insertOrderDetail, updateOrderDetailById, deleteOrderDetailById } = require('../controllers/orderController');
@@ -13,6 +13,8 @@ const { getAllBlogs, getBlogById, insertBlog, updateBlogById, deleteBlogById } =
 //api prodcuct
 router.get('/test/getAllProduct', getAllProduct);
 router.get('/test/getProductById', getProductById);
+router.get('/test/getProductByNameOrId', getProductByNameOrId);
+router.get('/test/getProductByCategory', getProductByCategory);
 router.post('/test/insertProduct', insertProduct);
 router.put('/test/updateProductById', updateProductById);
 router.delete('/test/deleteProductById', deleteProductById);
