@@ -24,7 +24,7 @@ router.put('/test/update', updateUserById);
 router.delete('/test/delete', deleteUserById);
 router.post('/test/insert', insertUser);
 router.post('/test/register', register)
-router.put('/test/login', login);
+router.post('/test/login', login);
 router.post('/test/logout', logout);
 //api cost gem
 router.get('/test/getAllCostGem', getAllCostGem);

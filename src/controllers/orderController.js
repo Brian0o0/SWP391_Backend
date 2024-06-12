@@ -115,10 +115,9 @@ const getAllOrderProgress = async (req, res) => {
         const orderProgress = await getAllOrderProgresss();
 
         if (orderProgress == null) {
-            return res.json({
-                status: 'err',
-                message: 'Empty order progress list'
-            });
+            return res
+                .status(404)
+                .sen('Empty order progress list')
         } else {
             res.status(200).json(orderProgress);
         }
@@ -180,22 +179,19 @@ const deleteOrderProgressById = async (req, res) => {
         const { orderProgressId } = req.body
         const check = await deleteOrderProgressByIds(orderProgressId);
         if (check == false) {
-            return res.json({
-                status: 'error',
-                message: 'Delete order progress fail'
-            });
+            return res
+                .status(500)
+                .sen('Delete order progress fail')
         } else {
-            return res.json({
-                status: 'success',
-                message: 'Delete order progress successfully'
-            });
+            return res
+                .status(200)
+                .sen('Delete order progress successfully')
         }
     } catch (error) {
         console.log(error);
-        return res.json({
-            status: 'error',
-            message: error.message
-        })
+        return res
+            .status(500)
+            .sen(error)
     }
 }
 
@@ -226,16 +222,15 @@ const getAllOrder = async (req, res) => {
         const order = await getAllOrders();
 
         if (order == null) {
-            return res.json({
-                status: 'err',
-                message: 'Empty order list'
-            });
+            return res
+                .status(404)
+                .sen('Empty order list')
         } else {
-            res.json(order);
+            res.status(200).json(order);
         }
 
     } catch (error) {
-        res.status(500).json(error);
+        res.status(500).sen(error);
     }
 }
 

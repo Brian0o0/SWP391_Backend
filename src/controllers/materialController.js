@@ -7,19 +7,17 @@ const getAllCostMaterial = async (req, res) => {
         const cost = await getAllCostMaterials();
 
         if (cost == null) {
-            return res.json({
-                status: 'err',
-                message: 'Empty cost material list'
-            });
+            return res
+                .status(404)
+                .sen('Empty cost material list')
         } else {
-            res.json(cost);
+            res.status(200).json(cost);
         }
 
     } catch (error) {
-        return res.json({
-            status: 'error',
-            message: error.message
-        });
+        return res
+            .status(500)
+            .sen(error)
     }
 }
 
@@ -28,19 +26,17 @@ const getCostMaterialById = async (req, res) => {
         const { costIdMaterial } = req.body
         const cost = await getCostMaterialByIds(costIdMaterial);
         if (cost == null) {
-            return res.json({
-                status: 'err',
-                message: 'Empty cost material list'
-            });
+            return res
+                .status(404)
+                .sen('Empty cost material list')
         } else {
-            res.json(cost);
+            res.status(200).json(cost);
         }
 
     } catch (error) {
-        return res.json({
-            status: 'error',
-            message: error.message
-        });
+        return res
+            .status(500)
+            .sen(error)
     }
 }
 
@@ -50,29 +46,24 @@ const insertCostMaterial = async (req, res) => {
         if (costMaterial) {
             const check = await insertCostMaterials(costMaterial);
             if (check == false) {
-                return res.json({
-                    status: 'error',
-                    message: 'Insert cost material fail'
-                });
+                return res
+                    .status(500)
+                    .sen('Insert cost material fail')
             } else {
-                return res.json({
-                    status: 'success',
-                    message: 'Insert cost material successfully'
-                });
+                return res
+                    .status(200)
+                    .sen('Insert cost material successfully')
             }
         } else {
-            return res.json({
-                status: 'err',
-                message: 'Cost Material is required'
-            })
+            return res
+                .status(400)
+                .sen('Cost Material is required')
         }
-
     } catch (error) {
         console.log(error);
-        return res.json({
-            status: 'error',
-            message: error.message
-        })
+        return res
+            .status(200)
+            .sen(error)
     }
 }
 
@@ -81,22 +72,19 @@ const deleteCostMaterialById = async (req, res) => {
         const { costIdMaterial } = req.body
         const check = await deleteCostMaterialByIds(costIdMaterial);
         if (check == false) {
-            return res.json({
-                status: 'error',
-                message: 'Delete cost material fail'
-            });
+            return res
+                .status(500)
+                .sen('Delete cost material fail')
         } else {
-            return res.json({
-                status: 'success',
-                message: 'Delete cost material successfully'
-            });
+            return res
+                .status(200)
+                .sen('Delete cost material successfully')
         }
     } catch (error) {
         console.log(error);
-        return res.json({
-            status: 'error',
-            message: error.message
-        })
+        return res
+            .status(500)
+            .sen(error)
     }
 }
 
@@ -105,22 +93,19 @@ const updateCostMaterialById = async (req, res) => {
         const { costIdMaterial, dateOfPrice, priceOfMaterial } = req.body
         const check = await updateCostMaterialByIds(costIdMaterial, dateOfPrice, priceOfMaterial);
         if (check == false) {
-            return res.json({
-                status: 'error',
-                message: 'Update cost material fail'
-            });
+            return res
+                .status(500)
+                .sen('Update cost material fail')
         } else {
-            return res.json({
-                status: 'success',
-                message: 'Update cost material successfully'
-            });
+            return res
+                .status(500)
+                .sen('Update cost material successfully')
         }
     } catch (error) {
         console.log(error);
-        return res.json({
-            status: 'error',
-            message: error.message
-        })
+        return res
+            .status(500)
+            .sen(error)
     }
 }
 
@@ -129,19 +114,17 @@ const getAllMaterial = async (req, res) => {
         const cost = await getAllMaterials();
 
         if (cost == null) {
-            return res.json({
-                status: 'err',
-                message: 'Empty material list'
-            });
+            return res
+                .status(404)
+                .sen('Empty material list')
         } else {
-            res.json(cost);
+            res.status(200).json(cost);
         }
 
     } catch (error) {
-        return res.json({
-            status: 'error',
-            message: error.message
-        });
+        return res
+            .status(500)
+            .sen(error)
     }
 }
 
@@ -150,19 +133,16 @@ const getMaterialById = async (req, res) => {
         const { materialId } = req.body
         const cost = await getMaterialByIds(materialId);
         if (cost == null) {
-            return res.json({
-                status: 'err',
-                message: 'Empty material list'
-            });
+            return res
+                .status(404)
+                .sen('Empty material list')
         } else {
-            res.json(cost);
+            res.status(200).json(cost);
         }
-
     } catch (error) {
-        return res.json({
-            status: 'error',
-            message: error.message
-        });
+        return res
+            .status(500)
+            .sen(error)
     }
 }
 
@@ -179,29 +159,25 @@ const insertMaterial = async (req, res) => {
             }
             const check = await insertMaterials(material);
             if (check == false) {
-                return res.json({
-                    status: 'error',
-                    message: 'Insert material fail'
-                });
+                return res
+                    .status(500)
+                    .sen('Insert material fail')
             } else {
-                return res.json({
-                    status: 'success',
-                    message: 'Insert material successfully'
-                });
+                return res
+                    .status(200)
+                    .sen('Insert material successfully')
             }
         } else {
-            return res.json({
-                status: 'err',
-                message: 'Material is required'
-            })
+            return res
+                .status(400)
+                .sen('Material is required')
         }
 
     } catch (error) {
         console.log(error);
-        return res.json({
-            status: 'error',
-            message: error.message
-        })
+        return res
+            .status(500)
+            .sen(error)
     }
 }
 
@@ -210,22 +186,19 @@ const deleteMaterialById = async (req, res) => {
         const { materialId } = req.body
         const check = await deleteMaterialByIds(materialId);
         if (check == false) {
-            return res.json({
-                status: 'error',
-                message: 'Delete material fail'
-            });
+            return res
+                .status(500)
+                .sen('Delete material fail')
         } else {
-            return res.json({
-                status: 'success',
-                message: 'Delete material successfully'
-            });
+            return res
+                .status(200)
+                .sen('Delete material successfully')
         }
     } catch (error) {
         console.log(error);
-        return res.json({
-            status: 'error',
-            message: error.message
-        })
+        return res
+            .status(500)
+            .sen(error)
     }
 }
 
@@ -242,22 +215,19 @@ const updateMaterialById = async (req, res) => {
         }
         const check = await updateMaterialByIds(material);
         if (check == false) {
-            return res.json({
-                status: 'error',
-                message: 'Update material fail'
-            });
+            return res
+                .status(500)
+                .sen('Update material fail')
         } else {
-            return res.json({
-                status: 'success',
-                message: 'Update material successfully'
-            });
+            return res
+                .status(200)
+                .sen('Update material successfully')
         }
     } catch (error) {
         console.log(error);
-        return res.json({
-            status: 'error',
-            message: error.message
-        })
+        return res
+            .status(500)
+            .sen(error)
     }
 }
 module.exports = {
