@@ -5,7 +5,7 @@ const getAllCostGem = async (req, res) => {
     try {
         const cost = await getAllCostGems();
 
-        if (cost == null) {
+        if (cost.length <= 0) {
             return res
                 .status(404)
                 .sen ('Empty gem price list')
@@ -24,7 +24,7 @@ const getCostGemById = async (req, res) => {
         const { costGemID } = req.body
         const cost = await getCostGemByIds(costGemID);
         console.log(cost);
-        if (cost == null) {
+        if (cost.length <= 0) {
             return res
                 .status (404)
                 .sen('Empty gem price list')
@@ -114,7 +114,7 @@ const getAllGem = async (req, res) => {
     try {
         const cost = await getAllGems();
 
-        if (cost == null) {
+        if (cost.length <= 0) {
             return res
                 .status(404)
                 .sen('Empty gem price list')
@@ -131,7 +131,7 @@ const getGemById = async (req, res) => {
     try {
         const { gemId } = req.body;
         const gem = await getGemByIds(gemId);
-        if (gem == null) {
+        if (gem.length <= 0  ) {
             return res
                 .status(404)
                 .sen('Empty gem list')
