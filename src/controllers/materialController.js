@@ -6,10 +6,10 @@ const getAllCostMaterial = async (req, res) => {
     try {
         const cost = await getAllCostMaterials();
 
-        if (cost == null) {
+        if (cost.length <= 0) {
             return res
                 .status(404)
-                .sen('Empty cost material list')
+                .send('Empty cost material list')
         } else {
             res.status(200).json(cost);
         }
@@ -17,7 +17,7 @@ const getAllCostMaterial = async (req, res) => {
     } catch (error) {
         return res
             .status(500)
-            .sen(error)
+            .send(error)
     }
 }
 
@@ -25,10 +25,10 @@ const getCostMaterialById = async (req, res) => {
     try {
         const { costIdMaterial } = req.body
         const cost = await getCostMaterialByIds(costIdMaterial);
-        if (cost == null) {
+        if (cost.length <= 0) {
             return res
                 .status(404)
-                .sen('Empty cost material list')
+                .send('Empty cost material list')
         } else {
             res.status(200).json(cost);
         }
@@ -36,7 +36,7 @@ const getCostMaterialById = async (req, res) => {
     } catch (error) {
         return res
             .status(500)
-            .sen(error)
+            .send(error)
     }
 }
 
@@ -48,22 +48,22 @@ const insertCostMaterial = async (req, res) => {
             if (check == false) {
                 return res
                     .status(500)
-                    .sen('Insert cost material fail')
+                    .send('Insert cost material fail')
             } else {
                 return res
                     .status(200)
-                    .sen('Insert cost material successfully')
+                    .send('Insert cost material successfully')
             }
         } else {
             return res
                 .status(400)
-                .sen('Cost Material is required')
+                .send('Cost Material is required')
         }
     } catch (error) {
         console.log(error);
         return res
             .status(200)
-            .sen(error)
+            .send(error)
     }
 }
 
@@ -74,17 +74,17 @@ const deleteCostMaterialById = async (req, res) => {
         if (check == false) {
             return res
                 .status(500)
-                .sen('Delete cost material fail')
+                .send('Delete cost material fail')
         } else {
             return res
                 .status(200)
-                .sen('Delete cost material successfully')
+                .send('Delete cost material successfully')
         }
     } catch (error) {
         console.log(error);
         return res
             .status(500)
-            .sen(error)
+            .send(error)
     }
 }
 
@@ -95,17 +95,17 @@ const updateCostMaterialById = async (req, res) => {
         if (check == false) {
             return res
                 .status(500)
-                .sen('Update cost material fail')
+                .send('Update cost material fail')
         } else {
             return res
                 .status(500)
-                .sen('Update cost material successfully')
+                .send('Update cost material successfully')
         }
     } catch (error) {
         console.log(error);
         return res
             .status(500)
-            .sen(error)
+            .send(error)
     }
 }
 
@@ -113,10 +113,10 @@ const getAllMaterial = async (req, res) => {
     try {
         const cost = await getAllMaterials();
 
-        if (cost == null) {
+        if (cost.length <= 0) {
             return res
                 .status(404)
-                .sen('Empty material list')
+                .send('Empty material list')
         } else {
             res.status(200).json(cost);
         }
@@ -124,7 +124,7 @@ const getAllMaterial = async (req, res) => {
     } catch (error) {
         return res
             .status(500)
-            .sen(error)
+            .send(error)
     }
 }
 
@@ -132,17 +132,17 @@ const getMaterialById = async (req, res) => {
     try {
         const { materialId } = req.body
         const cost = await getMaterialByIds(materialId);
-        if (cost == null) {
+        if (cost.length <= 0) {
             return res
                 .status(404)
-                .sen('Empty material list')
+                .send('Empty material list')
         } else {
             res.status(200).json(cost);
         }
     } catch (error) {
         return res
             .status(500)
-            .sen(error)
+            .send(error)
     }
 }
 
@@ -161,23 +161,23 @@ const insertMaterial = async (req, res) => {
             if (check == false) {
                 return res
                     .status(500)
-                    .sen('Insert material fail')
+                    .send('Insert material fail')
             } else {
                 return res
                     .status(200)
-                    .sen('Insert material successfully')
+                    .send('Insert material successfully')
             }
         } else {
             return res
                 .status(400)
-                .sen('Material is required')
+                .send('Material is required')
         }
 
     } catch (error) {
         console.log(error);
         return res
             .status(500)
-            .sen(error)
+            .send(error)
     }
 }
 
@@ -188,17 +188,17 @@ const deleteMaterialById = async (req, res) => {
         if (check == false) {
             return res
                 .status(500)
-                .sen('Delete material fail')
+                .send('Delete material fail')
         } else {
             return res
                 .status(200)
-                .sen('Delete material successfully')
+                .send('Delete material successfully')
         }
     } catch (error) {
         console.log(error);
         return res
             .status(500)
-            .sen(error)
+            .send(error)
     }
 }
 
@@ -217,17 +217,17 @@ const updateMaterialById = async (req, res) => {
         if (check == false) {
             return res
                 .status(500)
-                .sen('Update material fail')
+                .send('Update material fail')
         } else {
             return res
                 .status(200)
-                .sen('Update material successfully')
+                .send('Update material successfully')
         }
     } catch (error) {
         console.log(error);
         return res
             .status(500)
-            .sen(error)
+            .send(error)
     }
 }
 module.exports = {
