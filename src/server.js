@@ -10,7 +10,7 @@ const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 require('../src/controllers/passPort');
 const cookieSession = require('cookie-session');
-
+const key = require('../config/key')
 app.use(express.json()) // for json
 
 app.use(cookieParser());
@@ -41,7 +41,7 @@ app.use((req, res, next) => {
 app.use(
     cookieSession({
         maxAge: 30 * 24 * 60 * 60 * 1000,
-        keys: [process.env.COOKIE_KEY]
+        keys: [key.COOKIE_KEY]
     })
 );
 app.use(passport.initialize());
