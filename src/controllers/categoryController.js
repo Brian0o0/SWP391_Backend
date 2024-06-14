@@ -17,10 +17,10 @@ const getAllCategory = async (req, res) => {
         if (categories) {
             res.status(200).json(categories);
         } else {
-            res.status(404).json({ message: 'Categories not found' });
+            res.status(404).send ('Categories not found');
         }
     } catch (error) {
-        res.status(500).json({ message: 'Internal Server Error', error: error.message });
+        res.status(500).send (error.message);
     }
 }
 
@@ -32,10 +32,10 @@ const getCategoryById = async (req, res) => {
         if (category) {
             res.status(200).json(category);
         } else {
-            res.status(404).json({ message: 'Category not found' });
+            res.status(404).send('Category not found');
         }
     } catch (error) {
-        res.status(500).json({ message: 'Internal Server Error', error: error.message });
+        res.status(500).send(error.message);
     }
 }
 
@@ -46,19 +46,18 @@ const insertCategory = async (req, res) => {
         if (name && description) {
             const check = await insertCategorys(name, description);
             if (check == true) {
-                res.status(201).json({ message: 'Category created successfully' });
+                res.status(201).send('Category created successfully');
             } else {
-                res.status(400).json({ message: 'Failed to create category' });
+                res.status(400).send('Failed to create category');
             }
         } else {
-            return res.json({
-                status: 'err',
-                message: 'Description, productId, status, productName, categoryId, categoryName, materialId, materialName, gemId, gemName, quantityGem, quantityMaterial, orderDate and orderId is required'
-            });
+            return res
+                .status(400)
+                .send ('Description, productId, status, productName, categoryId, categoryName, materialId, materialName, gemId, gemName, quantityGem, quantityMaterial, orderDate and orderId is required');
         }
 
     } catch (error) {
-        res.status(500).json({ message: 'Internal Server Error', error: error.message });
+        res.status(500).send( error.message);
     }
 }
 
@@ -68,12 +67,12 @@ const updateCategoryById = async (req, res) => {
         const { categoryId, name, description } = req.body;
         const check = await updateCategoryByIds(categoryId, name, description);
         if (check) {
-            res.status(200).json({ message: 'Category updated successfully' });
+            res.status(200).send('Category updated successfully');
         } else {
-            res.status(400).json({ message: 'Failed to update category' });
+            res.status(400).send('Failed to update category' );
         }
     } catch (error) {
-        res.status(500).json({ message: 'Internal Server Error', error: error.message });
+        res.status(500).send (error.message);
     }
 }
 
@@ -83,12 +82,12 @@ const deleteCategoryById = async (req, res) => {
         const { categoryId } = req.body;
         const check = await deleteCategoryByIds(categoryId);
         if (check) {
-            res.status(200).json({ message: 'Category deleted successfully' });
+            res.status(200).send ('Category deleted successfully');
         } else {
-            res.status(400).json({ message: 'Failed to delete category' });
+            res.status(400).send ('Failed to delete category');
         }
     } catch (error) {
-        res.status(500).json({ message: 'Internal Server Error', error: error.message });
+        res.status(500).send(error.message);
     }
 }
 

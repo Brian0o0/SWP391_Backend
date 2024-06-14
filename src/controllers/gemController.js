@@ -8,7 +8,7 @@ const getAllCostGem = async (req, res) => {
         if (cost.length <= 0) {
             return res
                 .status(404)
-                .sen('Empty gem price list')
+                .send('Empty gem price list')
         } else {
             res.status(200).json(cost);
         }
@@ -26,14 +26,14 @@ const getCostGemById = async (req, res) => {
         if (cost.length <= 0) {
             return res
                 .status(404)
-                .sen('Empty gem price list')
+                .send('Empty gem price list')
         } else {
             res.status(200).json(cost);
         }
     } catch (error) {
         return res
             .status(500)
-            .sen(error)
+            .send(error)
     }
 }
 
@@ -46,22 +46,22 @@ const insertCostGem = async (req, res) => {
             if (check == false) {
                 return res
                     .status(500)
-                    .sen('Insert cost gem fail')
+                    .send('Insert cost gem fail')
             } else {
                 return res
                     .status(200)
-                    .sen('Insert cost gem successfully')
+                    .send('Insert cost gem successfully')
             }
         } else {
             return res
                 .status(400)
-                .sen('CostGem is required')
+                .send('CostGem is required')
         }
     } catch (error) {
         console.log(error);
         return res
             .status(500)
-            .sen(error)
+            .send(error)
     }
 }
 
@@ -72,17 +72,17 @@ const deleteCostGemById = async (req, res) => {
         if (check == false) {
             return res
                 .status(500)
-                .sen('Delete cost gem fail')
+                .send('Delete cost gem fail')
         } else {
             return res
                 .status(200)
-                .sen('Delete cost gem successfully')
+                .send('Delete cost gem successfully')
         }
     } catch (error) {
         console.log(error);
         return res
             .status(500)
-            .sen(error)
+            .send(error)
     }
 }
 
@@ -93,17 +93,17 @@ const updateCostGemById = async (req, res) => {
         if (check == false) {
             return res
                 .status(500)
-                .sen('Update cost gem fail')
+                .send('Update cost gem fail')
         } else {
             return res
                 .status(200)
-                .sen('Update cost gem successfully')
+                .send('Update cost gem successfully')
         }
     } catch (error) {
         console.log(error);
         return res
             .status(500)
-            .sen(error)
+            .send(error)
     }
 }
 
@@ -114,12 +114,12 @@ const getAllGem = async (req, res) => {
         if (cost.length <= 0) {
             return res
                 .status(404)
-                .sen('Empty gem price list')
+                .send('Empty gem price list')
         } else {
             res.status(200).json(cost);
         }
     } catch (error) {
-        res.status(500).sen(error);
+        res.status(500).send(error);
     }
 }
 
@@ -130,12 +130,12 @@ const getGemById = async (req, res) => {
         if (gem.length <= 0) {
             return res
                 .status(404)
-                .sen('Empty gem list')
+                .send('Empty gem list')
         } else {
             res.status(200).json(gem);
         }
     } catch (error) {
-        res.status(500).sen(error);
+        res.status(500).send(error);
     }
 }
 
@@ -159,22 +159,22 @@ const insertGem = async (req, res) => {
             if (check == false) {
                 return res
                     .status(500)
-                    .sen('Insert gem fail')
+                    .send('Insert gem fail')
             } else {
                 return res
                     .status(200)
-                    .sen('Insert gem successfully')
+                    .send('Insert gem successfully')
             }
         } else {
             return res
                 .status(400)
-                .sen('Name, Color, CaraWeight, Clarity, Cut, CostIDGem, AddedDate, Origin, Image and Identification is required')
+                .send('Name, Color, CaraWeight, Clarity, Cut, CostIDGem, AddedDate, Origin, Image and Identification is required')
         }
     } catch (error) {
         console.log(error);
         return res
             .status(500)
-            .sen(error)
+            .send(error)
     }
 }
 
@@ -198,17 +198,17 @@ const updateGemById = async (req, res) => {
         if (check == false) {
             return res
                 .status(500)
-                .sen('Update gem fail')
+                .send('Update gem fail')
         } else {
             return res
                 .status(200)
-                .sen('Update gem successfully')
+                .send('Update gem successfully')
         }
     } catch (error) {
         console.log(error);
         return res
             .status(500)
-            .sen(error)
+            .send(error)
     }
 }
 
@@ -218,29 +218,28 @@ const deleteGemById = async (req, res) => {
         if (gemId) {
             const check = await deleteGemByIds(gemId);
             if (check == false) {
-                return res.json({
-                    status: 'error',
-                    message: 'Delete gem fail'
-                });
+                return res
+                    .status(500)
+                    .send('Delete gem fail'
+                );
             } else {
-                return res.json({
-                    status: 'success',
-                    message: 'Delete gem successfully'
-                });
+                return res
+                    .status(200)
+                    .send ('Delete gem successfully'
+                );
             }
         } else {
-            return res.json({
-                status: 'error',
-                message: 'gemId is required'
-            });
+            return res
+                .status(400)
+                .send ('gemId is required'
+            );
         }
 
     } catch (error) {
         console.log(error);
-        return res.json({
-            status: 'error',
-            message: error.message
-        })
+        return res
+            .status(500)
+            .send(error)
     }
 }
 
