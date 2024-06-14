@@ -72,7 +72,7 @@ const insertCostMaterials = async (price) => {
     }
 }
 //update CostMaterial on database function
-const updateCostMaterialByIds = async (costIdMaterial, dateOfPrice, priceOfMaterial) => {
+const updateCostMaterialByIds = async (costIdMaterial, priceOfMaterial) => {
     try {
         await pool.connect();
         const sqlString = `
@@ -81,7 +81,7 @@ const updateCostMaterialByIds = async (costIdMaterial, dateOfPrice, priceOfMater
             WHERE CostIdMaterial = @costIdMaterial
         `;
         const request = pool.request();
-        request.input('dateOfPrice', dateOfPrice);
+        request.input('dateOfPrice', getDayNow());
         request.input('priceOfmaterial', priceOfMaterial);
         request.input('costIdMaterial', costIdMaterial);
         // Thực hiện truy vấn

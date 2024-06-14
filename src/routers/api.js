@@ -1,8 +1,9 @@
 //The api sent to the frontend
-
+const passport = require('passport');
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const express = require('express');
 const router = express.Router();
-const { register, login, logout, getAllUser, getUserById, getUserByUserName, deleteUserById, updateUserById, getUserByName } = require('../controllers/userController');
+const { register, login, logout, getAllUser, getUserById, getUserByUserName, deleteUserById, updateUserById, getUserByName, insertUserOnGoogle } = require('../controllers/userController');
 const { getAllProduct, getProductById, insertProduct, updateProductById, deleteProductById, getProductByNameOrId, getProductByCategory } = require('../controllers/productController');
 const { getAllCostGem, getCostGemById, insertCostGem, deleteCostGemById, updateCostGemById, getAllGem, getGemById, insertGem, updateGemById, deleteGemById, getGemByPrice } = require('../controllers/gemController');
 const { getAllCostMaterial, getCostMaterialById, insertCostMaterial, deleteCostMaterialById, updateCostMaterialById, getAllMaterial, getMaterialById, insertMaterial, updateMaterialById, deleteMaterialById } = require('../controllers/materialController');
@@ -19,6 +20,12 @@ router.put('/test/updateProductById', updateProductById);
 router.delete('/test/deleteProductById', deleteProductById);
 
 //api user
+router.get('/auth/google', passport.authenticate('google', {
+    scope: ['profile', 'email']
+})
+);
+
+router.get('/auth/google/callback', passport.authenticate('google'));
 router.get('/test/getAllUser', getAllUser);
 router.get('/test/getUserById', getUserById);
 router.get('/test/getUserByUserName', getUserByUserName);
@@ -27,6 +34,7 @@ router.put('/test/updateUserById', updateUserById);
 router.delete('/test/deleteUserById', deleteUserById);
 // router.post('/test/insert', insertUser);
 router.post('/test/register', register)
+router.post('/test/insertUserOnGoogle', insertUserOnGoogle)
 router.post('/test/login', login);
 router.post('/test/logout', logout);
 //api cost gem

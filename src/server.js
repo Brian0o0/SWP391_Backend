@@ -6,6 +6,10 @@ let hostname = process.env.HOST_NAME;
 const webRouter = require('./routers/api');
 const session = require('express-session');
 const cookieParser = require('cookie-parser');
+const passport = require('passport');
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
+require('../src/controllers/passPort');
+const cookieSession = require('cookie-session');
 
 app.use(express.json()) // for json
 
@@ -33,6 +37,15 @@ app.use((req, res, next) => {
     // Pass to next layer of middleware
     next();
 });
+
+app.use(
+    cookieSession({
+        maxAge: 30 * 24 * 60 * 60 * 1000,
+        keys: [process.env.COOKIE_KEY]
+    })
+);
+app.use(passport.initialize());
+app.use(passport.session());
 
 
 app.use('/', webRouter);

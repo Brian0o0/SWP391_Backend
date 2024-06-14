@@ -75,7 +75,7 @@ const insertCostGems = async (price) => {
     }
 }
 //update cost gem on database function
-const updateCostGemByIds = async (costGemID, dateOfPrice, priceOfGem) => {
+const updateCostGemByIds = async (costGemID, priceOfGem) => {
     try {
         await pool.connect();
         const sqlString = `
@@ -84,7 +84,7 @@ const updateCostGemByIds = async (costGemID, dateOfPrice, priceOfGem) => {
             WHERE CostIDGem = @costGemID
         `;
         const request = pool.request();
-        request.input('dateOfPrice', dateOfPrice);
+        request.input('dateOfPrice', getDayNow());
         request.input('priceOfGem', priceOfGem);
         request.input('costGemID', costGemID);
         // Thực hiện truy vấn
