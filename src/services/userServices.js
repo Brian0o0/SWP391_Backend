@@ -72,6 +72,27 @@ const getUserByNames = async (name) => {
         pool.close();
     }
 }
+
+const getUserByEmails = async (email) => {
+    try {
+        await pool.connect();
+        var sqlString = "SELECT TOP 1 * FROM [User] WHERE Email like @email";
+        const request = pool.request();
+        request.input('email', email);
+        const result = await request.query(sqlString);
+        const user = result.recordset;
+        console.log(user);
+        return user;
+    } catch (error) {
+        // Handle any errors
+        console.error('Error getting user by name:', error);
+        return null;
+    } finally {
+        pool.close();
+    }
+}
+
+
 //check email valid function
 const checkEmailValid = async (email) => {
     const isEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email);
@@ -191,6 +212,24 @@ const insertUsers = async (user) => {
 }
 
 
+const insertUserOnGoogles = async (user) => {
+    try {
+        if (user.Email) {
+            checkInsert = await insertUsers(user);
+            if (checkInsert) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    } catch (err) {
+        throw new Error("Error inserting user: " + err.message);
+        return false;
+    }
+}
+
 module.exports = {
     getAllUsers,
     getUserByIds,
@@ -200,5 +239,7 @@ module.exports = {
     checkEmailValid,
     getUserByUserNames,
     getUserByNames,
-    checkLogin
+    checkLogin,
+    getUserByEmails,
+    insertUserOnGoogles,
 }

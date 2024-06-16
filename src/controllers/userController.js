@@ -163,48 +163,7 @@ const updateUserById = async (req, res) => {
     }
 }
 
-const insertUserOnGoogle = async (req, res) => {
-    const { name, email } = req.body;
 
-    try {
-        if (email) {
-            let checkEmail = await checkLogin(email);
-            if (checkEmail != null) {
-                return res
-                    .status(400)
-                    .send('The email is existed!!!')
-            } else {
-                const user = {
-                    PassWord: null,
-                    Name: name,
-                    Phone: null,
-                    Address: null,
-                    Email: email,
-                    UserName: null
-                };
-                const checkInsert = await insertUsers(user);
-                if (checkInsert) {
-                    return res
-                        .status(201)
-                        .send('User created successfully')
-                } else {
-                    return res
-                        .status(500)
-                        .send('User created fail')
-                }
-            }
-        } else {
-            return res
-                .status(400)
-                .send('Email is required')
-        }
-    } catch (err) {
-        console.log(err);
-        return res
-            .status(500)
-            .send(err)
-    }
-}
 
 
 //User creation function
@@ -342,9 +301,9 @@ const login = async (req, res) => {
     const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
 
     const dataForAccessToken = {
-        username: user.UserName,
-        role: user.Role,
-        id: user.UserID
+        UserName: user.UserName,
+        Role: user.Role,
+        Id: user.UserID
     };
     const accessToken = await generateToken(
         dataForAccessToken,
@@ -450,5 +409,4 @@ module.exports = {
     deleteUserById,
     updateUserById,
     getUserByName,
-    insertUserOnGoogle,
 }

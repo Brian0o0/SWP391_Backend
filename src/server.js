@@ -10,7 +10,6 @@ const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 require('../src/controllers/passPort');
 const cookieSession = require('cookie-session');
-const key = require('../config/key')
 app.use(express.json()) // for json
 
 app.use(cookieParser());
@@ -38,12 +37,25 @@ app.use((req, res, next) => {
     next();
 });
 
+// app.use(
+//     cookieSession({
+//         name: 'session',
+//         maxAge: 30 * 24 * 60 * 60 * 1000,
+//         keys: [process.env.COOKIE_KEY]
+//     })
+// );
+
+// Session middleware
 app.use(
-    cookieSession({
-        maxAge: 30 * 24 * 60 * 60 * 1000,
-        keys: [process.env.COOKIE_KEY]
+    session({
+        name: 'session',
+        secret: process.env.SESSION_SECRET,
+        resave: false,
+        saveUninitialized: false,
+        cookie: { maxAge: 30 * 24 * 60 * 60 * 1000 } // 30 days
     })
 );
+
 app.use(passport.initialize());
 app.use(passport.session());
 
