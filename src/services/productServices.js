@@ -196,7 +196,7 @@ const getProductByCategorys = async (categoryName) => {
             const costGemTemp = await getCostGemByIds(gemTemp[0].CostIDGem);
 
             const materialTemp = await getMaterialByIds(product.MaterialID);
-            const costMaterialTemp = await getCostMaterialByIds(materialTemp[0].CostIDMaterial);
+            const costMaterialTemp = await getCostMaterialByIds(materialTemp[0].CostIdMaterial);
 
             const prodcuctDetail = {
                 ProductId: product.ProductID,
@@ -204,7 +204,7 @@ const getProductByCategorys = async (categoryName) => {
                 GemName: gemTemp[0].Name,
                 GemCost: costGemTemp[0].PriceOfGem,
                 MaterialName: materialTemp[0].Name,
-                MaterialCost: costMaterialTemp[0].PriceOfmaterial,
+                MaterialCost: costMaterialTemp[0].PriceOfMaterial,
                 CategoryName: categoryTemp[0].Name,
                 ProductCost: product.ProductCost,
                 Image: product.Image,
