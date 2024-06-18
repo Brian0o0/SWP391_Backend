@@ -58,20 +58,25 @@ const insertSteps = async (description, etimatedTime) => {
 //update step on database function
 const updateStepByIds = async (description, etimatedTime, stepId) => {
     try {
-        await pool.connect();
-        const sqlString = `
+        if (getStepByIds(stepId)) {
+            await pool.connect();
+            const sqlString = `
             UPDATE Step
             SET Description = @description, EtimatedTime = @etimatedTime
             WHERE StepID = @stepId
         `;
-        const request = pool.request();
-        request.input('description', description);
-        request.input('etimatedTime', etimatedTime);
-        request.input('stepId', stepId);
-        // Thực hiện truy vấn
-        await request.query(sqlString);
-        // Gửi phản hồi
-        return true;
+            const request = pool.request();
+            request.input('description', description);
+            request.input('etimatedTime', etimatedTime);
+            request.input('stepId', stepId);
+            // Thực hiện truy vấn
+            await request.query(sqlString);
+            // Gửi phản hồi
+            return true;
+        } else {
+            console.log('Step is invalid');
+            return false;
+        }
     } catch (error) {
         console.log(error.message);
         return false;
@@ -333,7 +338,7 @@ const insertOrderDetails = async (description, productId, status, productName, c
     try {
         await pool.connect();
         const sqlString = `
-        INSERT INTO OrderDetail (Description, ProductID, Status, ProductName, CategoryID, CategoryName, MaterialID, MaterialName, GemID, GemName, QuantityGem, QuantityMaterial, OrderDate, OrderID) VALUES (@description, @productId, @status, @productName, @categoryId, @categoryName, @materialId, @materialName, @gemId, @gemName, @quantityGem, @quantityMaterial, @orderDate, @orderId)
+        INSERT INTO OrderDetail (Description, ProductID, Status, ProductName, CategoryID, CategoryName, MaterialID, MaterialName, GemID, GemName, QuantityGem, QuantityMaterial, OrderDate) VALUES (@description, @productId, @status, @productName, @categoryId, @categoryName, @materialId, @materialName, @gemId, @gemName, @quantityGem, @quantityMaterial, @orderDate)
         `;
         const request = pool.request();
         request.input('description', description);
@@ -349,7 +354,6 @@ const insertOrderDetails = async (description, productId, status, productName, c
         request.input('quantityGem', quantityGem);
         request.input('quantityMaterial', quantityMaterial);
         request.input('orderDate', orderDate);
-        request.input('orderId', orderId);
         // Thực hiện truy vấn
         await request.query(sqlString);
         // Gửi phản hồi
@@ -368,7 +372,7 @@ const updateOrderDetailByIds = async (description, productId, status, productNam
             UPDATE OrderDetail
             SET Description = @description, ProductID = @productId, Status = @status, ProductName = @productName,
                 CategoryID = @categoryId, CategoryName = @categoryName,MaterialID = @materialId, MaterialName = @materialName, 
-                GemID = @gemId , GemName = @gemName,QuantityGem = @quantityGem, QuantityMaterial = @quantityMaterial , OrderDate = @orderDate, OrderID = @orderId
+                GemID = @gemId , GemName = @gemName,QuantityGem = @quantityGem, QuantityMaterial = @quantityMaterial , OrderDate = @orderDate
             WHERE OrderDetailID = @orderDetailId
         `;
         const request = pool.request();
@@ -385,7 +389,6 @@ const updateOrderDetailByIds = async (description, productId, status, productNam
         request.input('quantityGem', quantityGem);
         request.input('quantityMaterial', quantityMaterial);
         request.input('orderDate', orderDate);
-        request.input('orderId', orderId);
         request.input('orderDetailId', orderDetailId);
         // Thực hiện truy vấn
         await request.query(sqlString);

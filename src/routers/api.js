@@ -12,7 +12,7 @@ const { getAllStep, getStepById, insertStep, deleteStepById, updateStepById, get
 const { getAllCategory, getCategoryById, insertCategory, updateCategoryById, deleteCategoryById, } = require("../controllers/categoryController");
 const { getAllBlogs, getBlogById, insertBlog, updateBlogById, deleteBlogById } = require('../services/blogServices');
 const { loginSuccess } = require('../controllers/authController')
-
+const { payment } = require('../controllers/zaloPay')
 //api prodcuct
 router.get('/test/getAllProduct', getAllProduct);
 router.get('/test/getProductById', getProductById);
@@ -37,6 +37,10 @@ router.get('/auth/google/callback', (req, res, next) => {
 });
 
 router.post('/login-success', loginSuccess)
+
+
+router.post("/test/payment", payment);
+
 router.get('/test/getAllUser', getAllUser);
 router.get('/test/getUserById', getUserById);
 router.get('/test/getUserByUserName', getUserByUserName);
