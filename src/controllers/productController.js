@@ -19,7 +19,7 @@ const getAllProduct = async (req, res) => {
 
 const getProductById = async (req, res) => {
     try {
-        const { productId } = req.body
+        const productId = req.query
         const product = await getProductByIds(productId);
         console.log(product);
         if (product == null) {
@@ -105,7 +105,8 @@ const updateProductById = async (req, res) => {
 
 const getProductByNameOrId = async (req, res) => {
     try {
-        const { name } = req.body
+        const name = req.query
+        console.log(name);
         const product = await getProductByNameOrIds(name);
         if (product.length <= 0) {
             return res
@@ -122,7 +123,7 @@ const getProductByNameOrId = async (req, res) => {
 
 const getProductByCategory = async (req, res) => {
     try {
-        const { categoryName } = req.body
+        const categoryName = req.query
         const product = await getProductByCategorys(categoryName);
         if (product.length <= 0) {
             return res

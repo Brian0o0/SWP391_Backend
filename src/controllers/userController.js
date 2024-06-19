@@ -26,7 +26,7 @@ const getAllUser = async (req, res) => {
 
 const getUserById = async (req, res) => {
     try {
-        const { userId } = req.body
+        const userId = req.query
         const user = await getUserByIds(userId);
         if (user.length <= 0) {
             return res
