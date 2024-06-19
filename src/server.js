@@ -21,7 +21,7 @@ app.use(express.json()) // for json
 
 app.use(cookieParser());
 
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 
 
 // CORS middleware
