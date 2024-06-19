@@ -44,7 +44,7 @@ const getUserById = async (req, res) => {
 
 const getUserByUserName = async (req, res) => {
     try {
-        const { userName } = req.body
+        const userName = req.query
         const user = await getUserByUserNames(userName);
         if (user.length <= 0) {
             return res
@@ -62,7 +62,7 @@ const getUserByUserName = async (req, res) => {
 
 const getUserByName = async (req, res) => {
     try {
-        const { name } = req.body
+        const name = req.query
         const user = await getUserByNames(name);
         if (user.length <= 0) {
             return res
