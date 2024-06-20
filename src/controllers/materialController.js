@@ -23,7 +23,7 @@ const getAllCostMaterial = async (req, res) => {
 
 const getCostMaterialById = async (req, res) => {
     try {
-        const { costIdMaterial } = req.body
+        const  costIdMaterial  = req.query
         const cost = await getCostMaterialByIds(costIdMaterial);
         if (cost.length <= 0) {
             return res
@@ -130,7 +130,7 @@ const getAllMaterial = async (req, res) => {
 
 const getMaterialById = async (req, res) => {
     try {
-        const { materialId } = req.body
+        const  materialId  = req.query
         const cost = await getMaterialByIds(materialId);
         if (cost.length <= 0) {
             return res

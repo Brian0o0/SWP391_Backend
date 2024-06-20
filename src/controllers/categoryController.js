@@ -27,7 +27,7 @@ const getAllCategory = async (req, res) => {
 // Lấy category theo ID
 const getCategoryById = async (req, res) => {
     try {
-        const { categoryId } = req.body;
+        const  categoryId = req.query;
         const category = await getCategoryByIds(categoryId);
         if (category) {
             res.status(200).json(category);
