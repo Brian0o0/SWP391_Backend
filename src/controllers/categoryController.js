@@ -64,6 +64,7 @@ const insertCategory = async (req, res) => {
 // Cập nhật category theo ID
 const updateCategoryById = async (req, res) => {
     try {
+
         const { categoryId, name, description } = req.body;
         const check = await updateCategoryByIds(categoryId, name, description);
         if (check) {

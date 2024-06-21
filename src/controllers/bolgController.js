@@ -75,16 +75,24 @@ const insertBlog = async (req, res) => {
 const deleteBlogById = async (req, res) => {
     try {
         const { blogId } = req.body
-        const check = await deleteBlogByIds(blogId);
-        if (check == false) {
+        const find = await getBlogById(blogId);
+        if (find.length <= 0) {
             return res
-                .status(500)
-                .send('Delete blog fail')
+                .status(404)
+                .send('Blog does not exist')
         } else {
-            return res
-                .status(200)
-                .send('Delete blog successfully')
+            const check = await deleteBlogByIds(blogId);
+            if (check == false) {
+                return res
+                    .status(500)
+                    .send('Delete blog fail')
+            } else {
+                return res
+                    .status(200)
+                    .send('Delete blog successfully')
+            }
         }
+
     } catch (error) {
         console.log(error);
         return res
@@ -96,28 +104,36 @@ const deleteBlogById = async (req, res) => {
 const updateBlogById = async (req, res) => {
     try {
         const { title, content, dateCreated, userID, blogId } = req.body
-        if (title && content && dateCreated && userID && blogId) {
-            const blog = {
-                Title: title,
-                Content: content,
-                DateCreated: dateCreated,
-                UserID: userID,
-                BlogId: blogId,
-            }
-            const check = await updateBlogByIds(blog);
-            if (check == false) {
-                return res
-                    .status(500)
-                    .send('Update cost gem fail')
+        let find = await getBlogById(blogId);
+        if (find.length <= 0) {
+            return res
+                .status(404)
+                .send('Blog does not exist')
+        } else {
+            if (title && content && dateCreated && userID && blogId) {
+                const blog = {
+                    Title: title,
+                    Content: content,
+                    DateCreated: dateCreated,
+                    UserID: userID,
+                    BlogId: blogId,
+                }
+                const check = await updateBlogByIds(blog);
+                if (check == false) {
+                    return res
+                        .status(500)
+                        .send('Update cost gem fail')
+                } else {
+                    return res
+                        .status(200)
+                        .send('Update cost gem successfully')
+                }
             } else {
                 return res
-                    .status(200)
-                    .send('Update cost gem successfully')
+                    .status(400)
+                    .send('UserId,content and title is required')
             }
-        } else {
-            return res
-                .status(400)
-                .send('UserId,content and title is required')
+
         }
 
     } catch (error) {
