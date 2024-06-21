@@ -19,7 +19,7 @@ const getAllBlogs = async () => {
 };
 
 // Get blog post by ID from database function
-const getBlogById = async (blogId) => {
+const getBlogByIds = async (blogId) => {
     try {
         await pool.connect();
         const sqlString = "SELECT * FROM Blog WHERE BlogId = @blogId";
@@ -36,9 +36,21 @@ const getBlogById = async (blogId) => {
         pool.close();
     }
 };
-
+const getDayNow = () => {
+    try {
+        const currentDate = new Date();
+        const year = currentDate.getFullYear();
+        const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+        const day = String(currentDate.getDate()).padStart(2, '0');
+        const date = `${year}-${month}-${day}`;
+        return date;
+    } catch (error) {
+        console.error(error.message);
+        return null;
+    }
+}
 // Insert blog post to database function
-const insertBlog = async (blog) => {
+const insertBlogs = async (blog) => {
     try {
         await pool.connect();
         const sqlString = `
@@ -48,7 +60,7 @@ const insertBlog = async (blog) => {
         const request = pool.request();
         request.input('title', blog.Title);
         request.input('content', blog.Content);
-        request.input('dateCreated', blog.DateCreated);
+        request.input('dateCreated', getDayNow);
         request.input('userID', blog.UserID);
         await request.query(sqlString);
         return true;
@@ -59,7 +71,7 @@ const insertBlog = async (blog) => {
 };
 
 // Update blog post on database function
-const updateBlogById = async (blog) => {
+const updateBlogByIds = async (blog) => {
     try {
         await pool.connect();
         const sqlString = `
@@ -82,7 +94,7 @@ const updateBlogById = async (blog) => {
 };
 
 // Delete blog post by ID on database function
-const deleteBlogById = async (blogId) => {
+const deleteBlogByIds = async (blogId) => {
     try {
         await pool.connect();
         const sqlString = "DELETE FROM Blog WHERE BlogId = @blogId";
@@ -98,8 +110,8 @@ const deleteBlogById = async (blogId) => {
 
 module.exports = {
     getAllBlogs,
-    getBlogById,
-    insertBlog,
-    updateBlogById,
-    deleteBlogById
+    getBlogByIds,
+    insertBlogs,
+    updateBlogByIds,
+    deleteBlogByIds
 };
