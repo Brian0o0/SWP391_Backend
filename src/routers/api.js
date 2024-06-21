@@ -10,7 +10,7 @@ const { getAllCostGem, getCostGemById, insertCostGem, deleteCostGemById, updateC
 const { getAllCostMaterial, getCostMaterialById, insertCostMaterial, deleteCostMaterialById, updateCostMaterialById, getAllMaterial, getMaterialById, insertMaterial, updateMaterialById, deleteMaterialById } = require('../controllers/materialController');
 const { getAllStep, getStepById, insertStep, deleteStepById, updateStepById, getAllOrderProgress, getOrderProgressById, insertOrderProgress, deleteOrderProgressById, updateOrderProgressById, getAllOrder, getOrderById, insertOrder, deleteOrderById, updateOrderById, getAllOrderDetail, getOrderDetailById, insertOrderDetail, updateOrderDetailById, deleteOrderDetailById } = require('../controllers/orderController');
 const { getAllCategory, getCategoryById, insertCategory, updateCategoryById, deleteCategoryById, } = require("../controllers/categoryController");
-const { getAllBlogs, getBlogById, insertBlog, updateBlogById, deleteBlogById } = require('../services/blogServices');
+const { getAllBlog, getBlogById, insertBlog, updateBlogById, deleteBlogById } = require('../controllers/bolgController');
 const { loginSuccess } = require('../controllers/authController')
 const { payment } = require('../controllers/zaloPay')
 //api prodcuct
@@ -55,7 +55,6 @@ router.post('/test/logout', logout);
 //api cost gem
 router.get('/test/getAllCostGem', getAllCostGem);
 router.get('/test/getCostGemById', getCostGemById);
-router.get('/test/getGemByPrice', getGemByPrice);
 router.post('/test/insertCostGem', insertCostGem);
 router.delete('/test/deleteCostGemById', deleteCostGemById);
 router.put('/test/updateCostGemById', updateCostGemById);
@@ -66,7 +65,7 @@ router.get('/test/getGemById', getGemById);
 router.post('/test/insertGem', insertGem);
 router.put('/test/updateGemById', updateGemById);
 router.delete('/test/deleteGemById', deleteGemById);
-
+router.post('/test/getGemByPrice', getGemByPrice);
 //api cost material
 router.get('/test/getAllCostMaterial', getAllCostMaterial);
 router.get('/test/getCostMaterialById', getCostMaterialById);
@@ -118,7 +117,7 @@ router.delete('/test/deleteCategoryById', deleteCategoryById);
 router.put('/test/updateCategoryById', updateCategoryById);
 
 //api blog
-router.get('/test/getAllBlogs', getAllBlogs);
+router.get('/test/getAllBlogs', getAllBlog);
 router.get('/test/getBlogById/:id', getBlogById);
 router.post('/test/insertBlog', insertBlog);
 router.put('/test/updateBlogById/:id', updateBlogById);

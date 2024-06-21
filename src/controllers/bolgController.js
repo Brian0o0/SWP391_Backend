@@ -74,7 +74,7 @@ const insertBlog = async (req, res) => {
 
 const deleteBlogById = async (req, res) => {
     try {
-        const blogId = req.query
+        const { blogId } = req.body
         const check = await deleteBlogByIds(blogId);
         if (check == false) {
             return res

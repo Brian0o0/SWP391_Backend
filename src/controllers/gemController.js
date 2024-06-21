@@ -20,7 +20,7 @@ const getAllCostGem = async (req, res) => {
 
 const getCostGemById = async (req, res) => {
     try {
-        const { costGemID } = req.body
+        const costGemID = req.query
         const cost = await getCostGemByIds(costGemID);
         console.log(cost);
         if (cost.length <= 0) {
@@ -125,7 +125,7 @@ const getAllGem = async (req, res) => {
 
 const getGemById = async (req, res) => {
     try {
-        const { gemId } = req.body;
+        const gemId = req.query;
         const gem = await getGemByIds(gemId);
         if (gem.length <= 0) {
             return res
@@ -221,18 +221,18 @@ const deleteGemById = async (req, res) => {
                 return res
                     .status(500)
                     .send('Delete gem fail'
-                );
+                    );
             } else {
                 return res
                     .status(200)
-                    .send ('Delete gem successfully'
-                );
+                    .send('Delete gem successfully'
+                    );
             }
         } else {
             return res
                 .status(400)
-                .send ('gemId is required'
-            );
+                .send('gemId is required'
+                );
         }
 
     } catch (error) {
