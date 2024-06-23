@@ -1,6 +1,11 @@
 //CRUD of order with database
 const express = require('express');
 const { pool } = require('../config/database');
+const { getDayNow, getGemByIds } = require('../services/gemServices')
+const { getProductByIds } = require('../services/productServices')
+const { getMaterialByIds } = require('../services/materialServices')
+const { getCategoryByIds } = require('../services/categoryServices');
+const { get } = require('request');
 
 const getAllSteps = async () => {
     try {
@@ -258,6 +263,9 @@ const insertOrders = async (paymentMethods, phone, address, orderDetailId, statu
 //update order on database function
 const updateOrderByIds = async (paymentMethods, phone, address, orderDetailId, status, userId, description, userName, orderId) => {
     try {
+        console.log(status);
+        console.log(orderId);
+
         await pool.connect();
         const sqlString = `
             UPDATE [Order]
@@ -334,7 +342,7 @@ const getOrderDetailByIds = async (orderDetailId) => {
     }
 }
 //insert OrderDetail to database function
-const insertOrderDetails = async (description, productId, status, productName, categoryId, categoryName, materialId, materialName, gemId, gemName, quantityGem, quantityMaterial, orderDate, orderId) => {
+const insertOrderDetails = async (description, productId, status, productName, categoryId, categoryName, materialId, materialName, gemId, gemName, quantityGem, quantityMaterial, orderDate) => {
     try {
         await pool.connect();
         const sqlString = `
@@ -365,7 +373,7 @@ const insertOrderDetails = async (description, productId, status, productName, c
     }
 }
 //update OrderDetail on database function
-const updateOrderDetailByIds = async (description, productId, status, productName, categoryId, categoryName, materialId, materialName, gemId, gemName, quantityGem, quantityMaterial, orderDate, orderId, orderDetailId) => {
+const updateOrderDetailByIds = async (description, productId, status, productName, categoryId, categoryName, materialId, materialName, gemId, gemName, quantityGem, quantityMaterial, orderDate, orderDetailId) => {
     try {
         await pool.connect();
         const sqlString = `
@@ -416,8 +424,50 @@ const deleteOrderDetailByIds = async (orderDetailId) => {
     }
 }
 
+const updateOrderStatus = async (status, orderId) => {
+    try {
+        const request = pool.request();
+        const sqlString = "UPDATE [Order] SET Status = @status WHERE OrderID = @orderId";
+        request.input('status', status);
+        request.input('orderId', orderId);
+        await request.query(sqlString);
+        return true;
+    } catch (error) {
+        console.error(error.message);
+        return false;
+    }
+};
 
 
+const insertOrderDetailServices = async (description, productId, status) => {
+    try {
+        const product = await getProductByIds(productId);
+        const gem = await getGemByIds(product[0].GemID);
+        const material = await getMaterialByIds(product[0].MaterialID);
+        const category = await getCategoryByIds(product[0].CategoryID);
+        const check = await insertOrderDetails(
+            description,
+            productId,
+            status,
+            product[0].Name,
+            product[0].CategoryID,
+            category[0].Name,
+            product[0].MaterialID,
+            material[0].Name,
+            product[0].GemID,
+            gem[0].Name,
+            product[0].QuantityGem,
+            product[0].QuantityMaterial,
+            getDayNow())
+        if (check) {
+            return true;
+        } else { return false; }
+    } catch (error) {
+        // Xử lý bất kỳ lỗi nào
+        throw new Error("Error inserting order detail: " + error.message);
+        return false;
+    }
+}
 
 module.exports = {
     getAllSteps,
@@ -440,5 +490,7 @@ module.exports = {
     insertOrderDetails,
     updateOrderDetailByIds,
     deleteOrderDetailByIds,
+    updateOrderStatus,
+    insertOrderDetailServices
 
 }

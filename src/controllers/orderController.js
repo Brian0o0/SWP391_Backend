@@ -2,7 +2,7 @@
 const { getAllSteps, getStepByIds, insertSteps, updateStepByIds, deleteStepByIds,
     getAllOrderProgresss, getOrderProgressByIds, insertOrderProgresss, deleteOrderProgressByIds, updateOrderProgressByIds,
     getAllOrders, getOrderByIds, insertOrders, updateOrderByIds, deleteOrderByIds,
-    getAllOrderDetails, getOrderDetailByIds, insertOrderDetails, updateOrderDetailByIds, deleteOrderDetailByIds
+    getAllOrderDetails, getOrderDetailByIds, insertOrderDetails, updateOrderDetailByIds, deleteOrderDetailByIds, insertOrderDetailServices
 } = require('../services/orderServices');
 
 const getAllStep = async (req, res) => {
@@ -306,21 +306,23 @@ const deleteOrderById = async (req, res) => {
 const updateOrderById = async (req, res) => {
     try {
         const { paymentMethods, phone, address, orderDetailId, status, userId, description, userName, orderId } = req.body
+        console.log(status);
+        console.log(orderId);
         const check = await updateOrderByIds(paymentMethods, phone, address, orderDetailId, status, userId, description, userName, orderId);
         if (check == false) {
             return res
                 .status(500)
-                .sen('Update order fail')
+                .send('Update order fail')
         } else {
             return res
                 .status(200)
-                .sen('Update order successfully')
+                .send('Update order successfully')
         }
     } catch (error) {
         console.log(error);
         return res
             .status(500)
-            .sen(error)
+            .send(error)
     }
 }
 
@@ -361,12 +363,12 @@ const getOrderDetailById = async (req, res) => {
     }
 }
 
-const insertOrderDetail = async (req, res) => {
+const insertOrderDetailTemp = async (req, res) => {
     try {
-        const { description, productId, status, productName, categoryId, categoryName, materialId, materialName, gemId, gemName, quantityGem, quantityMaterial, orderDate, orderId } = req.body
-        if (description && productId && status && productName && categoryId && categoryName && materialId && materialName && gemId && gemName && quantityGem && quantityMaterial && orderDate && orderId) {
+        const { description, productId, status, productName, categoryId, categoryName, materialId, materialName, gemId, gemName, quantityGem, quantityMaterial, orderDate } = req.body
+        if (description && productId && status && productName && categoryId && categoryName && materialId && materialName && gemId && gemName && quantityGem && quantityMaterial && orderDate) {
 
-            const check = await insertOrderDetails(description, productId, status, productName, categoryId, categoryName, materialId, materialName, gemId, gemName, quantityGem, quantityMaterial, orderDate, orderId);
+            const check = await insertOrderDetails(description, productId, status, productName, categoryId, categoryName, materialId, materialName, gemId, gemName, quantityGem, quantityMaterial, orderDate);
             if (check == false) {
                 return res
                     .status(500)
@@ -431,6 +433,36 @@ const updateOrderDetailById = async (req, res) => {
             .sen(error)
     }
 }
+
+const insertOrderDetail = async (req, res) => {
+    try {
+        const { description, productId, status } = req.body
+        if (description && productId && status) {
+
+            const check = await insertOrderDetailServices(description, productId, status);
+            if (check == false) {
+                return res
+                    .status(500)
+                    .sen('Insert order detail fail')
+            } else {
+                return res
+                    .status(200)
+                    .sen('Insert order  detail successfully')
+            }
+        } else {
+            return res
+                .status(400)
+                .sen('Description, productId and status is required')
+        }
+
+    } catch (error) {
+        console.log(error);
+        return res
+            .status(500)
+            .sen(error)
+    }
+}
+
 module.exports = {
     getAllStep,
     getStepById,
@@ -449,7 +481,8 @@ module.exports = {
     updateOrderById,
     getAllOrderDetail,
     getOrderDetailById,
-    insertOrderDetail,
+    insertOrderDetailTemp,
     updateOrderDetailById,
     deleteOrderDetailById,
+    insertOrderDetail,
 }

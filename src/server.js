@@ -14,9 +14,7 @@ const GoogleStrategy = require('passport-google-oauth20').Strategy;
 require('../src/controllers/passPort');
 const cookieSession = require('cookie-session');
 app.use(express.json()) // for json
-/*Dòng mã app.use(express.json()) trong ứng dụng Express có tác dụng thiết lập middleware để phân tích cú pháp (parse) các yêu cầu HTTP với payload JSON. 
-Điều này có nghĩa là khi một yêu cầu HTTP chứa dữ liệu JSON trong phần thân (body) được gửi đến server,
- middleware này sẽ tự động phân tích cú pháp dữ liệu JSON đó và làm cho dữ liệu có thể truy cập được thông qua req.body. */
+
 
 
 app.use(cookieParser());

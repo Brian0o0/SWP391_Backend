@@ -64,14 +64,27 @@ const insertCategory = async (req, res) => {
 // Cập nhật category theo ID
 const updateCategoryById = async (req, res) => {
     try {
-
         const { categoryId, name, description } = req.body;
-        const check = await updateCategoryByIds(categoryId, name, description);
-        if (check) {
-            res.status(200).send('Category updated successfully');
+        let find = await getCategoryById(categoryId);
+        if (find.length <= 0) {
+            return res
+                .status(404)
+                .send('Category does not exist')
         } else {
-            res.status(400).send('Failed to update category');
+            if (categoryId && name && description) {
+                const check = await updateCategoryByIds(categoryId, name, description);
+                if (check) {
+                    res.status(200).send('Category updated successfully');
+                } else {
+                    res.status(400).send('Failed to update category');
+                }
+            } else {
+                return res
+                    .status(400)
+                    .send('CategoryId, name and description is required')
+            }
         }
+
     } catch (error) {
         res.status(500).send(error.message);
     }
@@ -81,12 +94,20 @@ const updateCategoryById = async (req, res) => {
 const deleteCategoryById = async (req, res) => {
     try {
         const { categoryId } = req.body;
-        const check = await deleteCategoryByIds(categoryId);
-        if (check) {
-            res.status(200).send('Category deleted successfully');
+        let find = await getCategoryById(categoryId);
+        if (find.length <= 0) {
+            return res
+                .status(404)
+                .send('Category does not exist')
         } else {
-            res.status(400).send('Failed to delete category');
+            const check = await deleteCategoryByIds(categoryId);
+            if (check) {
+                res.status(200).send('Category deleted successfully');
+            } else {
+                res.status(400).send('Failed to delete category');
+            }
         }
+
     } catch (error) {
         res.status(500).send(error.message);
     }

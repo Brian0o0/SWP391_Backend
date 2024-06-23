@@ -45,12 +45,12 @@ const getProductByIds = async (productId) => {
     }
 }
 //insert product to database function
-const insertProducts = async (name, materialId, gemId, categoryId, materialCost, gemCost, productCost, image, quantityGem, size, warrantyCard, description) => {
+const insertProducts = async (name, materialId, gemId, categoryId, materialCost, gemCost, productCost, image, quantityGem, size, warrantyCard, description, quantityMaterial) => {
     try {
         await pool.connect();
         const sqlString = `
-        INSERT INTO Product (Name, MaterialID, GemID, CategoryID, MaterialCost, GemCost, ProductCost, Image, QuantityGem, Size, WarrantyCard, Description) 
-        VALUES (@name, @materialId, @gemId, @categoryId, @materialCost, @gemCost, @productCost, @image, @quantityGem, @size, @warrantyCard, @description)
+        INSERT INTO Product (Name, MaterialID, GemID, CategoryID, MaterialCost, GemCost, ProductCost, Image, QuantityGem, Size, WarrantyCard, Description, QuantityMaterial) 
+        VALUES (@name, @materialId, @gemId, @categoryId, @materialCost, @gemCost, @productCost, @image, @quantityGem, @size, @warrantyCard, @description, @quantityMaterial)
         `;
         const request = pool.request();
         request.input('name', name);
@@ -65,6 +65,7 @@ const insertProducts = async (name, materialId, gemId, categoryId, materialCost,
         request.input('size', size);
         request.input('warrantyCard', warrantyCard);
         request.input('description', description);
+        request.input('quantityMaterial', quantityMaterial);
         // Thực hiện truy vấn
         await request.query(sqlString);
         // Gửi phản hồi
@@ -76,14 +77,14 @@ const insertProducts = async (name, materialId, gemId, categoryId, materialCost,
     }
 }
 //update product on database function
-const updateProductByIds = async (name, materialId, gemId, categoryId, materialCost, gemCost, productCost, image, quantityGem, size, warrantyCard, description, productId) => {
+const updateProductByIds = async (name, materialId, gemId, categoryId, materialCost, gemCost, productCost, image, quantityGem, size, warrantyCard, description, quantityMaterial, productId) => {
     try {
         await pool.connect();
         const sqlString = `
             UPDATE Product
             SET Name = @name, MaterialID = @materialId, GemID = @gemId, CategoryID = @categoryId
             , MaterialCost = @materialCost, GemCost = @gemCost, ProductCost = @productCost, Image = @image
-            , QuantityGem = @quantityGem, Size = @size, WarrantyCard = @warrantyCard, Description = @description
+            , QuantityGem = @quantityGem, Size = @size, WarrantyCard = @warrantyCard, Description = @description, QuantityMaterial= @quantityMaterial
             WHERE ProductID = @productId
         `;
         const request = pool.request();
@@ -99,6 +100,7 @@ const updateProductByIds = async (name, materialId, gemId, categoryId, materialC
         request.input('size', size);
         request.input('warrantyCard', warrantyCard);
         request.input('description', description);
+        request.input('quantityMaterial', quantityMaterial);
         request.input('productId', productId);
         // Thực hiện truy vấn
         await request.query(sqlString);
@@ -164,7 +166,8 @@ const getProductByNameOrIds = async (name) => {
                 QuantityGem: product.QuantityGem,
                 Size: product.Size,
                 WarrantyCard: product.WarrantyCard,
-                Description: product.Description
+                Description: product.Description,
+                QuantityMaterial: product.QuantityMaterial
             };
             productDetails.push(prodcuctDetail);
         }
@@ -211,7 +214,8 @@ const getProductByCategorys = async (categoryName) => {
                 QuantityGem: product.QuantityGem,
                 Size: product.Size,
                 WarrantyCard: product.WarrantyCard,
-                Description: product.Description
+                Description: product.Description,
+                QuantityMaterial: product.QuantityMaterial
             };
             productDetails.push(prodcuctDetail);
         }
