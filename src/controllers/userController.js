@@ -26,7 +26,7 @@ const getAllUser = async (req, res) => {
 
 const getUserById = async (req, res) => {
     try {
-        const userId = req.query
+        const userId = req.query.userId;
         const user = await getUserByIds(userId);
         if (user.length <= 0) {
             return res
@@ -44,7 +44,7 @@ const getUserById = async (req, res) => {
 
 const getUserByUserName = async (req, res) => {
     try {
-        const userName = req.query
+        const userName = req.query.userName;
         const user = await getUserByUserNames(userName);
         if (user.length <= 0) {
             return res
@@ -62,7 +62,7 @@ const getUserByUserName = async (req, res) => {
 
 const getUserByName = async (req, res) => {
     try {
-        const name = req.query
+        const name = req.query.name;
         const user = await getUserByNames(name);
         if (user.length <= 0) {
             return res

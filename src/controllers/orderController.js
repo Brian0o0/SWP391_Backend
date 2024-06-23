@@ -24,7 +24,7 @@ const getAllStep = async (req, res) => {
 
 const getStepById = async (req, res) => {
     try {
-        const stepId = req.query
+        const stepId = req.query.stepId;
         const step = await getStepByIds(stepId);
         if (step == null) {
             return res
@@ -129,7 +129,7 @@ const getAllOrderProgress = async (req, res) => {
 
 const getOrderProgressById = async (req, res) => {
     try {
-        const orderProgressId = req.query
+        const orderProgressId = req.query.orderProgressId;
         const orderProgress = await getOrderProgressByIds(orderProgressId);
         console.log(orderProgress);
         if (orderProgressId == null) {
@@ -236,7 +236,7 @@ const getAllOrder = async (req, res) => {
 
 const getOrderById = async (req, res) => {
     try {
-        const orderId = req.query
+        const orderId = req.query.orderId;
         const order = await getOrderByIds(orderId);
         console.log(order);
         if (order == null) {
@@ -345,7 +345,7 @@ const getAllOrderDetail = async (req, res) => {
 
 const getOrderDetailById = async (req, res) => {
     try {
-        const orderDetailId = req.query;
+        const orderDetailId = req.query.orderDetailId;
         const order = await getOrderDetailByIds(orderDetailId);
         console.log(order);
         if (order == null) {

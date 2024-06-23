@@ -20,7 +20,7 @@ const getAllBlog = async (req, res) => {
 
 const getBlogById = async (req, res) => {
     try {
-        const blogId = req.query
+        const blogId = req.query.blogId
         const blog = await getBlogByIds(blogId);
         console.log(blog);
         if (blog.length <= 0) {

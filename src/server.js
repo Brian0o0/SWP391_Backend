@@ -19,7 +19,7 @@ app.use(express.json()) // for json
 
 app.use(cookieParser());
 
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: false }));
 
 
 // CORS middleware
