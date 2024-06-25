@@ -151,6 +151,7 @@ const insertOrderProgress = async (req, res) => {
     try {
         const { img, note, stepId, orderId, date } = req.body
         if (img && note && stepId && orderId && date) {
+            // const buffer = Buffer.from(base64String, 'base64');
             const check = await insertOrderProgresss(img, note, stepId, orderId, date);
             if (check == false) {
                 return res
