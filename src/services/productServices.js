@@ -9,29 +9,32 @@ const { getCostGemByIds, getGemByIds } = require('../services/gemServices');
 const { getCostMaterialByIds, getMaterialByIds } = require('../services/materialServices');
 const { Int } = require('msnodesqlv8');
 
+// Đảm bảo kết nối pool được mở
+pool.connect().then(() => {
+    console.log('Connected to the database.');
+}).catch(err => {
+    console.error('Database connection failed:', err);
+});
 
 //get all product from database function
 const getAllProducts = async () => {
     try {
-        await pool.connect();
+        const request = pool.request();
         var sqlString = "select * from Product";
-        const result = await pool.request().query(sqlString);
+        const result = await request.query(sqlString);
         const product = result.recordset;
         console.log(product);
         return product;
     } catch (error) {
         console.log(error);
         return null;
-    } finally {
-        pool.close();
     }
 }
 //get product by id from database function
 const getProductByIds = async (productId) => {
     try {
-        await pool.connect();
-        var sqlString = "select * from Product where ProductID = @productId;";
         const request = pool.request();
+        var sqlString = "select * from Product where ProductID = @productId;";
         request.input('productId', productId);
         const result = await request.query(sqlString);
         const product = result.recordset;
@@ -40,19 +43,16 @@ const getProductByIds = async (productId) => {
     } catch (error) {
         console.log(error);
         return null;
-    } finally {
-        pool.close();
     }
 }
 //insert product to database function
 const insertProducts = async (name, materialId, gemId, categoryId, materialCost, gemCost, productCost, image, quantityGem, size, warrantyCard, description, quantityMaterial) => {
     try {
-        await pool.connect();
+        const request = pool.request();
         const sqlString = `
         INSERT INTO Product (Name, MaterialID, GemID, CategoryID, MaterialCost, GemCost, ProductCost, Image, QuantityGem, Size, WarrantyCard, Description, QuantityMaterial) 
         VALUES (@name, @materialId, @gemId, @categoryId, @materialCost, @gemCost, @productCost, @image, @quantityGem, @size, @warrantyCard, @description, @quantityMaterial)
         `;
-        const request = pool.request();
         request.input('name', name);
         request.input('materialId', materialId);
         request.input('gemId', gemId);
@@ -79,7 +79,7 @@ const insertProducts = async (name, materialId, gemId, categoryId, materialCost,
 //update product on database function
 const updateProductByIds = async (name, materialId, gemId, categoryId, materialCost, gemCost, productCost, image, quantityGem, size, warrantyCard, description, quantityMaterial, productId) => {
     try {
-        await pool.connect();
+        const request = pool.request();
         const sqlString = `
             UPDATE Product
             SET Name = @name, MaterialID = @materialId, GemID = @gemId, CategoryID = @categoryId
@@ -87,7 +87,6 @@ const updateProductByIds = async (name, materialId, gemId, categoryId, materialC
             , QuantityGem = @quantityGem, Size = @size, WarrantyCard = @warrantyCard, Description = @description, QuantityMaterial= @quantityMaterial
             WHERE ProductID = @productId
         `;
-        const request = pool.request();
         request.input('name', name);
         request.input('materialId', materialId);
         request.input('gemId', gemId);
@@ -113,11 +112,10 @@ const updateProductByIds = async (name, materialId, gemId, categoryId, materialC
 //delete product by id on database function
 const deleteProductByIds = async (productId) => {
     try {
-        await pool.connect();
+        const request = pool.request();
         const sqlString = `
         DELETE FROM Product WHERE ProductID = @productId
         `;
-        const request = pool.request();
         request.input('productId', productId);
         await request.query(sqlString);
         return true;
@@ -129,9 +127,8 @@ const deleteProductByIds = async (productId) => {
 
 const getProductByNameOrIds = async (name) => {
     try {
-        await pool.connect();
-        var sqlString = "select * from Product where [Name] like @name or ProductID = @id";
         const request = pool.request();
+        var sqlString = "select * from Product where [Name] like @name or ProductID = @id";
         request.input('name', '%' + name + '%');
         let id
         try {
@@ -175,19 +172,15 @@ const getProductByNameOrIds = async (name) => {
     } catch (error) {
         console.log(error);
         return null;
-    } finally {
-        pool.close();
     }
 }
 
 const getProductByCategorys = async (categoryName) => {
 
     try {
-
-        const categoryTemp = await getCategoryByNames(categoryName);
-        await pool.connect();
-        var sqlString = "select * from Product where CategoryID = @categoryId";
         const request = pool.request();
+        const categoryTemp = await getCategoryByNames(categoryName);
+        var sqlString = "select * from Product where CategoryID = @categoryId";
         request.input('categoryId', categoryTemp[0].CategoryID);
         const result = await request.query(sqlString);
         const productTemp = result.recordset;
@@ -224,8 +217,6 @@ const getProductByCategorys = async (categoryName) => {
     } catch (error) {
         console.log(error);
         return null;
-    } finally {
-        pool.close();
     }
 }
 
@@ -238,3 +229,12 @@ module.exports = {
     getProductByNameOrIds,
     getProductByCategorys,
 }
+
+// Đảm bảo pool kết nối được đóng khi ứng dụng kết thúc
+process.on('exit', () => {
+    pool.close().then(() => {
+        console.log('Database connection closed.');
+    }).catch(err => {
+        console.error('Error closing database connection:', err);
+    });
+});

@@ -126,10 +126,10 @@ router.put('/test/updateCategoryById', updateCategoryById);
 
 //api blog
 router.get('/test/getAllBlogs', getAllBlog);
-router.get('/test/getBlogById/:id', getBlogById);
+router.get('/test/getBlogById', getBlogById);
 router.post('/test/insertBlog', insertBlog);
-router.put('/test/updateBlogById/:id', updateBlogById);
-router.delete('/test/deleteBlogById/:id', deleteBlogById);
+router.put('/test/updateBlogById', updateBlogById);
+router.delete('/test/deleteBlogById', deleteBlogById);
 
 
 router.get("/", function (req, res, next) {

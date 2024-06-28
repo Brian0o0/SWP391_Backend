@@ -1,29 +1,32 @@
 //CRUD of material with database
 
 const { pool } = require('../config/database');
+// Đảm bảo kết nối pool được mở
+pool.connect().then(() => {
+    console.log('Connected to the database.');
+}).catch(err => {
+    console.error('Database connection failed:', err);
+});
 
 //get all CostMaterial from database function
 const getAllCostMaterials = async () => {
     try {
-        await pool.connect();
+        const request = pool.request();
         var sqlString = "select * from CostMaterial";
-        const result = await pool.request().query(sqlString);
+        const result = await request.query(sqlString);
         const costMaterial = result.recordset;
         console.log(costMaterial);
         return costMaterial;
     } catch (error) {
         console.log(error);
         return null;
-    } finally {
-        pool.close();
     }
 }
 //get CostMaterial by id from database function
 const getCostMaterialByIds = async (costIdMaterial) => {
     try {
-        await pool.connect();
-        var sqlString = "select * from CostMaterial where CostIdMaterial = @costIdMaterial;";
         const request = pool.request();
+        var sqlString = "select * from CostMaterial where CostIdMaterial = @costIdMaterial;";
         request.input('costIdMaterial', costIdMaterial);
         const result = await request.query(sqlString);
         const costMaterial = result.recordset;
@@ -32,8 +35,6 @@ const getCostMaterialByIds = async (costIdMaterial) => {
     } catch (error) {
         console.log("Error:", error);
         return null;
-    } finally {
-        pool.close();
     }
 }
 // get day of system
@@ -53,12 +54,11 @@ const getDayNow = () => {
 //insert CostMaterial to database function
 const insertCostMaterials = async (price) => {
     try {
-        await pool.connect();
+        const request = pool.request();
         const sqlString = `
         INSERT INTO CostMaterial (DateOfPrice, PriceOfMaterial) VALUES (@dateOfPrice, @priceOfMaterial)
         `;
         let priceTemp = parseInt(price, 10)
-        const request = pool.request();
         request.input('dateOfPrice', getDayNow());
         request.input('priceOfMaterial', priceTemp);
         // Thực hiện truy vấn
@@ -74,13 +74,12 @@ const insertCostMaterials = async (price) => {
 //update CostMaterial on database function
 const updateCostMaterialByIds = async (costIdMaterial, priceOfMaterial) => {
     try {
-        await pool.connect();
+        const request = pool.request();
         const sqlString = `
             UPDATE CostMaterial
             SET DateOfPrice = @dateOfPrice, priceOfMaterial = @priceOfMaterial
             WHERE CostIdMaterial = @costIdMaterial
         `;
-        const request = pool.request();
         request.input('dateOfPrice', getDayNow());
         request.input('priceOfMaterial', priceOfMaterial);
         request.input('costIdMaterial', costIdMaterial);
@@ -96,11 +95,10 @@ const updateCostMaterialByIds = async (costIdMaterial, priceOfMaterial) => {
 //delete CostMaterial by id on database function
 const deleteCostMaterialByIds = async (costIdMaterial) => {
     try {
-        await pool.connect();
+        const request = pool.request();
         const sqlString = `
         DELETE FROM CostMaterial WHERE  CostIdMaterial = @costIdMaterial
         `;
-        const request = pool.request();
         request.input('costIdMaterial', costIdMaterial);
         await request.query(sqlString);
         return true;
@@ -112,25 +110,22 @@ const deleteCostMaterialByIds = async (costIdMaterial) => {
 //get all Material from database function
 const getAllMaterials = async () => {
     try {
-        await pool.connect();
+        const request = pool.request();
         var sqlString = "select * from Material";
-        const result = await pool.request().query(sqlString);
+        const result = await request.query(sqlString);
         const Material = result.recordset;
         console.log(Material);
         return Material;
     } catch (error) {
         console.log(error);
         return null;
-    } finally {
-        pool.close();
     }
 }
 //get Material by id from database function
 const getMaterialByIds = async (materialId) => {
     try {
-        await pool.connect();
-        var sqlString = "select * from Material where MaterialID = @materialId;";
         const request = pool.request();
+        var sqlString = "select * from Material where MaterialID = @materialId;";
         request.input('materialId', materialId);
         const result = await request.query(sqlString);
         const material = result.recordset;
@@ -139,19 +134,16 @@ const getMaterialByIds = async (materialId) => {
     } catch (error) {
         console.log("Error:", error);
         return null;
-    } finally {
-        pool.close();
     }
 }
 
 //insert Material to database function
 const insertMaterials = async (material) => {
     try {
-        await pool.connect();
+        const request = pool.request();
         const sqlString = `
         INSERT INTO Material (Name, Unit, BuyPrice, CostIdMaterial) VALUES (@name, @unit, @buyPrice, @costIdMaterial)
         `;
-        const request = pool.request();
         request.input('name', material.Name);
         request.input('unit', material.Unit);
         request.input('buyPrice', material.BuyPrice);
@@ -170,14 +162,12 @@ const insertMaterials = async (material) => {
 //update Material on database function
 const updateMaterialByIds = async (material) => {
     try {
-        console.log(material);
-        await pool.connect();
+        const request = pool.request();
         const sqlString = `
             UPDATE Material
             SET Name = @Name, Unit = @Unit, BuyPrice = @BuyPrice ,CostIdMaterial = @CostIdMaterial
             WHERE MaterialID = @MaterialID
         `;
-        const request = pool.request();
         request.input('Name', material.Name);
         request.input('Unit', material.Unit);
         request.input('BuyPrice', material.BuyPrice);
@@ -196,11 +186,10 @@ const updateMaterialByIds = async (material) => {
 //delete Material by id on database function
 const deleteMaterialByIds = async (MaterialID) => {
     try {
-        await pool.connect();
+        const request = pool.request();
         const sqlString = `
         DELETE FROM Material WHERE  MaterialID = @MaterialID
         `;
-        const request = pool.request();
         request.input('MaterialID', MaterialID);
         await request.query(sqlString);
         return true;
@@ -222,3 +211,11 @@ module.exports = {
     updateMaterialByIds,
     deleteMaterialByIds,
 }
+// Đảm bảo pool kết nối được đóng khi ứng dụng kết thúc
+process.on('exit', () => {
+    pool.close().then(() => {
+        console.log('Database connection closed.');
+    }).catch(err => {
+        console.error('Error closing database connection:', err);
+    });
+});

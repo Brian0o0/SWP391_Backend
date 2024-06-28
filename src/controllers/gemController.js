@@ -141,8 +141,8 @@ const getGemById = async (req, res) => {
 
 const insertGem = async (req, res) => {
     try {
-        const { name, color, caraWeight, clarity, cut, costIdGem, addedDate, origin, image, identification } = req.body
-        if (name && color && caraWeight && clarity && cut && costIdGem && addedDate && origin && image && identification) {
+        const { name, color, caraWeight, clarity, cut, costIdGem, addedDate, origin, image, identification, size } = req.body
+        if (name && color && caraWeight && clarity && cut && costIdGem && addedDate && origin && image && identification && size) {
             const gem = {
                 Name: name,
                 Color: color,
@@ -154,6 +154,7 @@ const insertGem = async (req, res) => {
                 Origin: origin,
                 Image: image,
                 Identification: identification,
+                Size: parseFloat(size)
             };
             const check = await insertGems(gem);
             if (check == false) {
@@ -168,7 +169,7 @@ const insertGem = async (req, res) => {
         } else {
             return res
                 .status(400)
-                .send('Name, Color, CaraWeight, Clarity, Cut, CostIDGem, AddedDate, Origin, Image and Identification is required')
+                .send('Name, Color, CaraWeight, Clarity, Cut, CostIDGem, AddedDate, Origin, Image, Identification and Size is required')
         }
     } catch (error) {
         console.log(error);
@@ -180,7 +181,7 @@ const insertGem = async (req, res) => {
 
 const updateGemById = async (req, res) => {
     try {
-        const { gemId, name, color, caraWeight, clarity, cut, costIdGem, addedDate, origin, image, identification } = req.body
+        const { gemId, name, color, caraWeight, clarity, cut, costIdGem, addedDate, origin, image, identification, size } = req.body
         const gem = {
             GemId: parseInt(gemId),
             Name: name,
@@ -193,6 +194,7 @@ const updateGemById = async (req, res) => {
             Origin: origin,
             Image: image,
             Identification: identification,
+            Size: parseFloat(size)
         };
         const check = await updateGemByIds(gem);
         if (check == false) {

@@ -74,7 +74,7 @@ const insertBlog = async (req, res) => {
 
 const deleteBlogById = async (req, res) => {
     try {
-        const { blogId } = req.body
+        const { blogId } = req.body;
         const find = await getBlogById(blogId);
         if (find.length <= 0) {
             return res

@@ -2,29 +2,31 @@
 const express = require('express');
 const { pool } = require('../config/database');
 
+pool.connect().then(() => {
+    console.log('Connected to the database.');
+}).catch(err => {
+    console.error('Database connection failed:', err);
+});
 
 const getAllCategorys = async () => {
     try {
-        await pool.connect();
+        const request = pool.request();
         var sqlString = "select * from Category";
-        const result = await pool.request().query(sqlString);
+        const result = await request.query(sqlString);
         const category = result.recordset;
         console.log(category);
         return category;
     } catch (error) {
         console.log(error);
         return null;
-    } finally {
-        pool.close();
     }
 }
 
 // lấy category theo ID
 const getCategoryByIds = async (categoryId) => {
     try {
-        await pool.connect();
-        const sqlString = "SELECT * FROM Category WHERE CategoryID = @categoryId";
         const request = pool.request();
+        const sqlString = "SELECT * FROM Category WHERE CategoryID = @categoryId";
         request.input('categoryId', categoryId);
         const result = await request.query(sqlString);
         const category = result.recordset;
@@ -33,17 +35,14 @@ const getCategoryByIds = async (categoryId) => {
     } catch (error) {
         console.error(error);
         return null;
-    } finally {
-        pool.close();
     }
 }
 
 
 const getCategoryByNames = async (name) => {
     try {
-        await pool.connect();
-        const sqlString = "SELECT * FROM Category WHERE Name = @name";
         const request = pool.request();
+        const sqlString = "SELECT * FROM Category WHERE Name = @name";
         request.input('name', name);
         const result = await request.query(sqlString);
         const category = result.recordset;
@@ -52,17 +51,14 @@ const getCategoryByNames = async (name) => {
     } catch (error) {
         console.error(error);
         return null;
-    } finally {
-        pool.close();
     }
 }
 
 // Thêm Category Mới
 const insertCategorys = async (name, description) => {
     try {
-        await pool.connect();
-        const sqlString = "INSERT INTO Category (Description, Name) VALUES (@description, @name)";
         const request = pool.request();
+        const sqlString = "INSERT INTO Category (Description, Name) VALUES (@description, @name)";
         request.input('description', name);
         request.input('name', description);
         await request.query(sqlString);
@@ -70,21 +66,18 @@ const insertCategorys = async (name, description) => {
     } catch (error) {
         console.error("Error inserting category: " + error.message);
         return false;
-    } finally {
-        pool.close();
     }
 }
 
 //Cập Nhật Category Theo ID
 const updateCategoryByIds = async (categoryId, name, description) => {
     try {
-        await pool.connect();
+        const request = pool.request();
         const sqlString = `
             UPDATE Category
             SET name = @name, description = @description
             WHERE categoryID = @categoryID
         `;
-        const request = pool.request();
         request.input('name', name);
         request.input('description', description);
         request.input('categoryID', categoryId);
@@ -93,8 +86,6 @@ const updateCategoryByIds = async (categoryId, name, description) => {
     } catch (error) {
         console.error("Error updating category: " + error.message);
         return false;
-    } finally {
-        pool.close();
     }
 }
 
@@ -102,17 +93,14 @@ const updateCategoryByIds = async (categoryId, name, description) => {
 //Xóa Category Theo ID
 const deleteCategoryByIds = async (categoryId) => {
     try {
-        await pool.connect();
-        const sqlString = "DELETE FROM Category WHERE CategoryID = @categoryId";
         const request = pool.request();
+        const sqlString = "DELETE FROM Category WHERE CategoryID = @categoryId";
         request.input('categoryId', categoryId);
         await request.query(sqlString);
         return true;
     } catch (error) {
         console.error("Error deleting category: " + error.message);
         return false;
-    } finally {
-        pool.close();
     }
 }
 //
@@ -124,4 +112,11 @@ module.exports = {
     deleteCategoryByIds,
     getCategoryByNames,
 }
-
+// Đảm bảo pool kết nối được đóng khi ứng dụng kết thúc
+process.on('exit', () => {
+    pool.close().then(() => {
+        console.log('Database connection closed.');
+    }).catch(err => {
+        console.error('Error closing database connection:', err);
+    });
+});

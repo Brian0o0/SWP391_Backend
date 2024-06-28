@@ -3,29 +3,33 @@
 const express = require('express');
 const { pool } = require('../config/database');
 
+// Đảm bảo kết nối pool được mở
+pool.connect().then(() => {
+    console.log('Connected to the database.');
+}).catch(err => {
+    console.error('Database connection failed:', err);
+});
+
 //get all cost gem from database function
 const getAllCostGems = async () => {
     try {
-        await pool.connect();
+        const request = pool.request();
         var sqlString = "select * from CostGem";
-        const result = await pool.request().query(sqlString);
+        const result = await request.query(sqlString);
         const cost = result.recordset;
         console.log(cost);
         return cost;
     } catch (error) {
         console.log(error);
         return null;
-    } finally {
-        pool.close();
     }
 }
 
 //get cost gem by id from database function
 const getCostGemByIds = async (costIDGem) => {
     try {
-        await pool.connect();
-        var sqlString = "select * from CostGem where CostIDGem = @CostIDGem;";
         const request = pool.request();
+        var sqlString = "select * from CostGem where CostIDGem = @CostIDGem;";
         request.input('CostIDGem', costIDGem);
         const result = await request.query(sqlString);
         const cost = result.recordset;
@@ -34,8 +38,6 @@ const getCostGemByIds = async (costIDGem) => {
     } catch (error) {
         console.log("Error:", error);
         return null;
-    } finally {
-        pool.close();
     }
 }
 // get day of system
@@ -56,12 +58,11 @@ const getDayNow = () => {
 //insert cost gem to database function
 const insertCostGems = async (price) => {
     try {
-        await pool.connect();
+        const request = pool.request();
         const sqlString = `
         INSERT INTO CostGem (DateOfPrice, PriceOfGem) VALUES (@dateOfPrice, @priceOfgem)
         `;
         let priceTemp = parseInt(price, 10)
-        const request = pool.request();
         request.input('dateOfPrice', getDayNow());
         request.input('priceOfgem', priceTemp);
         // Thực hiện truy vấn
@@ -77,13 +78,12 @@ const insertCostGems = async (price) => {
 //update cost gem on database function
 const updateCostGemByIds = async (costGemID, priceOfGem) => {
     try {
-        await pool.connect();
+        const request = pool.request();
         const sqlString = `
             UPDATE CostGem
             SET DateOfPrice = @dateOfPrice, PriceOfGem = @priceOfGem
             WHERE CostIDGem = @costGemID
         `;
-        const request = pool.request();
         request.input('dateOfPrice', getDayNow());
         request.input('priceOfGem', priceOfGem);
         request.input('costGemID', costGemID);
@@ -99,11 +99,10 @@ const updateCostGemByIds = async (costGemID, priceOfGem) => {
 //delete cost gem by id on database function
 const deleteCostGemByIds = async (costGemID) => {
     try {
-        await pool.connect();
+        const request = pool.request();
         const sqlString = `
         DELETE FROM CostGem WHERE CostIDGem = @costGemID
         `;
-        const request = pool.request();
         request.input('costGemID', costGemID);
         await request.query(sqlString);
         return true;
@@ -116,9 +115,9 @@ const deleteCostGemByIds = async (costGemID) => {
 // get all gem function
 const getAllGems = async () => {
     try {
-        await pool.connect();
+        const request = pool.request();
         var sqlString = "select * from Gem";
-        const result = await pool.request().query(sqlString);
+        const result = await request.query(sqlString);
         const gem = result.recordset;
         console.log(gem);
         return gem;
@@ -133,9 +132,8 @@ const getAllGems = async () => {
 //get gem by id from database function
 const getGemByIds = async (gemId) => {
     try {
-        await pool.connect();
-        var sqlString = `select * from Gem where GemID = @gemId;`
         const request = pool.request();
+        var sqlString = `select * from Gem where GemID = @gemId;`
         request.input('gemId', gemId);
         const result = await request.query(sqlString);
         const gem = result.recordset;
@@ -144,19 +142,16 @@ const getGemByIds = async (gemId) => {
     } catch (error) {
         console.log("Error:", error);
         return null;
-    } finally {
-        pool.close();
     }
 }
 //insert gem to database function
 const insertGems = async (gem) => {
     try {
-        await pool.connect();
-        const sqlString = `
-        INSERT INTO Gem (Name, Color, CaraWeight, Clarity, Cut, CostIDGem, AddedDate, Origin, Image,Identification) 
-VALUES (@name, @color, @caraWeight, @clarity, @cut, @costIdGem, @addedDate, @origin, @image, @identification)
-        `;
         const request = pool.request();
+        const sqlString = `
+        INSERT INTO Gem (Name, Color, CaraWeight, Clarity, Cut, CostIDGem, AddedDate, Origin, Image,Identification,Size) 
+VALUES (@name, @color, @caraWeight, @clarity, @cut, @costIdGem, @addedDate, @origin, @image, @identification, @size)
+        `;
         request.input('name', gem.Name);
         request.input('color', gem.Color);
         request.input('caraWeight', gem.CaraWeight);
@@ -167,6 +162,8 @@ VALUES (@name, @color, @caraWeight, @clarity, @cut, @costIdGem, @addedDate, @ori
         request.input('origin', gem.Origin);
         request.input('image', gem.Image);
         request.input('identification', gem.Identification);
+        request.input('size', gem.Size);
+
         // Thực hiện truy vấn
         await request.query(sqlString);
         // Gửi phản hồi
@@ -181,14 +178,13 @@ VALUES (@name, @color, @caraWeight, @clarity, @cut, @costIdGem, @addedDate, @ori
 //update gem on database function
 const updateGemByIds = async (gem) => {
     try {
-        await pool.connect();
+        const request = pool.request();
         const sqlString = `
             UPDATE Gem
             SET Name = @name, Color = @color, CaraWeight = @caraWeight, Clarity = @clarity, Cut = @cut, CostIDGem = @costIdGem, 
-            AddedDate = @addedDate, Origin = @origin, Image = @image,Identification = @identification
+            AddedDate = @addedDate, Origin = @origin, Image = @image,Identification = @identification, Size = @size
             WHERE GemID = @gemId
         `;
-        const request = pool.request();
         request.input('name', gem.Name);
         request.input('color', gem.Color);
         request.input('caraWeight', gem.CaraWeight);
@@ -199,6 +195,7 @@ const updateGemByIds = async (gem) => {
         request.input('origin', gem.Origin);
         request.input('image', gem.Image);
         request.input('identification', gem.Identification);
+        request.input('size', gem.Size);
         request.input('gemId', gem.GemId);
         // Thực hiện truy vấn
         await request.query(sqlString);
@@ -213,11 +210,10 @@ const updateGemByIds = async (gem) => {
 //delete gem by id on database function
 const deleteGemByIds = async (gemId) => {
     try {
-        await pool.connect();
+        const request = pool.request();
         const sqlString = `
         DELETE FROM Gem WHERE GemID = @gemId
         `;
-        const request = pool.request();
         request.input('gemId', gemId);
         await request.query(sqlString);
         return true;
@@ -229,9 +225,8 @@ const deleteGemByIds = async (gemId) => {
 
 const getGemByCostId = async (costId) => {
     try {
-        await pool.connect();
-        var sqlString = `select * from Gem where CostIDGem = @costId`
         const request = pool.request();
+        var sqlString = `select * from Gem where CostIDGem = @costId`
         request.input('costId', costId);
         const result = await request.query(sqlString);
         const gem = result.recordset;
@@ -240,16 +235,13 @@ const getGemByCostId = async (costId) => {
     } catch (error) {
         console.log("Error:", error);
         return null;
-    } finally {
-        pool.close();
     }
 }
 
 const getGemByPrices = async (firstPrice, secondPrice) => {
     try {
-        await pool.connect();
-        var sqlString = `SELECT * FROM CostGem WHERE PriceOfGem BETWEEN @firstPrice AND @secondPrice;`
         const request = pool.request();
+        var sqlString = `SELECT * FROM CostGem WHERE PriceOfGem BETWEEN @firstPrice AND @secondPrice;`
         request.input('firstPrice', firstPrice);
         request.input('secondPrice', secondPrice);
         const result = await request.query(sqlString);
@@ -266,7 +258,6 @@ const getGemByPrices = async (firstPrice, secondPrice) => {
                     Clarity: gem.Clarity,
                     Cut: gem.Cut,
                     Origin: gem.Origin,
-
                 };
                 gemDetails.push(gemDetail);
             }
@@ -275,8 +266,6 @@ const getGemByPrices = async (firstPrice, secondPrice) => {
     } catch (error) {
         console.log("Error:", error);
         return null;
-    } finally {
-        pool.close();
     }
 }
 
@@ -295,3 +284,11 @@ module.exports = {
     getGemByPrices,
     getDayNow,
 }
+// Đảm bảo pool kết nối được đóng khi ứng dụng kết thúc
+process.on('exit', () => {
+    pool.close().then(() => {
+        console.log('Database connection closed.');
+    }).catch(err => {
+        console.error('Error closing database connection:', err);
+    });
+});

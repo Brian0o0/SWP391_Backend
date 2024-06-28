@@ -107,16 +107,13 @@ const getProductByNameOrId = async (req, res) => {
     try {
 
         const name = req.query.name;
-        console.log(name)
         const product = await getProductByNameOrIds(name);
         console.log(product);
         if (product.length === 0 || !product) {
-            console.log("sss");
             return res
                 .status(404)
                 .send('Empty product list')
         } else {
-            console.log("Aa");
             res.status(200).json(product);
         }
 
