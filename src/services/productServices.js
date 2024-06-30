@@ -1,7 +1,4 @@
 //CRUD of product with database
-
-
-
 const express = require('express');
 const { pool } = require('../config/database');
 const { getCategoryByIds, getCategoryByNames } = require('../services/categoryServices');
@@ -9,12 +6,6 @@ const { getCostGemByIds, getGemByIds } = require('../services/gemServices');
 const { getCostMaterialByIds, getMaterialByIds } = require('../services/materialServices');
 const { Int } = require('msnodesqlv8');
 
-// Đảm bảo kết nối pool được mở
-pool.connect().then(() => {
-    console.log('Connected to the database.');
-}).catch(err => {
-    console.error('Database connection failed:', err);
-});
 
 //get all product from database function
 const getAllProducts = async () => {

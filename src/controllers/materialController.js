@@ -23,7 +23,7 @@ const getAllCostMaterial = async (req, res) => {
 
 const getCostMaterialById = async (req, res) => {
     try {
-        const costIdMaterial = req.query.costIdMaterial;
+        const costIdMaterial = req.query.CostIdMaterial;
         const cost = await getCostMaterialByIds(costIdMaterial);
         if (cost.length <= 0) {
             return res
@@ -42,9 +42,9 @@ const getCostMaterialById = async (req, res) => {
 
 const insertCostMaterial = async (req, res) => {
     try {
-        const { costMaterial } = req.body
-        if (costMaterial) {
-            const check = await insertCostMaterials(costMaterial);
+        const { PriceOfMaterial } = req.body
+        if (CostMaterial) {
+            const check = await insertCostMaterials(PriceOfMaterial);
             if (check == false) {
                 return res
                     .status(500)
@@ -69,8 +69,8 @@ const insertCostMaterial = async (req, res) => {
 
 const deleteCostMaterialById = async (req, res) => {
     try {
-        const { costIdMaterial } = req.body
-        const check = await deleteCostMaterialByIds(costIdMaterial);
+        const { CostIdMaterial } = req.body
+        const check = await deleteCostMaterialByIds(CostIdMaterial);
         if (check == false) {
             return res
                 .status(500)
@@ -90,8 +90,8 @@ const deleteCostMaterialById = async (req, res) => {
 
 const updateCostMaterialById = async (req, res) => {
     try {
-        const { costIdMaterial, dateOfPrice, priceOfMaterial } = req.body
-        const check = await updateCostMaterialByIds(costIdMaterial, dateOfPrice, priceOfMaterial);
+        const { CostIdMaterial, DateOfPrice, PriceOfMaterial } = req.body
+        const check = await updateCostMaterialByIds(CostIdMaterial, DateOfPrice, PriceOfMaterial);
         if (check == false) {
             return res
                 .status(500)
@@ -130,14 +130,14 @@ const getAllMaterial = async (req, res) => {
 
 const getMaterialById = async (req, res) => {
     try {
-        const materialId = req.query.materialId;
-        const cost = await getMaterialByIds(materialId);
-        if (cost.length <= 0) {
+        const materialId = req.query.MaterialId;
+        const materials = await getMaterialByIds(materialId);
+        if (materials.length <= 0) {
             return res
                 .status(404)
                 .send('Empty material list')
         } else {
-            res.status(200).json(cost);
+            res.status(200).json(materials);
         }
     } catch (error) {
         return res
@@ -148,13 +148,13 @@ const getMaterialById = async (req, res) => {
 
 const insertMaterial = async (req, res) => {
     try {
-        const { name, unit, buyPrice, costIdMaterial } = req.body
-        if (name && unit && buyPrice && costIdMaterial) {
+        const { Name, Unit, BuyPrice, CostIdMaterial } = req.body
+        if (Name && Unit && BuyPrice && CostIdMaterial) {
             const material = {
-                Name: name,
-                Unit: unit,
-                BuyPrice: parseFloat(buyPrice),
-                CostIDMaterial: parseInt(costIdMaterial)
+                Name: Name,
+                Unit: Unit,
+                BuyPrice: parseFloat(BuyPrice),
+                CostIdMaterial: parseInt(CostIdMaterial)
 
             }
             const check = await insertMaterials(material);
@@ -183,8 +183,8 @@ const insertMaterial = async (req, res) => {
 
 const deleteMaterialById = async (req, res) => {
     try {
-        const { materialId } = req.body
-        const check = await deleteMaterialByIds(materialId);
+        const { MaterialId } = req.body
+        const check = await deleteMaterialByIds(MaterialId);
         if (check == false) {
             return res
                 .status(500)
@@ -204,13 +204,13 @@ const deleteMaterialById = async (req, res) => {
 
 const updateMaterialById = async (req, res) => {
     try {
-        const { name, unit, buyPrice, costIdMaterial, materialId } = req.body
+        const { Name, Unit, BuyPrice, CostIdMaterial, MaterialId } = req.body
         const material = {
-            Name: name,
-            Unit: unit,
-            BuyPrice: parseFloat(buyPrice),
-            CostIDMaterial: parseInt(costIdMaterial),
-            MaterialID: materialId
+            Name: Name,
+            Unit: Unit,
+            BuyPrice: parseFloat(BuyPrice),
+            CostIdMaterial: parseInt(CostIdMaterial),
+            MaterialId: MaterialId
 
         }
         const check = await updateMaterialByIds(material);

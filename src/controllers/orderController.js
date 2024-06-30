@@ -9,27 +9,27 @@ const getAllStep = async (req, res) => {
     try {
         const step = await getAllSteps();
 
-        if (step == null) {
+        if (step.length <= 0) {
             return res
                 .status(404)
-                .sen('Empty step list')
+                .send('Empty step list')
         } else {
             res.status(200).json(step);
         }
 
     } catch (error) {
-        res.status(500).sen(error);
+        res.status(500).send(error);
     }
 }
 
 const getStepById = async (req, res) => {
     try {
-        const stepId = req.query.stepId;
+        const stepId = req.query.StepId;
         const step = await getStepByIds(stepId);
-        if (step == null) {
+        if (step.length <= 0) {
             return res
                 .status(404)
-                .sen('Empty step list')
+                .send('Step not found!!!')
         } else {
             res.status(200).json(step);
         }
@@ -37,62 +37,62 @@ const getStepById = async (req, res) => {
     } catch (error) {
         return res
             .status(500)
-            .sen(error)
+            .send(error)
     }
 }
 
 const insertStep = async (req, res) => {
     try {
-        const { description, etimatedTime } = req.body
-        if (description && etimatedTime) {
-            const check = await insertSteps(description, etimatedTime);
+        const { Description, EtimatedTime } = req.body
+        if (Description && EtimatedTime) {
+            const check = await insertSteps(Description, EtimatedTime);
             if (check == false) {
                 return res
                     .status(500)
-                    .sen('Insert step  fail')
+                    .send('Insert step  fail')
             } else {
                 return res
                     .status(200)
-                    .sen('Insert step successfully')
+                    .send('Insert step successfully')
             }
         } else {
             return res
                 .status(400)
-                .sen('Description and etimatedTime is required')
+                .send('Description and etimatedTime is required')
         }
     } catch (error) {
         console.log(error);
         return res
             .status(500)
-            .sen(error)
+            .send(error)
     }
 }
 
 const deleteStepById = async (req, res) => {
     try {
-        const { stepId } = req.body
-        const check = await deleteStepByIds(stepId);
+        const { StepId } = req.body
+        const check = await deleteStepByIds(StepId);
         if (check == false) {
             return res
                 .status(500)
-                .sen('Delete step fail')
+                .send('Delete step fail')
         } else {
             return res
                 .status(200)
-                .sen('Delete step successfully')
+                .send('Delete step successfull')
         }
     } catch (error) {
         console.log(error);
         return res
             .status(500)
-            .sen(error)
+            .send(error)
     }
 }
 
 const updateStepById = async (req, res) => {
     try {
-        const { stepId, description, etimatedTime } = req.body
-        const check = await updateStepByIds(description, etimatedTime, stepId);
+        const { StepId, Description, EtimatedTime } = req.body
+        const check = await updateStepByIds(Description, EtimatedTime, StepId);
         if (check == false) {
             return res
                 .status(500)
@@ -113,8 +113,7 @@ const updateStepById = async (req, res) => {
 const getAllOrderProgress = async (req, res) => {
     try {
         const orderProgress = await getAllOrderProgresss();
-
-        if (orderProgress == null) {
+        if (orderProgress.length <= 0) {
             return res
                 .status(404)
                 .sen('Empty order progress list')
@@ -129,13 +128,12 @@ const getAllOrderProgress = async (req, res) => {
 
 const getOrderProgressById = async (req, res) => {
     try {
-        const orderProgressId = req.query.orderProgressId;
+        const orderProgressId = req.query.OrderProgressId;
         const orderProgress = await getOrderProgressByIds(orderProgressId);
-        console.log(orderProgress);
-        if (orderProgressId == null) {
+        if (orderProgress.length <= 0) {
             return res
                 .status(404)
-                .sen('Empty order progress list')
+                .sen('Order progress not found')
         } else {
             res.status(200).json(orderProgress);
         }
@@ -149,10 +147,9 @@ const getOrderProgressById = async (req, res) => {
 
 const insertOrderProgress = async (req, res) => {
     try {
-        const { img, note, stepId, orderId, date } = req.body
-        if (img && note && stepId && orderId && date) {
-            const imgBuffer = Buffer.from(img, 'base64');
-            const check = await insertOrderProgresss(imgBuffer, note, stepId, orderId, date);
+        const { Image, Note, StepId, OrderId, Date } = req.body
+        if (Image && Note && StepId && OrderId && Date) {
+            const check = await insertOrderProgresss(Image, Note, StepId, OrderId, Date);
             if (check == false) {
                 return res
                     .status(500)
@@ -177,8 +174,8 @@ const insertOrderProgress = async (req, res) => {
 
 const deleteOrderProgressById = async (req, res) => {
     try {
-        const { orderProgressId } = req.body
-        const check = await deleteOrderProgressByIds(orderProgressId);
+        const { OrderProgressId } = req.body
+        const check = await deleteOrderProgressByIds(OrderProgressId);
         if (check == false) {
             return res
                 .status(500)
@@ -198,8 +195,8 @@ const deleteOrderProgressById = async (req, res) => {
 
 const updateOrderProgressById = async (req, res) => {
     try {
-        const { img, note, stepId, orderId, date, orderProgressId } = req.body
-        const check = await updateOrderProgressByIds(img, note, stepId, orderId, date, orderProgressId);
+        const { Image, Note, StepId, OrderId, Date, OrderProgressId } = req.body
+        const check = await updateOrderProgressByIds(Image, Note, StepId, OrderId, Date, OrderProgressId);
         console.log(check);
         if (check == false) {
             return res
@@ -220,14 +217,13 @@ const updateOrderProgressById = async (req, res) => {
 
 const getAllOrder = async (req, res) => {
     try {
-        const order = await getAllOrders();
-
-        if (order == null) {
+        const orders = await getAllOrders();
+        if (orders.length <= 0) {
             return res
                 .status(404)
                 .sen('Empty order list')
         } else {
-            res.status(200).json(order);
+            res.status(200).json(orders);
         }
 
     } catch (error) {
@@ -237,10 +233,10 @@ const getAllOrder = async (req, res) => {
 
 const getOrderById = async (req, res) => {
     try {
-        const orderId = req.query.orderId;
+        const orderId = req.query.OrderId;
         const order = await getOrderByIds(orderId);
         console.log(order);
-        if (order == null) {
+        if (order.length <= 0) {
             return res
                 .status(404)
                 .sen('Empty order list')
@@ -257,9 +253,9 @@ const getOrderById = async (req, res) => {
 
 const insertOrder = async (req, res) => {
     try {
-        const { paymentMethods, phone, address, orderDetailId, status, userId, description, userName } = req.body
-        if (paymentMethods && phone && address && orderDetailId && status && userId && description && userName) {
-            const check = await insertOrders(paymentMethods, phone, address, orderDetailId, status, userId, description, userName);
+        const { PaymentMethods, Phone, Address, Status, UserId, Description, UserName } = req.body
+        if (PaymentMethods && Phone && Address && Status && UserId && Description && UserName) {
+            const check = await insertOrders(PaymentMethods, Phone, Address, Status, UserId, Description, UserName);
             if (check == false) {
                 return res
                     .status(500)
@@ -272,7 +268,7 @@ const insertOrder = async (req, res) => {
         } else {
             return res
                 .status(400)
-                .sen('PaymentMethods, phone, address, orderDetailId, status, userId, description and userName is required')
+                .sen('PaymentMethods, Phone, Address, Status, UserId, Description and UserName and userName is required')
         }
 
     } catch (error) {
@@ -285,8 +281,8 @@ const insertOrder = async (req, res) => {
 
 const deleteOrderById = async (req, res) => {
     try {
-        const { orderId } = req.body
-        const check = await deleteOrderByIds(orderId);
+        const { OrderId } = req.body
+        const check = await deleteOrderByIds(OrderId);
         if (check == false) {
             return res.json
                 .status(500)
@@ -306,10 +302,8 @@ const deleteOrderById = async (req, res) => {
 
 const updateOrderById = async (req, res) => {
     try {
-        const { paymentMethods, phone, address, orderDetailId, status, userId, description, userName, orderId } = req.body
-        console.log(status);
-        console.log(orderId);
-        const check = await updateOrderByIds(paymentMethods, phone, address, orderDetailId, status, userId, description, userName, orderId);
+        const { PaymentMethods, Phone, Address, OrderDetailId, Status, UserId, Description, UserName, OrderId } = req.body
+        const check = await updateOrderByIds(PaymentMethods, Phone, Address, OrderDetailId, Status, UserId, Description, UserName, OrderId);
         if (check == false) {
             return res
                 .status(500)
@@ -329,14 +323,14 @@ const updateOrderById = async (req, res) => {
 
 const getAllOrderDetail = async (req, res) => {
     try {
-        const order = await getAllOrderDetails();
+        const orderDetails = await getAllOrderDetails();
 
-        if (order == null) {
+        if (orderDetails.length <= 0) {
             return res
                 .status(404)
                 .sen('Empty order detail list')
         } else {
-            res.status(200).json(order);
+            res.status(200).json(orderDetails);
         }
 
     } catch (error) {
@@ -346,13 +340,12 @@ const getAllOrderDetail = async (req, res) => {
 
 const getOrderDetailById = async (req, res) => {
     try {
-        const orderDetailId = req.query.orderDetailId;
-        const order = await getOrderDetailByIds(orderDetailId);
-        console.log(order);
-        if (order == null) {
+        const orderDetailId = req.query.OrderDetailId;
+        const orderDetail = await getOrderDetailByIds(orderDetailId);
+        if (orderDetail.length <= 0) {
             return res
                 .status(404)
-                .sen('Empty order detail list')
+                .sen('Order detail not found')
         } else {
             res.status(200).json(order);
         }
@@ -366,10 +359,10 @@ const getOrderDetailById = async (req, res) => {
 
 const insertOrderDetailTemp = async (req, res) => {
     try {
-        const { description, productId, status, productName, categoryId, categoryName, materialId, materialName, gemId, gemName, quantityGem, quantityMaterial, orderDate } = req.body
-        if (description && productId && status && productName && categoryId && categoryName && materialId && materialName && gemId && gemName && quantityGem && quantityMaterial && orderDate) {
+        const { Description, ProductId, Status, ProductName, CategoryId, CategoryName, MaterialId, MaterialName, GemId, GemName, QuantityGem, QuantityMaterial, OrderDate, OrderId } = req.body
+        if (Description && ProductId && Status && ProductName && CategoryId && CategoryName && MaterialId && MaterialName && GemId && GemName && QuantityGem && QuantityMaterial && OrderDate && OrderId) {
 
-            const check = await insertOrderDetails(description, productId, status, productName, categoryId, categoryName, materialId, materialName, gemId, gemName, quantityGem, quantityMaterial, orderDate);
+            const check = await insertOrderDetails(Description, ProductId, Status, ProductName, CategoryId, CategoryName, MaterialId, MaterialName, GemId, GemName, QuantityGem, QuantityMaterial, OrderDate, OrderId);
             if (check == false) {
                 return res
                     .status(500)
@@ -382,7 +375,7 @@ const insertOrderDetailTemp = async (req, res) => {
         } else {
             return res
                 .status(400)
-                .sen('Description, productId, status, productName, categoryId, categoryName, materialId, materialName, gemId, gemName, quantityGem, quantityMaterial, orderDate and orderId is required')
+                .sen('description, productId, status, productName, categoryId, categoryName, materialId, materialName, gemId, gemName, quantityGem, quantityMaterial, orderDate and orderId is required')
         }
 
     } catch (error) {
@@ -395,8 +388,8 @@ const insertOrderDetailTemp = async (req, res) => {
 
 const deleteOrderDetailById = async (req, res) => {
     try {
-        const { orderDetailId } = req.body
-        const check = await deleteOrderDetailByIds(orderDetailId);
+        const { OrderDetailId } = req.body
+        const check = await deleteOrderDetailByIds(OrderDetailId);
         if (check == false) {
             return res
                 .status(500)
@@ -416,8 +409,8 @@ const deleteOrderDetailById = async (req, res) => {
 
 const updateOrderDetailById = async (req, res) => {
     try {
-        const { description, productId, status, productName, categoryId, categoryName, materialId, materialName, gemId, gemName, quantityGem, quantityMaterial, orderDate, orderId, orderDetailId } = req.body
-        const check = await updateOrderDetailByIds(description, productId, status, productName, categoryId, categoryName, materialId, materialName, gemId, gemName, quantityGem, quantityMaterial, orderDate, orderId, orderDetailId);
+        const { Description, ProductId, Status, ProductName, CategoryId, CategoryName, MaterialId, MaterialName, GemId, GemName, QuantityGem, QuantityMaterial, OrderDate, OrderId, OrderDetailId } = req.body
+        const check = await updateOrderDetailByIds(Description, ProductId, Status, ProductName, CategoryId, CategoryName, MaterialId, MaterialName, GemId, GemName, QuantityGem, QuantityMaterial, OrderDate, OrderId, OrderDetailId);
         if (check == false) {
             return res
                 .status(500)
@@ -437,10 +430,10 @@ const updateOrderDetailById = async (req, res) => {
 
 const insertOrderDetail = async (req, res) => {
     try {
-        const { description, productId, status } = req.body
-        if (description && productId && status) {
+        const { Description, ProductId, Status, OrderId } = req.body
+        if (Description && ProductId && Status) {
 
-            const check = await insertOrderDetailServices(description, productId, status);
+            const check = await insertOrderDetailServices(Description, ProductId, Status, OrderId);
             if (check == false) {
                 return res
                     .status(500)
@@ -453,7 +446,7 @@ const insertOrderDetail = async (req, res) => {
         } else {
             return res
                 .status(400)
-                .sen('Description, productId and status is required')
+                .sen('Description, productId, status and orderId is required')
         }
 
     } catch (error) {

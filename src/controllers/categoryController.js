@@ -17,7 +17,7 @@ const getAllCategory = async (req, res) => {
         if (categories) {
             res.status(200).json(categories);
         } else {
-            res.status(404).send('Categories not found');
+            res.status(404).send('Empty categories list');
         }
     } catch (error) {
         res.status(500).send(error.message);
@@ -27,8 +27,8 @@ const getAllCategory = async (req, res) => {
 // Lấy category theo ID
 const getCategoryById = async (req, res) => {
     try {
-        const categoryId = req.query.categoryId;
-        const category = await getCategoryByIds(categoryId);
+        const CategoryId = req.query.CategoryId;
+        const category = await getCategoryByIds(CategoryId);
         if (category) {
             res.status(200).json(category);
         } else {
@@ -42,9 +42,9 @@ const getCategoryById = async (req, res) => {
 // Thêm category mới
 const insertCategory = async (req, res) => {
     try {
-        const { name, description } = req.body;
-        if (name && description) {
-            const check = await insertCategorys(name, description);
+        const { Name, Description } = req.body;
+        if (Name && Description) {
+            const check = await insertCategorys(Name, Description);
             if (check == true) {
                 res.status(201).send('Category created successfully');
             } else {
@@ -53,7 +53,7 @@ const insertCategory = async (req, res) => {
         } else {
             return res
                 .status(400)
-                .send('Description, productId, status, productName, categoryId, categoryName, materialId, materialName, gemId, gemName, quantityGem, quantityMaterial, orderDate and orderId is required');
+                .send('Description and name is required');
         }
 
     } catch (error) {
@@ -64,15 +64,15 @@ const insertCategory = async (req, res) => {
 // Cập nhật category theo ID
 const updateCategoryById = async (req, res) => {
     try {
-        const { categoryId, name, description } = req.body;
-        let find = await getCategoryById(categoryId);
+        const { CategoryId, Name, Description } = req.body;
+        let find = await getCategoryById(CategoryId);
         if (find.length <= 0) {
             return res
                 .status(404)
                 .send('Category does not exist')
         } else {
-            if (categoryId && name && description) {
-                const check = await updateCategoryByIds(categoryId, name, description);
+            if (CategoryId && Name && Description) {
+                const check = await updateCategoryByIds(CategoryId, Name, Description);
                 if (check) {
                     res.status(200).send('Category updated successfully');
                 } else {
@@ -93,14 +93,14 @@ const updateCategoryById = async (req, res) => {
 // Xóa category theo ID
 const deleteCategoryById = async (req, res) => {
     try {
-        const { categoryId } = req.body;
-        let find = await getCategoryById(categoryId);
+        const { CategoryId } = req.body;
+        let find = await getCategoryById(CategoryId);
         if (find.length <= 0) {
             return res
                 .status(404)
                 .send('Category does not exist')
         } else {
-            const check = await deleteCategoryByIds(categoryId);
+            const check = await deleteCategoryByIds(CategoryId);
             if (check) {
                 res.status(200).send('Category deleted successfully');
             } else {

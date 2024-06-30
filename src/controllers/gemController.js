@@ -4,7 +4,6 @@ const { getAllCostGems, getCostGemByIds, insertCostGems, updateCostGemByIds, del
 const getAllCostGem = async (req, res) => {
     try {
         const cost = await getAllCostGems();
-
         if (cost.length <= 0) {
             return res
                 .status(404)
@@ -20,8 +19,8 @@ const getAllCostGem = async (req, res) => {
 
 const getCostGemById = async (req, res) => {
     try {
-        const costGemID = req.query.costGemID;
-        const cost = await getCostGemByIds(costGemID);
+        const CostIdGem = req.query.CostIdGem;
+        const cost = await getCostGemByIds(CostIdGem);
         console.log(cost);
         if (cost.length <= 0) {
             return res
@@ -39,10 +38,10 @@ const getCostGemById = async (req, res) => {
 
 const insertCostGem = async (req, res) => {
     try {
-        const { costGem } = req.body
+        const { PriceOfGem } = req.body
 
-        if (costGem) {
-            const check = await insertCostGems(costGem);
+        if (PriceOfGem) {
+            const check = await insertCostGems(PriceOfGem);
             if (check == false) {
                 return res
                     .status(500)
@@ -67,8 +66,8 @@ const insertCostGem = async (req, res) => {
 
 const deleteCostGemById = async (req, res) => {
     try {
-        const { costGemID } = req.body
-        const check = await deleteCostGemByIds(costGemID);
+        const { CostIdGem } = req.body
+        const check = await deleteCostGemByIds(CostIdGem);
         if (check == false) {
             return res
                 .status(500)
@@ -88,8 +87,8 @@ const deleteCostGemById = async (req, res) => {
 
 const updateCostGemById = async (req, res) => {
     try {
-        const { costGemID, dateOfPrice, priceOfGem } = req.body
-        const check = await updateCostGemByIds(costGemID, dateOfPrice, priceOfGem);
+        const { CostIdGem, DateOfPrice, PriceOfGem } = req.body
+        const check = await updateCostGemByIds(CostIdGem, DateOfPrice, PriceOfGem);
         if (check == false) {
             return res
                 .status(500)
@@ -109,14 +108,14 @@ const updateCostGemById = async (req, res) => {
 
 const getAllGem = async (req, res) => {
     try {
-        const cost = await getAllGems();
-
-        if (cost.length <= 0) {
+        const gems = await getAllGems();
+        if (gems.length <= 0) {
             return res
                 .status(404)
-                .send('Empty gem price list')
+                .send('Empty gem list')
         } else {
-            res.status(200).json(cost);
+
+            res.status(200).json(gems);
         }
     } catch (error) {
         res.status(500).send(error);
@@ -125,14 +124,14 @@ const getAllGem = async (req, res) => {
 
 const getGemById = async (req, res) => {
     try {
-        const gemId = req.query.gemId;
-        const gem = await getGemByIds(gemId);
-        if (gem.length <= 0) {
+        const GemId = req.query.GemId;
+        const gems = await getGemByIds(GemId);
+        if (gems.length <= 0) {
             return res
                 .status(404)
-                .send('Empty gem list')
+                .send('Gem not found')
         } else {
-            res.status(200).json(gem);
+            res.status(200).json(gems);
         }
     } catch (error) {
         res.status(500).send(error);
@@ -141,20 +140,20 @@ const getGemById = async (req, res) => {
 
 const insertGem = async (req, res) => {
     try {
-        const { name, color, caraWeight, clarity, cut, costIdGem, addedDate, origin, image, identification, size } = req.body
-        if (name && color && caraWeight && clarity && cut && costIdGem && addedDate && origin && image && identification && size) {
+        const { Name, Color, CaraWeight, Clarity, Cut, CostIdGem, AddedDate, Origin, Image, Identification, Size } = req.body
+        if (Name && Color && CaraWeight && Clarity && Cut && CostIdGem && AddedDate && Origin && Image && Identification && Size) {
             const gem = {
-                Name: name,
-                Color: color,
-                CaraWeight: parseFloat(caraWeight),
-                Clarity: clarity,
-                Cut: cut,
-                CostIDGem: parseInt(costIdGem),
-                AddedDate: addedDate,
-                Origin: origin,
-                Image: image,
-                Identification: identification,
-                Size: parseFloat(size)
+                Name: Name,
+                Color: Color,
+                CaraWeight: parseFloat(CaraWeight),
+                Clarity: Clarity,
+                Cut: Cut,
+                CostIdGem: parseInt(CostIdGem),
+                AddedDate: AddedDate,
+                Origin: Origin,
+                Image: Image,
+                Identification: Identification,
+                Size: parseFloat(Size)
             };
             const check = await insertGems(gem);
             if (check == false) {
@@ -181,20 +180,20 @@ const insertGem = async (req, res) => {
 
 const updateGemById = async (req, res) => {
     try {
-        const { gemId, name, color, caraWeight, clarity, cut, costIdGem, addedDate, origin, image, identification, size } = req.body
+        const { GemId, Name, Color, CaraWeight, Clarity, Cut, CostIdGem, AddedDate, Origin, Image, Identification, Size } = req.body
         const gem = {
-            GemId: parseInt(gemId),
-            Name: name,
-            Color: color,
-            CaraWeight: parseFloat(caraWeight),
-            Clarity: clarity,
-            Cut: cut,
-            CostIDGem: parseInt(costIdGem),
-            AddedDate: addedDate,
-            Origin: origin,
-            Image: image,
-            Identification: identification,
-            Size: parseFloat(size)
+            GemId: parseInt(GemId),
+            Name: Name,
+            Color: Color,
+            CaraWeight: parseFloat(CaraWeight),
+            Clarity: Clarity,
+            Cut: Cut,
+            CostIdGem: parseInt(CostIdGem),
+            AddedDate: AddedDate,
+            Origin: Origin,
+            Image: Image,
+            Identification: Identification,
+            Size: parseFloat(Size)
         };
         const check = await updateGemByIds(gem);
         if (check == false) {
@@ -216,9 +215,9 @@ const updateGemById = async (req, res) => {
 
 const deleteGemById = async (req, res) => {
     try {
-        const { gemId } = req.body
-        if (gemId) {
-            const check = await deleteGemByIds(gemId);
+        const { GemId } = req.body
+        if (GemId) {
+            const check = await deleteGemByIds(GemId);
             if (check == false) {
                 return res
                     .status(500)
@@ -233,7 +232,7 @@ const deleteGemById = async (req, res) => {
         } else {
             return res
                 .status(400)
-                .send('gemId is required'
+                .send('GemId is required'
                 );
         }
 
@@ -248,15 +247,68 @@ const deleteGemById = async (req, res) => {
 const getGemByPrice = async (req, res) => {
     try {
         const { firstPrice, secondPrice } = req.body;
-        const gem = await getGemByPrices(firstPrice, secondPrice);
-        console.log(gem)
-        if (gem.length <= 0) {
-            return res
-                .status(404)
-                .send('Empty gem list')
+        if (firstPrice && secondPrice) {
+            if (firstPrice <= secondPrice) {
+                console.log(1);
+                const gem = await getGemByPrices(firstPrice, secondPrice);
+                console.log(gem)
+                if (gem.length <= 0) {
+                    return res
+                        .status(404)
+                        .send('Empty gem list')
+                } else {
+                    res.status(200).json(gem);
+                }
+            } else {
+                console.log(2);
+                const gem = await getAllGems();
+                console.log(gem)
+                if (gem.length <= 0) {
+                    return res
+                        .status(404)
+                        .send('Empty gem list')
+                } else {
+                    res.status(200).json(gem);
+                }
+            }
+
+        } else if (!firstPrice && secondPrice) {
+            console.log(3);
+
+            const gem = await getGemByPrices(0, secondPrice);
+            console.log(gem)
+            if (gem.length <= 0) {
+                return res
+                    .status(404)
+                    .send('Empty gem list')
+            } else {
+                res.status(200).json(gem);
+            }
+        } else if (firstPrice && !secondPrice) {
+            console.log(4);
+            const gem = await getGemByPrices(firstPrice, 999999);
+            console.log(gem)
+            if (gem.length <= 0) {
+                return res
+                    .status(404)
+                    .send('Empty gem list')
+            } else {
+                res.status(200).json(gem);
+            }
         } else {
-            res.status(200).json(gem);
+            console.log(5);
+
+            const gem = await getAllGems();
+            console.log(gem)
+            if (gem.length <= 0) {
+                return res
+                    .status(404)
+                    .send('Empty gem list')
+            } else {
+                res.status(200).json(gem);
+            }
         }
+
     } catch (error) {
         res.status(500).send(error);
     }

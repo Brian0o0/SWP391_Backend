@@ -1,15 +1,11 @@
 //CRUD of category with database
 const express = require('express');
-const { pool } = require('../config/database');
+const { connectToDatabase } = require('../config/database');
 
-pool.connect().then(() => {
-    console.log('Connected to the database.');
-}).catch(err => {
-    console.error('Database connection failed:', err);
-});
 
 const getAllCategorys = async () => {
     try {
+        const pool = await connectToDatabase();
         const request = pool.request();
         var sqlString = "select * from Category";
         const result = await request.query(sqlString);
@@ -25,8 +21,9 @@ const getAllCategorys = async () => {
 // lấy category theo ID
 const getCategoryByIds = async (categoryId) => {
     try {
+        const pool = await connectToDatabase();
         const request = pool.request();
-        const sqlString = "SELECT * FROM Category WHERE CategoryID = @categoryId";
+        const sqlString = "SELECT * FROM Category WHERE CategoryId = @categoryId";
         request.input('categoryId', categoryId);
         const result = await request.query(sqlString);
         const category = result.recordset;
@@ -41,6 +38,7 @@ const getCategoryByIds = async (categoryId) => {
 
 const getCategoryByNames = async (name) => {
     try {
+        const pool = await connectToDatabase();
         const request = pool.request();
         const sqlString = "SELECT * FROM Category WHERE Name = @name";
         request.input('name', name);
@@ -57,6 +55,7 @@ const getCategoryByNames = async (name) => {
 // Thêm Category Mới
 const insertCategorys = async (name, description) => {
     try {
+        const pool = await connectToDatabase();
         const request = pool.request();
         const sqlString = "INSERT INTO Category (Description, Name) VALUES (@description, @name)";
         request.input('description', name);
@@ -72,15 +71,16 @@ const insertCategorys = async (name, description) => {
 //Cập Nhật Category Theo ID
 const updateCategoryByIds = async (categoryId, name, description) => {
     try {
+        const pool = await connectToDatabase();
         const request = pool.request();
         const sqlString = `
             UPDATE Category
-            SET name = @name, description = @description
-            WHERE categoryID = @categoryID
+            SET Name = @name, Description = @description
+            WHERE CategoryId = @categoryId
         `;
         request.input('name', name);
         request.input('description', description);
-        request.input('categoryID', categoryId);
+        request.input('categoryId', categoryId);
         await request.query(sqlString);
         return true;
     } catch (error) {
@@ -93,8 +93,9 @@ const updateCategoryByIds = async (categoryId, name, description) => {
 //Xóa Category Theo ID
 const deleteCategoryByIds = async (categoryId) => {
     try {
+        const pool = await connectToDatabase();
         const request = pool.request();
-        const sqlString = "DELETE FROM Category WHERE CategoryID = @categoryId";
+        const sqlString = "DELETE FROM Category WHERE CategoryId = @categoryId";
         request.input('categoryId', categoryId);
         await request.query(sqlString);
         return true;

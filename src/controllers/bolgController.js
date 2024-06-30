@@ -20,13 +20,13 @@ const getAllBlog = async (req, res) => {
 
 const getBlogById = async (req, res) => {
     try {
-        const blogId = req.query.blogId
+        const blogId = req.query.BlogId
         const blog = await getBlogByIds(blogId);
         console.log(blog);
         if (blog.length <= 0) {
             return res
                 .status(404)
-                .send('Empty blog list')
+                .send('Empty blog')
         } else {
             res.json(blog);
         }
@@ -40,23 +40,23 @@ const getBlogById = async (req, res) => {
 
 const insertBlog = async (req, res) => {
     try {
-        const { userId, content, title } = req.body
+        const { UserId, Content, Title } = req.body
 
-        if (userId && content && title) {
+        if (UserId && Content && Title) {
             const blog = {
-                UserID: userId,
-                Content: content,
-                Title: title
+                UserId: UserId,
+                Content: Content,
+                Title: Title
             }
             const check = await insertBlogs(blog);
             if (check == false) {
                 return res
                     .status(500)
-                    .send('Insert cost gem fail')
+                    .send('Insert blog fail')
             } else {
                 return res
                     .status(200)
-                    .send('Insert cost gem successfully')
+                    .send('Insert blog successfully')
             }
         } else {
             return res
@@ -74,14 +74,14 @@ const insertBlog = async (req, res) => {
 
 const deleteBlogById = async (req, res) => {
     try {
-        const { blogId } = req.body;
-        const find = await getBlogById(blogId);
+        const { BlogId } = req.body;
+        const find = await getBlogById(BlogId);
         if (find.length <= 0) {
             return res
                 .status(404)
                 .send('Blog does not exist')
         } else {
-            const check = await deleteBlogByIds(blogId);
+            const check = await deleteBlogByIds(BlogId);
             if (check == false) {
                 return res
                     .status(500)
@@ -103,20 +103,20 @@ const deleteBlogById = async (req, res) => {
 
 const updateBlogById = async (req, res) => {
     try {
-        const { title, content, dateCreated, userID, blogId } = req.body
-        let find = await getBlogById(blogId);
+        const { Title, Content, DateCreated, UserId, BlogId } = req.body
+        let find = await getBlogById(BlogId);
         if (find.length <= 0) {
             return res
                 .status(404)
                 .send('Blog does not exist')
         } else {
-            if (title && content && dateCreated && userID && blogId) {
+            if (Title && Content && DateCreated && UserId && BlogId) {
                 const blog = {
-                    Title: title,
-                    Content: content,
-                    DateCreated: dateCreated,
-                    UserID: userID,
-                    BlogId: blogId,
+                    Title: Title,
+                    Content: Content,
+                    DateCreated: DateCreated,
+                    UserID: UserId,
+                    BlogId: BlogId,
                 }
                 const check = await updateBlogByIds(blog);
                 if (check == false) {
