@@ -26,7 +26,7 @@ const getAllUser = async (req, res) => {
 
 const getUserById = async (req, res) => {
     try {
-        const userId = req.query.userId;
+        const userId = req.query.UserId;
         const user = await getUserByIds(userId);
         if (user.length <= 0) {
             return res
@@ -44,7 +44,7 @@ const getUserById = async (req, res) => {
 
 const getUserByUserName = async (req, res) => {
     try {
-        const userName = req.query.userName;
+        const userName = req.query.UserName;
         const user = await getUserByUserNames(userName);
         if (user.length <= 0) {
             return res
@@ -62,7 +62,7 @@ const getUserByUserName = async (req, res) => {
 
 const getUserByName = async (req, res) => {
     try {
-        const name = req.query.name;
+        const name = req.query.Name;
         const user = await getUserByNames(name);
         if (user.length <= 0) {
             return res
@@ -115,8 +115,8 @@ const getUserByName = async (req, res) => {
 
 const deleteUserById = async (req, res) => {
     try {
-        const { userId } = req.body
-        const check = await deleteUserByIds(userId);
+        const { UserId } = req.body
+        const check = await deleteUserByIds(UserId);
         if (check == false) {
             return res
                 .status(500)
@@ -136,14 +136,16 @@ const deleteUserById = async (req, res) => {
 
 const updateUserById = async (req, res) => {
     try {
-        const { name, phone, address, role, userId } = req.body
+        const { Name, Phone, Address, Role, UserId, PassWord, Email, UserName } = req.body
         const user = {
-            Name: name,
-            Phone: phone,
-            Address: address,
-            Role: parseInt(role),
-            UserId: parseInt(userId)
-
+            Name: Name,
+            Phone: Phone,
+            Address: Address,
+            Role: parseInt(Role),
+            UserId: parseInt(UserId),
+            PassWord: PassWord,
+            Email: Email,
+            UserName: UserName
         }
         const check = await updateUserByIds(user);
         if (check == false) {
@@ -168,29 +170,29 @@ const updateUserById = async (req, res) => {
 
 //User creation function
 const register = async (req, res) => {
-    const { passWord, name, phone, address, email, userName } = req.body;
+    const { PassWord, Name, Phone, Address, Email, UserName } = req.body;
 
     try {
-        if (passWord && name && phone && address && email && userName) {
-            const userNametemp = userName.toLowerCase();
-            const isEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email);
+        if (PassWord && Name && Phone && Address && Email && UserName) {
+            const userNametemp = UserName.toLowerCase();
+            const isEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(Email);
             if (isEmail) {
                 let checkUserName = await checkLogin(userNametemp);
-                let checkEmail = await checkLogin(email);
+                let checkEmail = await checkLogin(Email);
                 if ((checkUserName != null) || (checkEmail != null)) {
                     return res
                         .status(400)
                         .send('The user name or email is existed!!!')
                 } else {
-                    if (phone.length < 6 || phone.length > 10) {
-                        const hashPassword = bcrypt.hashSync(passWord, 10);
+                    if (Phone.length < 6 || Phone.length > 10) {
+                        const hashPassword = bcrypt.hashSync(PassWord, 10);
                         console.log(hashPassword);
                         const user = {
                             PassWord: hashPassword,
-                            Name: name,
-                            Phone: phone,
-                            Address: address,
-                            Email: email,
+                            Name: Name,
+                            Phone: Phone,
+                            Address: Address,
+                            Email: Email,
                             UserName: userNametemp
                         };
                         const checkInsert = await insertUsers(user);
@@ -274,15 +276,15 @@ const jwtVariable = {
 };
 
 const login = async (req, res) => {
-    const { userName, email, passWord } = req.body;
+    const { UserName, Email, PassWord } = req.body;
 
-    if ((!userName && !email) || !passWord) {
+    if ((!UserName && !Email) || !PassWord) {
         return res.status(400).send('Missing username, email or password.');
     }
-    const usernameLower = userName.toLowerCase();
+    const usernameLower = UserName.toLowerCase();
     let user = null;
     const user1 = await checkLogin(usernameLower);
-    const user2 = await checkLogin(email);
+    const user2 = await checkLogin(Email);
     if (!user1 && !user2) {
         return res.status(401).send('Username does not exist.');
     }
@@ -292,7 +294,7 @@ const login = async (req, res) => {
         user = user1;
     }
     console.log(user)
-    const isPasswordValid = bcrypt.compareSync(passWord, user.PassWord);
+    const isPasswordValid = bcrypt.compareSync(PassWord, user.PassWord);
     if (!isPasswordValid) {
         return res.status(401).send('Incorrect password.');
     }
@@ -303,7 +305,7 @@ const login = async (req, res) => {
     const dataForAccessToken = {
         UserName: user.UserName,
         Role: user.Role,
-        Id: user.UserID
+        Id: user.UserId
     };
     const accessToken = await generateToken(
         dataForAccessToken,

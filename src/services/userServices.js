@@ -1,13 +1,15 @@
 //CRUD of User with database
 const express = require('express');
 const { pool } = require('../config/database');
+const { connectToDatabase } = require('../config/database');
 
 //get user from database function
 const getAllUsers = async (req, res) => {
     try {
-        await pool.connect();
+        const pool = await connectToDatabase();
+        const request = pool.request();
         var sqlString = "select * from [User]";
-        const result = await pool.request().query(sqlString);
+        const result = await request.query(sqlString);
         const user = result.recordset;
         console.log(user);
         return user;
@@ -19,9 +21,9 @@ const getAllUsers = async (req, res) => {
 //get user by id from database function
 const getUserByIds = async (userId) => {
     try {
-        await pool.connect();
-        var sqlString = "select top 1 * from [User] where UserID = @id";
+        const pool = await connectToDatabase();
         const request = pool.request();
+        var sqlString = "select top 1 * from [User] where UserId = @id";
         request.input('id', userId);
         const result = await request.query(sqlString);
         const user = result.recordset[0];
@@ -30,16 +32,14 @@ const getUserByIds = async (userId) => {
         // Handle any errors
         console.error('Error getting user by ID:', error);
         return null;
-    } finally {
-        pool.close();
     }
 }
 //get user by username from database function
 const getUserByUserNames = async (userName) => {
     try {
-        await pool.connect();
-        var sqlString = "SELECT TOP 1 * FROM [User] WHERE UserName = @UserName";
+        const pool = await connectToDatabase();
         const request = pool.request();
+        var sqlString = "SELECT TOP 1 * FROM [User] WHERE UserName = @UserName";
         request.input('userName', userName);
         const result = await request.query(sqlString);
         const user = result.recordset[0];
@@ -48,17 +48,14 @@ const getUserByUserNames = async (userName) => {
         // Handle any errors
         console.error('Error getting user by ID:', error);
         return null;
-    } finally {
-        pool.close();
     }
 }
 //get user by name from database function
 const getUserByNames = async (name) => {
     try {
-        console.log(name);
-        await pool.connect();
-        var sqlString = "SELECT * FROM [User] WHERE Name like @name";
+        const pool = await connectToDatabase();
         const request = pool.request();
+        var sqlString = "SELECT * FROM [User] WHERE Name like @name";
         request.input('name', '%' + name + '%');
         const result = await request.query(sqlString);
         const user = result.recordset;
@@ -68,16 +65,14 @@ const getUserByNames = async (name) => {
         // Handle any errors
         console.error('Error getting user by name:', error);
         return null;
-    } finally {
-        pool.close();
     }
 }
 
 const getUserByEmails = async (email) => {
     try {
-        await pool.connect();
-        var sqlString = "SELECT TOP 1 * FROM [User] WHERE Email like @email";
+        const pool = await connectToDatabase();
         const request = pool.request();
+        var sqlString = "SELECT TOP 1 * FROM [User] WHERE Email like @email";
         request.input('email', email);
         const result = await request.query(sqlString);
         const user = result.recordset;
@@ -87,8 +82,6 @@ const getUserByEmails = async (email) => {
         // Handle any errors
         console.error('Error getting user by name:', error);
         return null;
-    } finally {
-        pool.close();
     }
 }
 
@@ -101,9 +94,9 @@ const checkEmailValid = async (email) => {
         return null;
     }
     try {
-        await pool.connect();
-        var sqlString = "SELECT TOP 1 * FROM [User] WHERE Email = @email";
+        const pool = await connectToDatabase();
         const request = pool.request();
+        var sqlString = "SELECT TOP 1 * FROM [User] WHERE Email = @email";
         request.input('email', email);
         const result = await request.query(sqlString);
         const user = result.recordset[0];
@@ -112,15 +105,13 @@ const checkEmailValid = async (email) => {
         // Handle any errors
         console.error('Error check email:', error);
         return null;
-    } finally {
-        pool.close();
     }
 }
 const checkUserNameValid = async (userName) => {
     try {
-        await pool.connect();
-        var sqlString = "SELECT TOP 1 * FROM [User] WHERE UserName = @UserName";
+        const pool = await connectToDatabase();
         const request = pool.request();
+        var sqlString = "SELECT TOP 1 * FROM [User] WHERE UserName = @UserName";
         request.input('userName', userName);
         const result = await request.query(sqlString);
         const user = result.recordset[0];
@@ -129,8 +120,6 @@ const checkUserNameValid = async (userName) => {
         // Handle any errors
         console.error('Error getting user by ID:', error);
         return null;
-    } finally {
-        pool.close();
     }
 }
 const checkLogin = async (user) => {
@@ -147,18 +136,22 @@ const checkLogin = async (user) => {
 //update user by id on database function
 const updateUserByIds = async (user) => {
     try {
-        await pool.connect();
+        const pool = await connectToDatabase();
+        const request = pool.request();
         const sqlString = `
             UPDATE [User]
-            SET Name = @name, Phone = @phone, Address = @address, Role = @role
-            WHERE UserID = @userId
+            SET PassWord = @passWord, Name = @name, Phone = @phone, Address = @address, Role = @role, UserName = @userName,  Email = @email
+            WHERE UserId = @userId
         `;
-        const request = pool.request();
+        request.input('passWord', user.PassWord);
         request.input('name', user.Name);
         request.input('phone', user.Phone);
         request.input('address', user.Address);
         request.input('role', user.Role);
+        request.input('userName', user.UserName);
+        request.input('email', user.Email);
         request.input('userId', user.UserId);
+
         await request.query(sqlString);
         return true;
     } catch (error) {
@@ -169,13 +162,12 @@ const updateUserByIds = async (user) => {
 //delete user by id on database function
 const deleteUserByIds = async (userId) => {
     try {
-
-        await pool.connect();
+        const pool = await connectToDatabase();
+        const request = pool.request();
         const sqlString = `
             DELETE FROM [User]
-            WHERE UserID = @id
+            WHERE UserId = @id
         `;
-        const request = pool.request();
         request.input('id', userId);
         await request.query(sqlString);
         return true;
@@ -187,12 +179,12 @@ const deleteUserByIds = async (userId) => {
 //insert user to database function
 const insertUsers = async (user) => {
     try {
-        await pool.connect();
+        const pool = await connectToDatabase();
+        const request = pool.request();
         const sqlString = `
             INSERT INTO [User] (PassWord, Name, Phone, Address, Email, Role, UserName)
             VALUES (@PassWord, @Name, @Phone, @Address, @Email, @Role, @UserName)
         `;
-        const request = pool.request();
         request.input('PassWord', user.PassWord);
         request.input('Name', user.Name);
         request.input('Phone', user.Phone);

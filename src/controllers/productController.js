@@ -5,7 +5,7 @@ const { getAllProducts, getProductByIds, insertProducts, updateProductByIds, del
 const getAllProduct = async (req, res) => {
     try {
         const product = await getAllProducts();
-        if (product == null) {
+        if (product.length <= 0) {
             return res
                 .status(404)
                 .send('Empty product list')
@@ -19,13 +19,13 @@ const getAllProduct = async (req, res) => {
 
 const getProductById = async (req, res) => {
     try {
-        const productId = req.query.productId;
+        const productId = req.query.ProductId;
         const product = await getProductByIds(productId);
         console.log(product);
-        if (product == null) {
+        if (product.length <= 0) {
             return res
                 .status(404)
-                .send('Empty product list')
+                .send('Product not found')
         } else {
             res.status(200).json(product);
         }
@@ -37,10 +37,10 @@ const getProductById = async (req, res) => {
 
 const insertProduct = async (req, res) => {
     try {
-        const { name, materialId, gemId, categoryId, materialCost, gemCost, productCost, image, quantityGem, size, warrantyCard, description, quantityMaterial } = req.body
-        if (name && materialId && gemId && categoryId && materialCost && gemCost && productCost && image && quantityGem && size && warrantyCard && description && quantityMaterial) {
+        const { Name, MaterialId, GemId, CategoryId, MaterialCost, GemCost, ProductCost, Image, QuantityGem, Size, WarrantyCard, Description, QuantityMaterial } = req.body
+        if (Name && MaterialId && GemId && CategoryId && MaterialCost && GemCost && ProductCost && Image && QuantityGem && Size && WarrantyCard && Description && QuantityMaterial) {
 
-            const check = await insertProducts(name, materialId, gemId, categoryId, materialCost, gemCost, productCost, image, quantityGem, size, warrantyCard, description, quantityMaterial);
+            const check = await insertProducts(Name, MaterialId, GemId, CategoryId, MaterialCost, GemCost, ProductCost, Image, QuantityGem, Size, WarrantyCard, Description, QuantityMaterial);
             if (check == false) {
                 return res
                     .status(500)
@@ -51,7 +51,7 @@ const insertProduct = async (req, res) => {
                     .status('Insert product successfully')
             }
         } else {
-            return res.status(400).send('name, materialId, gemId, categoryId, materialCost, gemCost, productCost, image, quantityGem, size, warrantyCard, description and quantityMaterial is required')
+            return res.status(400).send('Name, materialId, gemId, categoryId, materialCost, gemCost, productCost, image, quantityGem, size, warrantyCard, description and uantityMaterial is required')
         }
 
     } catch (error) {
@@ -62,8 +62,8 @@ const insertProduct = async (req, res) => {
 
 const deleteProductById = async (req, res) => {
     try {
-        const { productId } = req.body
-        const check = await deleteProductByIds(productId);
+        const { ProductId } = req.body
+        const check = await deleteProductByIds(ProductId);
         if (check == false) {
             return res
                 .status(500)
@@ -83,8 +83,8 @@ const deleteProductById = async (req, res) => {
 
 const updateProductById = async (req, res) => {
     try {
-        const { name, materialId, gemId, categoryId, materialCost, gemCost, productCost, image, quantityGem, size, warrantyCard, description, quantityMaterial, productId } = req.body
-        const check = await updateProductByIds(name, materialId, gemId, categoryId, materialCost, gemCost, productCost, image, quantityGem, size, warrantyCard, description, quantityMaterial, productId);
+        const { Name, MaterialId, GemId, CategoryId, MaterialCost, GemCost, ProductCost, Image, QuantityGem, Size, WarrantyCard, Description, QuantityMaterial, ProductId } = req.body
+        const check = await updateProductByIds(Name, MaterialId, GemId, CategoryId, MaterialCost, GemCost, ProductCost, Image, QuantityGem, Size, WarrantyCard, Description, QuantityMaterial, ProductId);
         console.log(check);
         if (check == false) {
             return res
@@ -106,7 +106,7 @@ const updateProductById = async (req, res) => {
 const getProductByNameOrId = async (req, res) => {
     try {
 
-        const name = req.query.name;
+        const name = req.query.Name;
         const product = await getProductByNameOrIds(name);
         console.log(product);
         if (product.length === 0 || !product) {
@@ -125,7 +125,7 @@ const getProductByNameOrId = async (req, res) => {
 const getProductByCategory = async (req, res) => {
     try {
 
-        const categoryName = req.query.categoryName;
+        const categoryName = req.query.CategoryName;
         console.log(categoryName);
         const product = await getProductByCategorys(categoryName);
         if (product.length <= 0) {

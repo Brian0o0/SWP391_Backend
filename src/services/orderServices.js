@@ -107,9 +107,20 @@ const getAllOrderProgresss = async () => {
         const request = pool.request();
         var sqlString = "select * from OrderProgress";
         const result = await request.query(sqlString);
-        const orderProgress = result.recordset;
-        console.log(orderProgress);
-        return orderProgress;
+        const orderProgresss = result.recordset;
+        let orderProgresList = [];
+        for (const orderProgress of orderProgresss) {
+            if (orderProgress.Image) {
+                try {
+                    orderProgress.Image = JSON.parse(orderProgress.Image);
+                } catch (error) {
+                    console.error(`Error parsing Image JSON for gem ID ${orderProgress.orderProgressId}:`, error);
+                }
+            }
+            orderProgresList.push(orderProgress);
+        }
+        console.log(orderProgresList);
+        return orderProgresList;
     } catch (error) {
         console.log(error);
         return null;
@@ -124,6 +135,13 @@ const getOrderProgressByIds = async (orderProgressId) => {
         request.input('orderProgressId', orderProgressId);
         const result = await request.query(sqlString);
         const orderProgress = result.recordset;
+        if (orderProgress.Image) {
+            try {
+                orderProgress.Image = JSON.parse(orderProgress.Image);
+            } catch (error) {
+                console.error(`Error parsing Image JSON for gem ID ${orderProgress.orderProgressId}:`, error);
+            }
+        }
         console.log(orderProgress);
         return orderProgress;
     } catch (error) {
@@ -136,10 +154,11 @@ const insertOrderProgresss = async (image, note, stepId, orderId, date) => {
     try {
         const pool = await connectToDatabase();
         const request = pool.request();
+        const imgTemp = JSON.stringify(image);
         const sqlString = `
         INSERT INTO OrderProgress (Image, Note, StepId, OrderId, Date) VALUES (@image, @note, @stepId, @orderId, @date)
         `;
-        request.input('image', image);
+        request.input('image', imgTemp);
         request.input('note', note);
         request.input('stepId', stepId);
         request.input('orderId', orderId);
@@ -159,12 +178,13 @@ const updateOrderProgressByIds = async (image, note, stepId, orderId, date, orde
     try {
         const pool = await connectToDatabase();
         const request = pool.request();
+        const imgTemp = JSON.stringify(image);
         const sqlString = `
             UPDATE OrderProgress
             SET Image=@image, Note=@note, StepId=@stepId, OrderId=@orderId, Date= @date
             WHERE OrderProgressId = @orderProgressId
         `;
-        request.input('image', image);
+        request.input('image', imgTemp);
         request.input('note', note);
         request.input('stepId', stepId);
         request.input('orderId', orderId);

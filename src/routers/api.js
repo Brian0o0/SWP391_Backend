@@ -41,7 +41,7 @@ router.get('/auth/google/callback', (req, res, next) => {
         next()
     })(req, res, next)
 }, (req, res) => {
-    res.redirect(`${process.env.CLIENT_URL}/login-success/${req.user.UserID}`)
+    res.redirect(`${process.env.CLIENT_URL}/login-success/${req.user.UserId}`)
 });
 
 router.post('/login-success', loginSuccess)
