@@ -96,17 +96,17 @@ const updateStepById = async (req, res) => {
         if (check == false) {
             return res
                 .status(500)
-                .sen('Update step fail')
+                .send('Update step fail')
         } else {
             return res
                 .status(200)
-                .sen('Update step successfully')
+                .send('Update step successfully')
         }
     } catch (error) {
         console.log(error);
         return res
             .status(500)
-            .sen(error)
+            .send(error)
     }
 }
 
@@ -116,7 +116,7 @@ const getAllOrderProgress = async (req, res) => {
         if (orderProgress.length <= 0) {
             return res
                 .status(404)
-                .sen('Empty order progress list')
+                .send('Empty order progress list')
         } else {
             res.status(200).json(orderProgress);
         }
@@ -141,7 +141,7 @@ const getOrderProgressById = async (req, res) => {
     } catch (error) {
         return res
             .status(500)
-            .sen(error)
+            .send(error)
     }
 }
 
@@ -153,22 +153,22 @@ const insertOrderProgress = async (req, res) => {
             if (check == false) {
                 return res
                     .status(500)
-                    .sen('Insert order progress fail')
+                    .send('Insert order progress fail')
             } else {
                 return res
                     .status(200)
-                    .sen('Insert order progress successfully')
+                    .send('Insert order progress successfully')
             }
         } else {
             return res
                 .status(400)
-                .sen('Img, note, stepId, orderId and date is required')
+                .send('Img, note, stepId, orderId and date is required')
         }
     } catch (error) {
         console.log(error);
         return res
             .status(500)
-            .sen(error)
+            .send(error)
     }
 }
 
@@ -179,17 +179,17 @@ const deleteOrderProgressById = async (req, res) => {
         if (check == false) {
             return res
                 .status(500)
-                .sen('Delete order progress fail')
+                .send('Delete order progress fail')
         } else {
             return res
                 .status(200)
-                .sen('Delete order progress successfully')
+                .send('Delete order progress successfully')
         }
     } catch (error) {
         console.log(error);
         return res
             .status(500)
-            .sen(error)
+            .send(error)
     }
 }
 
@@ -201,17 +201,17 @@ const updateOrderProgressById = async (req, res) => {
         if (check == false) {
             return res
                 .status(500)
-                .sen('Update order progress fail')
+                .send('Update order progress fail')
         } else {
             return res
                 .status(200)
-                .sen('Update order progress successfully')
+                .send('Update order progress successfully')
         }
     } catch (error) {
         console.log(error);
         return res
             .status(500)
-            .sen(error)
+            .send(error)
     }
 }
 
@@ -221,13 +221,13 @@ const getAllOrder = async (req, res) => {
         if (orders.length <= 0) {
             return res
                 .status(404)
-                .sen('Empty order list')
+                .send('Empty order list')
         } else {
             res.status(200).json(orders);
         }
 
     } catch (error) {
-        res.status(500).sen(error);
+        res.status(500).send(error);
     }
 }
 
@@ -239,7 +239,7 @@ const getOrderById = async (req, res) => {
         if (order.length <= 0) {
             return res
                 .status(404)
-                .sen('Empty order list')
+                .d('Empty order list')
         } else {
             res.status(200).json(order);
         }
@@ -247,7 +247,7 @@ const getOrderById = async (req, res) => {
     } catch (error) {
         return res
             .status(500)
-            .sen(error)
+            .send(error)
     }
 }
 
@@ -259,23 +259,23 @@ const insertOrder = async (req, res) => {
             if (check == false) {
                 return res
                     .status(500)
-                    .sen('Insert order fail')
+                    .send('Insert order fail')
             } else {
                 return res
                     .status(200)
-                    .sen('Insert order successfully')
+                    .send('Insert order successfully')
             }
         } else {
             return res
                 .status(400)
-                .sen('PaymentMethods, Phone, Address, Status, UserId, Description and UserName and userName is required')
+                .sen('paymentMethods, phone, address, status, userId, description and userName is required')
         }
 
     } catch (error) {
         console.log(error);
         return res
             .status(500)
-            .sen(error)
+            .send(error)
     }
 }
 
@@ -286,17 +286,17 @@ const deleteOrderById = async (req, res) => {
         if (check == false) {
             return res.json
                 .status(500)
-                .sen('Delete order fail')
+                .send('Delete order fail')
         } else {
             return res
                 .status(200)
-                .sen('Delete order successfully')
+                .send('Delete order successfully')
         }
     } catch (error) {
         console.log(error);
         return res
             .status(500)
-            .sen(error)
+            .send(error)
     }
 }
 
@@ -328,13 +328,13 @@ const getAllOrderDetail = async (req, res) => {
         if (orderDetails.length <= 0) {
             return res
                 .status(404)
-                .sen('Empty order detail list')
+                .send('Empty order detail list')
         } else {
             res.status(200).json(orderDetails);
         }
 
     } catch (error) {
-        res.status(500).sen(error);
+        res.status(500).send(error);
     }
 }
 
@@ -353,7 +353,7 @@ const getOrderDetailById = async (req, res) => {
     } catch (error) {
         return res
             .status(500)
-            .sen(error)
+            .send(error)
     }
 }
 
@@ -366,11 +366,11 @@ const insertOrderDetailTemp = async (req, res) => {
             if (check == false) {
                 return res
                     .status(500)
-                    .sen('Insert order detail fail')
+                    .send('Insert order detail fail')
             } else {
                 return res
                     .status(200)
-                    .sen('Insert order  detail successfully')
+                    .send('Insert order  detail successfully')
             }
         } else {
             return res
@@ -382,7 +382,7 @@ const insertOrderDetailTemp = async (req, res) => {
         console.log(error);
         return res
             .status(500)
-            .sen(error)
+            .send(error)
     }
 }
 
@@ -393,17 +393,17 @@ const deleteOrderDetailById = async (req, res) => {
         if (check == false) {
             return res
                 .status(500)
-                .sen('Delete order detailId fail')
+                .send('Delete order detailId fail')
         } else {
             return res
                 .status(200)
-                .sen('Delete order detailId successfully')
+                .send('Delete order detailId successfully')
         }
     } catch (error) {
         console.log(error);
         return res
             .status(500)
-            .sen(error)
+            .send(error)
     }
 }
 
@@ -414,17 +414,17 @@ const updateOrderDetailById = async (req, res) => {
         if (check == false) {
             return res
                 .status(500)
-                .sen('Update order detail fail')
+                .send('Update order detail fail')
         } else {
             return res
                 .status(200)
-                .sen('Update order detail successfully')
+                .send('Update order detail successfully')
         }
     } catch (error) {
         console.log(error);
         return res
             .status(500)
-            .sen(error)
+            .send(error)
     }
 }
 
@@ -437,11 +437,11 @@ const insertOrderDetail = async (req, res) => {
             if (check == false) {
                 return res
                     .status(500)
-                    .sen('Insert order detail fail')
+                    .send('Insert order detail fail')
             } else {
                 return res
                     .status(200)
-                    .sen('Insert order  detail successfully')
+                    .send('Insert order  detail successfully')
             }
         } else {
             return res
@@ -453,7 +453,7 @@ const insertOrderDetail = async (req, res) => {
         console.log(error);
         return res
             .status(500)
-            .sen(error)
+            .send(error)
     }
 }
 
