@@ -8,12 +8,12 @@ const getAllProduct = async (req, res) => {
         if (product == null) {
             return res
                 .status(404)
-                .sen('Empty product list')
+                .send('Empty product list')
         } else {
             res.status(200).json(product);
         }
     } catch (error) {
-        res.status(500).sen(error);
+        res.status(500).send(error);
     }
 }
 
@@ -25,13 +25,13 @@ const getProductById = async (req, res) => {
         if (product == null) {
             return res
                 .status(404)
-                .sen('Empty product list')
+                .send('Empty product list')
         } else {
             res.status(200).json(product);
         }
 
     } catch (error) {
-        res.status(500).sen(error);
+        res.status(500).send(error);
     }
 }
 
@@ -44,19 +44,19 @@ const insertProduct = async (req, res) => {
             if (check == false) {
                 return res
                     .status(500)
-                    .sen('Insert product  fail')
+                    .send('Insert product  fail')
             } else {
                 return res
                     .status(200)
                     .status('Insert product successfully')
             }
         } else {
-            return res.status(400).sen('name, materialId, gemId, categoryId, materialCost, gemCost, productCost, image, quantityGem, size, warrantyCard, description and quantityMaterial is required')
+            return res.status(400).send('name, materialId, gemId, categoryId, materialCost, gemCost, productCost, image, quantityGem, size, warrantyCard, description and quantityMaterial is required')
         }
 
     } catch (error) {
         console.log(error);
-        res.status(500).sen(error);
+        res.status(500).send(error);
     }
 }
 
@@ -67,17 +67,17 @@ const deleteProductById = async (req, res) => {
         if (check == false) {
             return res
                 .status(500)
-                .sen('Delete product fail')
+                .send('Delete product fail')
         } else {
             return res
                 .status(200)
-                .sen('Delete product successfully')
+                .send('Delete product successfully')
         }
     } catch (error) {
         console.log(error);
         return res
             .status(500)
-            .sen(error)
+            .send(error)
     }
 }
 
@@ -89,17 +89,17 @@ const updateProductById = async (req, res) => {
         if (check == false) {
             return res
                 .status(500)
-                .sen('Update product fail')
+                .send('Update product fail')
         } else {
             return res
                 .status(200)
-                .sen('Update product successfully')
+                .send('Update product successfully')
         }
     } catch (error) {
         console.log(error);
         return res
             .status(500)
-            .sen(error)
+            .send(error)
     }
 }
 

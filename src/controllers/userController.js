@@ -149,17 +149,17 @@ const updateUserById = async (req, res) => {
         if (check == false) {
             return res
                 .status(500)
-                .sen('Update user fail')
+                .send('Update user fail')
         } else {
             return res
                 .status(200)
-                .sen('Update user successfully')
+                .send('Update user successfully')
         }
     } catch (error) {
         console.log(error);
         return res
             .status(500)
-            .sen(error)
+            .send(error)
     }
 }
 
