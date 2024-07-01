@@ -57,7 +57,7 @@ const insertBlogs = async (blog) => {
         `;
         request.input('title', blog.Title);
         request.input('content', blog.Content);
-        request.input('dateCreated', getDayNow);
+        request.input('dateCreated', getDayNow());
         request.input('userId', blog.UserId);
         await request.query(sqlString);
         return true;
