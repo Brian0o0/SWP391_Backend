@@ -247,12 +247,12 @@ const getOrderByIds = async (orderId) => {
     }
 }
 //insert order to database function
-const insertOrders = async (paymentMethods, phone, address, status, userId, description, userName) => {
+const insertOrders = async (paymentMethods, phone, address, status, userId, description, name) => {
     try {
         const pool = await connectToDatabase();
         const request = pool.request();
         const sqlString = `
-        INSERT INTO [Order] (PaymentMethods, Phone, Address, Status, UserId, Description, UserName) VALUES (@paymentMethods, @phone, @address, @status, @userId, @description, @userName)
+        INSERT INTO [Order] (PaymentMethods, Phone, Address, Status, UserId, Description, Name) VALUES (@paymentMethods, @phone, @address, @status, @userId, @description, @name)
         `;
         request.input('paymentMethods', paymentMethods);
         request.input('phone', phone);
@@ -260,7 +260,7 @@ const insertOrders = async (paymentMethods, phone, address, status, userId, desc
         request.input('status', status);
         request.input('userId', userId);
         request.input('description', description);
-        request.input('userName', userName);
+        request.input('name', name);
         // Thực hiện truy vấn
         await request.query(sqlString);
         // Gửi phản hồi
@@ -272,14 +272,14 @@ const insertOrders = async (paymentMethods, phone, address, status, userId, desc
     }
 }
 //update order on database function
-const updateOrderByIds = async (paymentMethods, phone, address, status, userId, description, userName, orderId) => {
+const updateOrderByIds = async (paymentMethods, phone, address, status, userId, description, name, orderId) => {
     try {
         const pool = await connectToDatabase();
         const request = pool.request();
         const sqlString = `
             UPDATE [Order]
-            SET PaymentMethods = @paymentMethods, Phone = @phone, Address = @address, Status = @status, UserId = @userId, Description = @description, UserName = @userName
-            WHERE OrderID = @orderId
+            SET PaymentMethods = @paymentMethods, Phone = @phone, Address = @address, Status = @status, UserId = @userId, Description = @description, Name = @name
+            WHERE OrderId = @orderId
         `;
         request.input('paymentMethods', paymentMethods);
         request.input('phone', phone);
@@ -287,7 +287,7 @@ const updateOrderByIds = async (paymentMethods, phone, address, status, userId, 
         request.input('status', status);
         request.input('userId', userId);
         request.input('description', description);
-        request.input('userName', userName);
+        request.input('name', name);
         request.input('orderId', orderId);
         // Thực hiện truy vấn
         await request.query(sqlString);

@@ -47,16 +47,17 @@ const getDayNow = () => {
     }
 }
 //insert CostMaterial to database function
-const insertCostMaterials = async (price) => {
+const insertCostMaterials = async (purchasePrice, price, materialId) => {
     try {
         const pool = await connectToDatabase();
         const request = pool.request();
         const sqlString = `
-        INSERT INTO CostMaterial (DateOfPrice, PriceOfMaterial) VALUES (@dateOfPrice, @priceOfMaterial)
+        INSERT INTO CostMaterial (DateOfPrice, PurchasePrice, Price, MaterialId) VALUES (@dateOfPrice, @purchasePrice, @price, @materialId)
         `;
-        let priceTemp = parseInt(price, 10)
         request.input('dateOfPrice', getDayNow());
-        request.input('priceOfMaterial', priceTemp);
+        request.input('purchasePrice', purchasePrice);
+        request.input('price', price);
+        request.input('materialId', materialId);
         // Thực hiện truy vấn
         await request.query(sqlString);
         // Gửi phản hồi
@@ -68,17 +69,19 @@ const insertCostMaterials = async (price) => {
     }
 }
 //update CostMaterial on database function
-const updateCostMaterialByIds = async (costIdMaterial, priceOfMaterial) => {
+const updateCostMaterialByIds = async (costIdMaterial, purchasePrice, price, materialId) => {
     try {
         const pool = await connectToDatabase();
         const request = pool.request();
         const sqlString = `
             UPDATE CostMaterial
-            SET DateOfPrice = @dateOfPrice, priceOfMaterial = @priceOfMaterial
+            SET DateOfPrice = @dateOfPrice, PurchasePrice = @purchasePrice, Price = @price, MaterialId = @materialId
             WHERE CostIdMaterial = @costIdMaterial
         `;
         request.input('dateOfPrice', getDayNow());
-        request.input('priceOfMaterial', priceOfMaterial);
+        request.input('purchasePrice', purchasePrice);
+        request.input('price', price);
+        request.input('materialId', materialId);
         request.input('costIdMaterial', costIdMaterial);
         // Thực hiện truy vấn
         await request.query(sqlString);
@@ -143,12 +146,10 @@ const insertMaterials = async (material) => {
         const pool = await connectToDatabase();
         const request = pool.request();
         const sqlString = `
-        INSERT INTO Material (Name, Unit, BuyPrice, CostIdMaterial) VALUES (@name, @unit, @buyPrice, @costIdMaterial)
+        INSERT INTO Material (Name, Unit) VALUES (@name, @unit)
         `;
         request.input('name', material.Name);
         request.input('unit', material.Unit);
-        request.input('buyPrice', material.BuyPrice);
-        request.input('costIdMaterial', material.CostIdMaterial);
         // Thực hiện truy vấn
         await request.query(sqlString);
         // Gửi phản hồi
@@ -167,13 +168,11 @@ const updateMaterialByIds = async (material) => {
         const request = pool.request();
         const sqlString = `
             UPDATE Material
-            SET Name = @name, Unit = @unit, BuyPrice = @buyPrice ,CostIdMaterial = @costIdMaterial
+            SET Name = @name, Unit = @unit
             WHERE MaterialId = @materialId
         `;
         request.input('name', material.Name);
         request.input('unit', material.Unit);
-        request.input('buyPrice', material.BuyPrice);
-        request.input('costIdMaterial', material.CostIdMaterial);
         request.input('materialId', material.MaterialId);
         // Thực hiện truy vấn
         await request.query(sqlString);

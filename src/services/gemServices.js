@@ -24,8 +24,8 @@ const getCostGemByIds = async (costIdGem) => {
     try {
         const pool = await connectToDatabase();
         const request = pool.request();
-        var sqlString = "select * from CostGem where CostIdGem = @CostIdGem;";
-        request.input('CostIdGem', costIdGem);
+        var sqlString = "select * from CostGem where CostIdGem = @costIdGem;";
+        request.input('costIdGem', costIdGem);
         const result = await request.query(sqlString);
         const cost = result.recordset;
         console.log(cost);
@@ -51,16 +51,17 @@ const getDayNow = () => {
 }
 
 //insert cost gem to database function
-const insertCostGems = async (price) => {
+const insertCostGems = async (purchasePrice, price, gemId) => {
     try {
         const pool = await connectToDatabase();
         const request = pool.request();
         const sqlString = `
-        INSERT INTO CostGem (DateOfPrice, PriceOfGem) VALUES (@dateOfPrice, @priceOfgem)
+        INSERT INTO CostGem (DateOfPrice, PurchasePrice, Price, GemId) VALUES (@dateOfPrice, @purchasePrice, @price, @gemId)
         `;
-        let priceTemp = parseInt(price, 10)
         request.input('dateOfPrice', getDayNow());
-        request.input('priceOfgem', priceTemp);
+        request.input('purchasePrice', purchasePrice);
+        request.input('price', price);
+        request.input('gemId', gemId);
         // Thực hiện truy vấn
         await request.query(sqlString);
         // Gửi phản hồi
@@ -72,18 +73,20 @@ const insertCostGems = async (price) => {
     }
 }
 //update cost gem on database function
-const updateCostGemByIds = async (costGemId, priceOfGem) => {
+const updateCostGemByIds = async (purchasePrice, price, gemId, costIdGem) => {
     try {
         const pool = await connectToDatabase();
         const request = pool.request();
         const sqlString = `
             UPDATE CostGem
-            SET DateOfPrice = @dateOfPrice, PriceOfGem = @priceOfGem
-            WHERE CostIdGem = @costGemId
+            SET DateOfPrice = @dateOfPrice, PurchasePrice = @purchasePrice, Price = @price, GemId = @gemId
+            WHERE CostIdGem = @costIdGem
         `;
         request.input('dateOfPrice', getDayNow());
-        request.input('priceOfGem', priceOfGem);
-        request.input('costGemID', costGemId);
+        request.input('purchasePrice', purchasePrice);
+        request.input('price', price);
+        request.input('gemId', gemId);
+        request.input('costIdGem', costIdGem);
         // Thực hiện truy vấn
         await request.query(sqlString);
         // Gửi phản hồi
@@ -167,21 +170,19 @@ const insertGems = async (gem) => {
         const request = pool.request();
         const imgTemp = JSON.stringify(gem.Image);
         const sqlString = `
-        INSERT INTO Gem (Name, Color, CaraWeight, Clarity, Cut, CostIdGem, AddedDate, Origin, Image,Identification,Size) 
-VALUES (@name, @color, @caraWeight, @clarity, @cut, @costIdGem, @addedDate, @origin, @image, @identification, @size)
+        INSERT INTO Gem (Name, Color, CaraWeight, Clarity, Cut, AddedDate, Origin, Image,Identification,Size) 
+VALUES (@name, @color, @caraWeight, @clarity, @cut, @addedDate, @origin, @image, @identification, @size)
         `;
         request.input('name', gem.Name);
         request.input('color', gem.Color);
         request.input('caraWeight', gem.CaraWeight);
         request.input('clarity', gem.Clarity);
         request.input('cut', gem.Cut);
-        request.input('costIdGem', gem.CostIdGem);
         request.input('addedDate', gem.AddedDate);
         request.input('origin', gem.Origin);
         request.input('image', imgTemp);
         request.input('identification', gem.Identification);
         request.input('size', gem.Size);
-
         // Thực hiện truy vấn
         await request.query(sqlString);
         // Gửi phản hồi
@@ -201,16 +202,15 @@ const updateGemByIds = async (gem) => {
         const imgTemp = JSON.stringify(gem.Image);
         const sqlString = `
             UPDATE Gem
-            SET Name = @name, Color = @color, CaraWeight = @caraWeight, Clarity = @clarity, Cut = @cut, CostIdGem = @costIdGem, 
+            SET Name = @name, Color = @color, CaraWeight = @caraWeight, Clarity = @clarity, Cut = @cut, 
             AddedDate = @addedDate, Origin = @origin, Image = @image,Identification = @identification, Size = @size
-            WHERE GemID = @gemId
+            WHERE GemId = @gemId
         `;
         request.input('name', gem.Name);
         request.input('color', gem.Color);
         request.input('caraWeight', gem.CaraWeight);
         request.input('clarity', gem.Clarity);
         request.input('cut', gem.Cut);
-        request.input('costIdGem', gem.CostIdGem);
         request.input('addedDate', gem.AddedDate);
         request.input('origin', gem.Origin);
         request.input('image', imgTemp);

@@ -38,10 +38,10 @@ const getCostGemById = async (req, res) => {
 
 const insertCostGem = async (req, res) => {
     try {
-        const { PriceOfGem } = req.body
+        const { PurchasePrice, Price, GemId } = req.body
 
-        if (PriceOfGem) {
-            const check = await insertCostGems(PriceOfGem);
+        if (PurchasePrice && Price && GemId) {
+            const check = await insertCostGems(PurchasePrice, Price, GemId);
             if (check == false) {
                 return res
                     .status(500)
@@ -54,7 +54,7 @@ const insertCostGem = async (req, res) => {
         } else {
             return res
                 .status(400)
-                .send('CostGem is required')
+                .send('PurchasePrice, price and gemId is required')
         }
     } catch (error) {
         console.log(error);
@@ -87,8 +87,8 @@ const deleteCostGemById = async (req, res) => {
 
 const updateCostGemById = async (req, res) => {
     try {
-        const { CostIdGem, DateOfPrice, PriceOfGem } = req.body
-        const check = await updateCostGemByIds(CostIdGem, DateOfPrice, PriceOfGem);
+        const { PurchasePrice, Price, GemId, CostIdGem } = req.body
+        const check = await updateCostGemByIds(PurchasePrice, Price, GemId, CostIdGem);
         if (check == false) {
             return res
                 .status(500)
@@ -140,15 +140,14 @@ const getGemById = async (req, res) => {
 
 const insertGem = async (req, res) => {
     try {
-        const { Name, Color, CaraWeight, Clarity, Cut, CostIdGem, AddedDate, Origin, Image, Identification, Size } = req.body
-        if (Name && Color && CaraWeight && Clarity && Cut && CostIdGem && AddedDate && Origin && Image && Identification && Size) {
+        const { Name, Color, CaraWeight, Clarity, Cut, AddedDate, Origin, Image, Identification, Size } = req.body
+        if (Name && Color && CaraWeight && Clarity && Cut && AddedDate && Origin && Image && Identification && Size) {
             const gem = {
                 Name: Name,
                 Color: Color,
                 CaraWeight: parseFloat(CaraWeight),
                 Clarity: Clarity,
                 Cut: Cut,
-                CostIdGem: parseInt(CostIdGem),
                 AddedDate: AddedDate,
                 Origin: Origin,
                 Image: Image,
@@ -180,7 +179,7 @@ const insertGem = async (req, res) => {
 
 const updateGemById = async (req, res) => {
     try {
-        const { GemId, Name, Color, CaraWeight, Clarity, Cut, CostIdGem, AddedDate, Origin, Image, Identification, Size } = req.body
+        const { GemId, Name, Color, CaraWeight, Clarity, Cut, AddedDate, Origin, Image, Identification, Size } = req.body
         const gem = {
             GemId: parseInt(GemId),
             Name: Name,
@@ -188,7 +187,6 @@ const updateGemById = async (req, res) => {
             CaraWeight: parseFloat(CaraWeight),
             Clarity: Clarity,
             Cut: Cut,
-            CostIdGem: parseInt(CostIdGem),
             AddedDate: AddedDate,
             Origin: Origin,
             Image: Image,
@@ -249,7 +247,6 @@ const getGemByPrice = async (req, res) => {
         const { firstPrice, secondPrice } = req.body;
         if (firstPrice && secondPrice) {
             if (firstPrice <= secondPrice) {
-                console.log(1);
                 const gem = await getGemByPrices(firstPrice, secondPrice);
                 console.log(gem)
                 if (gem.length <= 0) {
@@ -260,7 +257,6 @@ const getGemByPrice = async (req, res) => {
                     res.status(200).json(gem);
                 }
             } else {
-                console.log(2);
                 const gem = await getAllGems();
                 console.log(gem)
                 if (gem.length <= 0) {
@@ -273,8 +269,6 @@ const getGemByPrice = async (req, res) => {
             }
 
         } else if (!firstPrice && secondPrice) {
-            console.log(3);
-
             const gem = await getGemByPrices(0, secondPrice);
             console.log(gem)
             if (gem.length <= 0) {
@@ -285,7 +279,6 @@ const getGemByPrice = async (req, res) => {
                 res.status(200).json(gem);
             }
         } else if (firstPrice && !secondPrice) {
-            console.log(4);
             const gem = await getGemByPrices(firstPrice, 999999);
             console.log(gem)
             if (gem.length <= 0) {
@@ -296,8 +289,6 @@ const getGemByPrice = async (req, res) => {
                 res.status(200).json(gem);
             }
         } else {
-            console.log(5);
-
             const gem = await getAllGems();
             console.log(gem)
             if (gem.length <= 0) {

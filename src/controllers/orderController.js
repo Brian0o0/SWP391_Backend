@@ -253,9 +253,9 @@ const getOrderById = async (req, res) => {
 
 const insertOrder = async (req, res) => {
     try {
-        const { PaymentMethods, Phone, Address, Status, UserId, Description, UserName } = req.body
-        if (PaymentMethods && Phone && Address && Status && UserId && Description && UserName) {
-            const check = await insertOrders(PaymentMethods, Phone, Address, Status, UserId, Description, UserName);
+        const { PaymentMethods, Phone, Address, Status, UserId, Description, Name } = req.body
+        if (PaymentMethods && Phone && Address && Status && UserId && Description && Name) {
+            const check = await insertOrders(PaymentMethods, Phone, Address, Status, UserId, Description, Name);
             if (check == false) {
                 return res
                     .status(500)
@@ -302,8 +302,8 @@ const deleteOrderById = async (req, res) => {
 
 const updateOrderById = async (req, res) => {
     try {
-        const { PaymentMethods, Phone, Address, OrderDetailId, Status, UserId, Description, UserName, OrderId } = req.body
-        const check = await updateOrderByIds(PaymentMethods, Phone, Address, OrderDetailId, Status, UserId, Description, UserName, OrderId);
+        const { PaymentMethods, Phone, Address, OrderDetailId, Status, UserId, Description, Name, OrderId } = req.body
+        const check = await updateOrderByIds(PaymentMethods, Phone, Address, OrderDetailId, Status, UserId, Description, Name, OrderId);
         if (check == false) {
             return res
                 .status(500)
