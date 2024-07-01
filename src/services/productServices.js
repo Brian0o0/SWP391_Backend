@@ -177,7 +177,7 @@ const getProductByNameOrIds = async (name) => {
                 }
             }
             const productDetail = {
-                ProductId: product.ProductID,
+                ProductId: product.ProductId,
                 Name: product.Name,
                 GemName: gemTemp[0].Name,
                 GemCost: costGemTemp[0].PriceOfGem,
@@ -228,7 +228,7 @@ const getProductByCategorys = async (categoryName) => {
                 }
             }
             const productDetail = {
-                ProductId: product.ProductID,
+                ProductId: product.ProductId,
                 Name: product.Name,
                 GemName: gemTemp[0].Name,
                 GemCost: costGemTemp[0].PriceOfGem,
