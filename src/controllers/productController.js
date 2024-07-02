@@ -13,7 +13,7 @@ const getAllProduct = async (req, res) => {
             res.status(200).json(product);
         }
     } catch (error) {
-        res.status(500).send(error);
+        res.status(500).send(error.message);
     }
 }
 
@@ -31,7 +31,7 @@ const getProductById = async (req, res) => {
         }
 
     } catch (error) {
-        res.status(500).send(error);
+        res.status(500).send(error.message);
     }
 }
 
@@ -48,7 +48,7 @@ const insertProduct = async (req, res) => {
             } else {
                 return res
                     .status(200)
-                    .status('Insert product successfully')
+                    .send('Insert product successfully')
             }
         } else {
             return res.status(400).send('Name, materialId, gemId, categoryId, materialCost, gemCost, productCost, image, quantityGem, size, warrantyCard, description and uantityMaterial is required')
@@ -56,7 +56,7 @@ const insertProduct = async (req, res) => {
 
     } catch (error) {
         console.log(error);
-        res.status(500).send(error);
+        res.status(500).send(error.message);
     }
 }
 
@@ -77,7 +77,7 @@ const deleteProductById = async (req, res) => {
         console.log(error);
         return res
             .status(500)
-            .send(error)
+            .send(error.message)
     }
 }
 
@@ -99,7 +99,7 @@ const updateProductById = async (req, res) => {
         console.log(error);
         return res
             .status(500)
-            .send(error)
+            .send(error.message)
     }
 }
 
@@ -118,7 +118,7 @@ const getProductByNameOrId = async (req, res) => {
         }
 
     } catch (error) {
-        res.status(500).send(error);
+        res.status(500).send(error.message);
     }
 }
 
@@ -137,7 +137,7 @@ const getProductByCategory = async (req, res) => {
         }
 
     } catch (error) {
-        res.status(500).send(error);
+        res.status(500).send(error.message);
     }
 }
 module.exports = {

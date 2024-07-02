@@ -1,6 +1,6 @@
 const express = require('express');
 const { connectToDatabase } = require('../config/database');
-
+const { getUserByIds } = require('../services/userServices')
 // Get all blog posts from database function
 const getAllBlogs = async () => {
     try {
@@ -25,7 +25,17 @@ const getBlogByIds = async (blogId) => {
         const sqlString = "SELECT * FROM Blogs WHERE BlogId = @blogId";
         request.input('blogId', blogId);
         const result = await request.query(sqlString);
-        const blog = result.recordset;
+        const blogs = result.recordset[0];
+        const userName = await getUserByIds(blogs.UserId);
+        console.log(userName);
+
+        const blog = {
+            "BlogId": blogs.BlogId,
+            "Title": blogs.Title,
+            "Content": blogs.Content,
+            "DateCreated": blogs.BlogId,
+            "Name": userName.Name
+        }
         console.log(blog);
         return blog;
     } catch (error) {

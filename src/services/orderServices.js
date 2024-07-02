@@ -7,6 +7,7 @@ const { getMaterialByIds } = require('../services/materialServices')
 const { getCategoryByIds } = require('../services/categoryServices');
 const { get } = require('request');
 const { connectToDatabase } = require('../config/database');
+const sql = require('mssql/msnodesqlv8');
 
 const getAllSteps = async () => {
     try {
@@ -247,12 +248,13 @@ const getOrderByIds = async (orderId) => {
     }
 }
 //insert order to database function
-const insertOrders = async (paymentMethods, phone, address, status, userId, description, name) => {
+const insertOrders = async (transaction, paymentMethods, phone, address, status, userId, description, name) => {
     try {
-        const pool = await connectToDatabase();
-        const request = pool.request();
+        const request = new sql.Request(transaction);
         const sqlString = `
-        INSERT INTO [Order] (PaymentMethods, Phone, Address, Status, UserId, Description, Name) VALUES (@paymentMethods, @phone, @address, @status, @userId, @description, @name)
+        INSERT INTO [Order] (PaymentMethods, Phone, Address, Status, UserId, Description, Name)
+        OUTPUT INSERTED.OrderId
+        VALUES (@paymentMethods, @phone, @address, @status, @userId, @description, @name)
         `;
         request.input('paymentMethods', paymentMethods);
         request.input('phone', phone);
@@ -261,14 +263,18 @@ const insertOrders = async (paymentMethods, phone, address, status, userId, desc
         request.input('userId', userId);
         request.input('description', description);
         request.input('name', name);
-        // Thực hiện truy vấn
-        await request.query(sqlString);
-        // Gửi phản hồi
-        return true;
+        // Trả về orderId của đơn hàng vừa mới chèn
+        const result = await request.query(sqlString);
+        console.log("test");
+        if (result.recordset && result.recordset.length > 0) {
+            return result.recordset[0].OrderId;
+        } else {
+            throw new Error("Failed to insert order");
+        }
     } catch (error) {
         // Xử lý bất kỳ lỗi nào
         throw new Error("Error inserting order: " + error.message);
-        return false;
+        return null;
     }
 }
 //update order on database function
@@ -346,12 +352,11 @@ const getOrderDetailByIds = async (orderDetailId) => {
     }
 }
 //insert OrderDetail to database function
-const insertOrderDetails = async (description, productId, status, productName, categoryId, categoryName, materialId, materialName, gemId, gemName, quantityGem, quantityMaterial, orderDate, orderId) => {
+const insertOrderDetails = async (transaction, description, productId, status, productName, categoryId, categoryName, materialId, materialName, gemId, gemName, quantityGem, quantityMaterial, orderDate, orderId) => {
     try {
-        const pool = await connectToDatabase();
-        const request = pool.request();
+        const request = new sql.Request(transaction);
         const sqlString = `
-        INSERT INTO OrderDetail (Description, ProductID, Status, ProductName, CategoryID, CategoryName, MaterialID, MaterialName, GemID, GemName, QuantityGem, QuantityMaterial, OrderDate, OrderId) VALUES (@description, @productId, @status, @productName, @categoryId, @categoryName, @materialId, @materialName, @gemId, @gemName, @quantityGem, @quantityMaterial, @orderDate, @orderId)
+        INSERT INTO OrderDetail (Description, ProductId, Status, ProductName, CategoryId, CategoryName, MaterialId, MaterialName, GemId, GemName, QuantityGem, QuantityMaterial, OrderDate, OrderId) VALUES (@description, @productId, @status, @productName, @categoryId, @categoryName, @materialId, @materialName, @gemId, @gemName, @quantityGem, @quantityMaterial, @orderDate, @orderId)
         `;
         request.input('description', description);
         request.input('productId', productId);
@@ -443,39 +448,75 @@ const updateOrderStatus = async (status, orderId) => {
         console.error(error.message);
         return false;
     }
-};
+}
 
-const insertOrderDetailServices = async (description, productId, status, orderId) => {
+
+const insertOrderDetailServices = async (description, productId, status, orderId, transaction) => {
     try {
         const product = await getProductByIds(productId);
-        const gem = await getGemByIds(product[0].GemID);
-        const material = await getMaterialByIds(product[0].MaterialID);
-        const category = await getCategoryByIds(product[0].CategoryID);
+        const gem = await getGemByIds(product.GemId);
+
+        const material = await getMaterialByIds(product.MaterialId);
+
+        const category = await getCategoryByIds(product.CategoryId);
+
         const check = await insertOrderDetails(
+            transaction,
             description,
             productId,
             status,
-            product[0].Name,
-            product[0].CategoryID,
+            product.Name,
+            product.CategoryId,
             category[0].Name,
-            product[0].MaterialID,
+            product.MaterialId,
             material[0].Name,
-            product[0].GemID,
-            gem[0].Name,
-            product[0].QuantityGem,
-            product[0].QuantityMaterial,
+            product.GemId,
+            gem.Name,
+            product.QuantityGem,
+            product.QuantityMaterial,
             getDayNow(),
             orderId
         )
+        console.log(1);
+
         if (check) {
             return true;
         } else { return false; }
     } catch (error) {
         // Xử lý bất kỳ lỗi nào
-        throw new Error("Error inserting order detail: " + error.message);
+        throw new Error("Error inserting order detail service: " + error.message);
         return false;
     }
 }
+
+const checkOuts = async (paymentMethods, phone, address, status, userId, description, name, productIds) => {
+    const pool = await connectToDatabase();
+    const transaction = new sql.Transaction(pool);
+
+    try {
+        await transaction.begin();
+
+        // Thêm transaction vào hàm insertOrders để đảm bảo cùng một transaction
+        const orderId = await insertOrders(transaction, paymentMethods, phone, address, status, userId, description, name);
+
+        for (const productId of productIds) {
+            // Sử dụng orderId để truyền vào insertOrderDetailServices
+            const checkCreateOrderDetail = await insertOrderDetailServices(description, productId, status, orderId, transaction);
+
+            if (!checkCreateOrderDetail) {
+                throw new Error("Failed to insert order detail for product ID: " + productId);
+            }
+        }
+
+        await transaction.commit();
+        return true;
+    } catch (error) {
+        // Xử lý lỗi và rollback transaction nếu có lỗi xảy ra
+        await transaction.rollback();
+        throw new Error("Error during checkout: " + error.message);
+    }
+};
+
 
 module.exports = {
     getAllSteps,
@@ -499,6 +540,6 @@ module.exports = {
     updateOrderDetailByIds,
     deleteOrderDetailByIds,
     updateOrderStatus,
-    insertOrderDetailServices
-
+    insertOrderDetailServices,
+    checkOuts
 }

@@ -17,7 +17,7 @@ const getAllCostMaterial = async (req, res) => {
     } catch (error) {
         return res
             .status(500)
-            .send(error)
+            .send(error.message)
     }
 }
 
@@ -36,7 +36,7 @@ const getCostMaterialById = async (req, res) => {
     } catch (error) {
         return res
             .status(500)
-            .send(error)
+            .send(error.message)
     }
 }
 
@@ -63,7 +63,7 @@ const insertCostMaterial = async (req, res) => {
         console.log(error);
         return res
             .status(500)
-            .send(error)
+            .send(error.message)
     }
 }
 
@@ -84,7 +84,7 @@ const deleteCostMaterialById = async (req, res) => {
         console.log(error);
         return res
             .status(500)
-            .send(error)
+            .send(error.message)
     }
 }
 
@@ -105,7 +105,7 @@ const updateCostMaterialById = async (req, res) => {
         console.log(error);
         return res
             .status(500)
-            .send(error)
+            .send(error.message)
     }
 }
 
@@ -124,7 +124,7 @@ const getAllMaterial = async (req, res) => {
     } catch (error) {
         return res
             .status(500)
-            .send(error)
+            .send(error.message)
     }
 }
 
@@ -142,7 +142,7 @@ const getMaterialById = async (req, res) => {
     } catch (error) {
         return res
             .status(500)
-            .send(error)
+            .send(error.message)
     }
 }
 
@@ -174,7 +174,7 @@ const insertMaterial = async (req, res) => {
         console.log(error);
         return res
             .status(500)
-            .send(error)
+            .send(error.message)
     }
 }
 
@@ -195,7 +195,7 @@ const deleteMaterialById = async (req, res) => {
         console.log(error);
         return res
             .status(500)
-            .send(error)
+            .send(error.message)
     }
 }
 
@@ -221,7 +221,7 @@ const updateMaterialById = async (req, res) => {
         console.log(error);
         return res
             .status(500)
-            .send(error)
+            .send(error.message)
     }
 }
 module.exports = {

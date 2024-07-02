@@ -143,6 +143,7 @@ const getAllGems = async () => {
 //get gem by id from database function
 const getGemByIds = async (gemId) => {
     try {
+        const pool = await connectToDatabase();
         const request = pool.request();
         var sqlString = `select * from Gem where GemId = @gemId;`
         request.input('gemId', gemId);

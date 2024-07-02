@@ -20,7 +20,7 @@ const getAllUser = async (req, res) => {
     } catch (error) {
         return res
             .status(500)
-            .send(error)
+            .send(error.message)
     }
 }
 
@@ -38,7 +38,7 @@ const getUserById = async (req, res) => {
     } catch (error) {
         return res
             .status(500)
-            .send(error)
+            .send(error.message)
     }
 }
 
@@ -56,7 +56,7 @@ const getUserByUserName = async (req, res) => {
     } catch (error) {
         return res
             .status(500)
-            .send(error)
+            .send(error.message)
     }
 }
 
@@ -74,7 +74,7 @@ const getUserByName = async (req, res) => {
     } catch (error) {
         return res
             .status(500)
-            .send(error)
+            .send(error.message)
     }
 }
 
@@ -130,7 +130,7 @@ const deleteUserById = async (req, res) => {
         console.log(error);
         return res
             .status(500)
-            .send(error)
+            .send(error.message)
     }
 }
 
@@ -161,7 +161,7 @@ const updateUserById = async (req, res) => {
         console.log(error);
         return res
             .status(500)
-            .send(error)
+            .send(error.message)
     }
 }
 
@@ -184,7 +184,7 @@ const register = async (req, res) => {
                         .status(400)
                         .send('The user name or email is existed!!!')
                 } else {
-                    if (Phone.length < 6 || Phone.length > 10) {
+                    if (Phone.length === 10) {
                         const hashPassword = bcrypt.hashSync(PassWord, 10);
                         console.log(hashPassword);
                         const user = {
@@ -225,7 +225,7 @@ const register = async (req, res) => {
         console.log(err);
         return res
             .status(500)
-            .send(err)
+            .send(error.message)
     }
 }
 

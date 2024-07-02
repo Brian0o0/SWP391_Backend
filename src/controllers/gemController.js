@@ -13,7 +13,7 @@ const getAllCostGem = async (req, res) => {
         }
 
     } catch (error) {
-        res.status(500).json(error);
+        res.status(500).send(error.message);
     }
 }
 
@@ -32,7 +32,7 @@ const getCostGemById = async (req, res) => {
     } catch (error) {
         return res
             .status(500)
-            .send(error)
+            .send(error.message)
     }
 }
 
@@ -60,7 +60,7 @@ const insertCostGem = async (req, res) => {
         console.log(error);
         return res
             .status(500)
-            .send(error)
+            .send(error.message)
     }
 }
 
@@ -81,7 +81,7 @@ const deleteCostGemById = async (req, res) => {
         console.log(error);
         return res
             .status(500)
-            .send(error)
+            .send(error.message)
     }
 }
 
@@ -102,7 +102,7 @@ const updateCostGemById = async (req, res) => {
         console.log(error);
         return res
             .status(500)
-            .send(error)
+            .send(error.message)
     }
 }
 
@@ -118,7 +118,7 @@ const getAllGem = async (req, res) => {
             res.status(200).json(gems);
         }
     } catch (error) {
-        res.status(500).send(error);
+        res.status(500).send(error.message);
     }
 }
 
@@ -134,7 +134,7 @@ const getGemById = async (req, res) => {
             res.status(200).json(gems);
         }
     } catch (error) {
-        res.status(500).send(error);
+        res.status(500).send(error.message);
     }
 }
 
@@ -173,7 +173,7 @@ const insertGem = async (req, res) => {
         console.log(error);
         return res
             .status(500)
-            .send(error)
+            .send(error.message)
     }
 }
 
@@ -207,7 +207,7 @@ const updateGemById = async (req, res) => {
         console.log(error);
         return res
             .status(500)
-            .send(error)
+            .send(error.message)
     }
 }
 
@@ -238,7 +238,7 @@ const deleteGemById = async (req, res) => {
         console.log(error);
         return res
             .status(500)
-            .send(error)
+            .send(error.message)
     }
 }
 
@@ -301,7 +301,7 @@ const getGemByPrice = async (req, res) => {
         }
 
     } catch (error) {
-        res.status(500).send(error);
+        res.status(500).send(error.message);
     }
 }
 

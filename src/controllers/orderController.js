@@ -2,7 +2,7 @@
 const { getAllSteps, getStepByIds, insertSteps, updateStepByIds, deleteStepByIds,
     getAllOrderProgresss, getOrderProgressByIds, insertOrderProgresss, deleteOrderProgressByIds, updateOrderProgressByIds,
     getAllOrders, getOrderByIds, insertOrders, updateOrderByIds, deleteOrderByIds,
-    getAllOrderDetails, getOrderDetailByIds, insertOrderDetails, updateOrderDetailByIds, deleteOrderDetailByIds, insertOrderDetailServices
+    getAllOrderDetails, getOrderDetailByIds, insertOrderDetails, updateOrderDetailByIds, deleteOrderDetailByIds, insertOrderDetailServices, checkOuts
 } = require('../services/orderServices');
 
 const getAllStep = async (req, res) => {
@@ -18,7 +18,7 @@ const getAllStep = async (req, res) => {
         }
 
     } catch (error) {
-        res.status(500).send(error);
+        res.status(500).send(error.message);
     }
 }
 
@@ -37,7 +37,7 @@ const getStepById = async (req, res) => {
     } catch (error) {
         return res
             .status(500)
-            .send(error)
+            .send(error.message)
     }
 }
 
@@ -64,7 +64,7 @@ const insertStep = async (req, res) => {
         console.log(error);
         return res
             .status(500)
-            .send(error)
+            .send(error.message)
     }
 }
 
@@ -85,7 +85,7 @@ const deleteStepById = async (req, res) => {
         console.log(error);
         return res
             .status(500)
-            .send(error)
+            .send(error.message)
     }
 }
 
@@ -106,7 +106,7 @@ const updateStepById = async (req, res) => {
         console.log(error);
         return res
             .status(500)
-            .send(error)
+            .send(error.message)
     }
 }
 
@@ -122,7 +122,7 @@ const getAllOrderProgress = async (req, res) => {
         }
 
     } catch (error) {
-        res.status(500).json(error);
+        res.status(500).send(error.message);
     }
 }
 
@@ -133,7 +133,7 @@ const getOrderProgressById = async (req, res) => {
         if (orderProgress.length <= 0) {
             return res
                 .status(404)
-                .sen('Order progress not found')
+                .send('Order progress not found')
         } else {
             res.status(200).json(orderProgress);
         }
@@ -168,7 +168,7 @@ const insertOrderProgress = async (req, res) => {
         console.log(error);
         return res
             .status(500)
-            .send(error)
+            .send(error.message)
     }
 }
 
@@ -189,7 +189,7 @@ const deleteOrderProgressById = async (req, res) => {
         console.log(error);
         return res
             .status(500)
-            .send(error)
+            .send(error.message)
     }
 }
 
@@ -211,7 +211,7 @@ const updateOrderProgressById = async (req, res) => {
         console.log(error);
         return res
             .status(500)
-            .send(error)
+            .send(error.message)
     }
 }
 
@@ -227,7 +227,7 @@ const getAllOrder = async (req, res) => {
         }
 
     } catch (error) {
-        res.status(500).send(error);
+        res.status(500).send(error.message);
     }
 }
 
@@ -239,7 +239,7 @@ const getOrderById = async (req, res) => {
         if (order.length <= 0) {
             return res
                 .status(404)
-                .d('Empty order list')
+                .send('Empty order list')
         } else {
             res.status(200).json(order);
         }
@@ -247,15 +247,16 @@ const getOrderById = async (req, res) => {
     } catch (error) {
         return res
             .status(500)
-            .send(error)
+            .send(error.message)
     }
 }
 
 const insertOrder = async (req, res) => {
     try {
-        const { PaymentMethods, Phone, Address, Status, UserId, Description, Name } = req.body
-        if (PaymentMethods && Phone && Address && Status && UserId && Description && Name) {
-            const check = await insertOrders(PaymentMethods, Phone, Address, Status, UserId, Description, Name);
+        const { PaymentMethods, Phone, Address, Status, UserId, Description, Name, ProductIds } = req.body
+        console.log(req.body)
+        if (PaymentMethods && Phone && Address && Status && UserId && Description && Name && ProductIds) {
+            const check = await checkOuts(PaymentMethods, Phone, Address, Status, UserId, Description, Name, ProductIds);
             if (check == false) {
                 return res
                     .status(500)
@@ -268,14 +269,14 @@ const insertOrder = async (req, res) => {
         } else {
             return res
                 .status(400)
-                .sen('paymentMethods, phone, address, status, userId, description and userName is required')
+                .send('paymentMethods, phone, address, status, userId, description and userName is required')
         }
 
     } catch (error) {
         console.log(error);
         return res
             .status(500)
-            .send(error)
+            .send(error.message)
     }
 }
 
@@ -296,7 +297,7 @@ const deleteOrderById = async (req, res) => {
         console.log(error);
         return res
             .status(500)
-            .send(error)
+            .send(error.message)
     }
 }
 
@@ -317,7 +318,7 @@ const updateOrderById = async (req, res) => {
         console.log(error);
         return res
             .status(500)
-            .send(error)
+            .send(error.message)
     }
 }
 
@@ -334,7 +335,7 @@ const getAllOrderDetail = async (req, res) => {
         }
 
     } catch (error) {
-        res.status(500).send(error);
+        res.status(500).send(error.message);
     }
 }
 
@@ -345,7 +346,7 @@ const getOrderDetailById = async (req, res) => {
         if (orderDetail.length <= 0) {
             return res
                 .status(404)
-                .sen('Order detail not found')
+                .send('Order detail not found')
         } else {
             res.status(200).json(order);
         }
@@ -353,7 +354,7 @@ const getOrderDetailById = async (req, res) => {
     } catch (error) {
         return res
             .status(500)
-            .send(error)
+            .send(error.message)
     }
 }
 
@@ -375,14 +376,14 @@ const insertOrderDetailTemp = async (req, res) => {
         } else {
             return res
                 .status(400)
-                .sen('description, productId, status, productName, categoryId, categoryName, materialId, materialName, gemId, gemName, quantityGem, quantityMaterial, orderDate and orderId is required')
+                .send('description, productId, status, productName, categoryId, categoryName, materialId, materialName, gemId, gemName, quantityGem, quantityMaterial, orderDate and orderId is required')
         }
 
     } catch (error) {
         console.log(error);
         return res
             .status(500)
-            .send(error)
+            .send(error.message)
     }
 }
 
@@ -403,7 +404,7 @@ const deleteOrderDetailById = async (req, res) => {
         console.log(error);
         return res
             .status(500)
-            .send(error)
+            .send(error.message)
     }
 }
 
@@ -424,7 +425,7 @@ const updateOrderDetailById = async (req, res) => {
         console.log(error);
         return res
             .status(500)
-            .send(error)
+            .send(error.message)
     }
 }
 
@@ -446,14 +447,14 @@ const insertOrderDetail = async (req, res) => {
         } else {
             return res
                 .status(400)
-                .sen('Description, productId, status and orderId is required')
+                .send('Description, productId, status and orderId is required')
         }
 
     } catch (error) {
         console.log(error);
         return res
             .status(500)
-            .send(error)
+            .send(error.message)
     }
 }
 
