@@ -162,13 +162,13 @@ const getProductByNameOrIds = async (name) => {
         const productDetails = [];
 
         for (const product of productTemp) {
-            const categoryTemp = await getCategoryByIds(product.CategoryID);
+            const categoryTemp = await getCategoryByIds(product.CategoryId);
 
-            const gemTemp = await getGemByIds(product.GemID);
-            const costGemTemp = await getCostGemByIds(gemTemp[0].CostIDGem);
+            const gemTemp = await getGemByIds(product.GemId);
+            // const costGemTemp = await getCostGemByIds(gemTemp.GemId);
 
-            const materialTemp = await getMaterialByIds(product.MaterialID);
-            const costMaterialTemp = await getCostMaterialByIds(materialTemp[0].CostIdMaterial);
+            const materialTemp = await getMaterialByIds(product.MaterialId);
+            // const costMaterialTemp = await getCostMaterialByIds(materialTemp[0].MaterialId);
             if (product.Image) {
                 try {
                     product.Image = JSON.parse(product.Image);
@@ -179,10 +179,10 @@ const getProductByNameOrIds = async (name) => {
             const productDetail = {
                 ProductId: product.ProductId,
                 Name: product.Name,
-                GemName: gemTemp[0].Name,
-                GemCost: costGemTemp[0].PriceOfGem,
+                GemName: gemTemp.Name,
+                TotalGemPrice: product.GemCost,
                 MaterialName: materialTemp[0].Name,
-                MaterialCost: costMaterialTemp[0].PriceOfMaterial,
+                TotalMaterialPrice: product.MaterialCost,
                 CategoryName: categoryTemp[0].Name,
                 ProductCost: product.ProductCost,
                 Image: product.Image,
@@ -204,21 +204,23 @@ const getProductByNameOrIds = async (name) => {
 const getProductByCategorys = async (categoryName) => {
 
     try {
+        const pool = await connectToDatabase();
         const request = pool.request();
         const categoryTemp = await getCategoryByNames(categoryName);
-        var sqlString = "select * from Product where CategoryID = @categoryId";
-        request.input('categoryId', categoryTemp[0].CategoryID);
+        console.log(categoryTemp);
+        var sqlString = "select * from Product where CategoryId = @categoryId";
+        request.input('categoryId', categoryTemp[0].CategoryId);
         const result = await request.query(sqlString);
         const productTemp = result.recordset;
         console.log(productTemp);
         const productDetails = [];
 
         for (const product of productTemp) {
-            const gemTemp = await getGemByIds(product.GemID);
-            const costGemTemp = await getCostGemByIds(gemTemp[0].CostIDGem);
+            const gemTemp = await getGemByIds(product.GemId);
+            // const costGemTemp = await getCostGemByIds(gemTemp[0].GemId);
 
-            const materialTemp = await getMaterialByIds(product.MaterialID);
-            const costMaterialTemp = await getCostMaterialByIds(materialTemp[0].CostIdMaterial);
+            const materialTemp = await getMaterialByIds(product.MaterialId);
+            // const costMaterialTemp = await getCostMaterialByIds(materialTemp[0].MaterialId);
             if (product.Image) {
                 try {
                     product.Image = JSON.parse(product.Image);
@@ -230,10 +232,10 @@ const getProductByCategorys = async (categoryName) => {
             const productDetail = {
                 ProductId: product.ProductId,
                 Name: product.Name,
-                GemName: gemTemp[0].Name,
-                GemCost: costGemTemp[0].PriceOfGem,
+                GemName: gemTemp.Name,
+                TotalGemPrice: product.GemCost,
                 MaterialName: materialTemp[0].Name,
-                MaterialCost: costMaterialTemp[0].PriceOfMaterial,
+                TotalMaterialPrice: product.MaterialCost,
                 CategoryName: categoryTemp[0].Name,
                 ProductCost: product.ProductCost,
                 Image: product.Image,
