@@ -16,7 +16,7 @@ const { getAllCostGem, getCostGemById, insertCostGem, deleteCostGemById, updateC
 const { getAllCostMaterial, getCostMaterialById, insertCostMaterial, deleteCostMaterialById, updateCostMaterialById, getAllMaterial, getMaterialById, insertMaterial, updateMaterialById, deleteMaterialById } = require('../controllers/materialController');
 const { getAllStep, getStepById, insertStep, deleteStepById, updateStepById, getAllOrderProgress, getOrderProgressById, insertOrderProgress, deleteOrderProgressById, updateOrderProgressById, getAllOrder, getOrderById, insertOrder, deleteOrderById, updateOrderById,
     getAllOrderDetail, insertOrderDetailTemp, getOrderDetailById, insertOrderDetail, updateOrderDetailById, deleteOrderDetailById, getTotalOrder, getTotalOrderDetailByMonth,
-    getTotalOrderDetail, getTotalAmountOrderDetail, getTotalAmountOrderDetailByMonth, checkOuts, orderRequest } = require('../controllers/orderController');
+    getTotalOrderDetail, getTotalAmountOrderDetail, getTotalAmountOrderDetailByMonth, orderRequest, getTotalOrderDetailAllMonth } = require('../controllers/orderController');
 const { getAllCategory, getCategoryById, insertCategory, updateCategoryById, deleteCategoryById } = require("../controllers/categoryController");
 const { getAllBlog, getBlogById, insertBlog, updateBlogById, deleteBlogById } = require('../controllers/bolgController');
 const { loginSuccess } = require('../controllers/authController')
@@ -109,7 +109,6 @@ router.get('/test/getAllOrder', getAllOrder);
 router.get('/test/getOrderById', getOrderById);
 router.get('/test/getTotalOrder', getTotalOrder);
 router.post('/test/orderRequest', orderRequest);
-router.post('/test/checkOuts', checkOuts);
 router.post('/test/insertOrder', insertOrder);
 router.put('/test/updateOrderById', updateOrderById);
 router.delete('/test/deleteOrderById', deleteOrderById);
@@ -121,6 +120,7 @@ router.get('/test/getTotalOrderDetailByMonth', getTotalOrderDetailByMonth);
 router.get('/test/getTotalOrderDetail', getTotalOrderDetail);
 router.get('/test/getTotalAmountOrderDetail', getTotalAmountOrderDetail);
 router.get('/test/getTotalAmountOrderDetailByMonth', getTotalAmountOrderDetailByMonth);
+router.get('/test/getTotalOrderDetailAllMonth', getTotalOrderDetailAllMonth);
 router.post('/test/insertOrderDetailTemp', insertOrderDetailTemp);
 router.post('/test/insertOrderDetail', insertOrderDetail);
 router.put('/test/updateOrderDetailById', updateOrderDetailById);

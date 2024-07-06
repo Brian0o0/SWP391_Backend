@@ -3,7 +3,7 @@ const { getAllSteps, getStepByIds, insertSteps, updateStepByIds, deleteStepByIds
     getAllOrderProgresss, getOrderProgressByIds, insertOrderProgresss, deleteOrderProgressByIds, updateOrderProgressByIds,
     getAllOrders, getOrderByIds, insertOrders, updateOrderByIds, deleteOrderByIds,
     getAllOrderDetails, getOrderDetailByIds, insertOrderDetails, updateOrderDetailByIds, deleteOrderDetailByIds, insertOrderDetailServices,
-    checkOuts, orderRequests, getTotalOrders, getTotalOrderDetailByMonths, getTotalOrderDetails, getTotalAmountOrderDetails, getTotalAmountOrderDetailByMonths
+    checkOuts, orderRequests, getTotalOrders, getTotalOrderDetailByMonths, getTotalOrderDetails, getTotalAmountOrderDetails, getTotalAmountOrderDetailByMonths, getTotalOrderDetailAllMonths
 } = require('../services/orderServices');
 
 const getAllStep = async (req, res) => {
@@ -486,11 +486,11 @@ const orderRequest = async (req, res) => {
             if (check == false) {
                 return res
                     .status(500)
-                    .send('Insert order fail')
+                    .send('Create order request fail')
             } else {
                 return res
                     .status(200)
-                    .send('Insert order successfully')
+                    .send('Create order request successfully')
             }
         } else {
             return res
@@ -541,6 +541,23 @@ const getTotalOrderDetailByMonth = async (req, res) => {
     }
 }
 
+const getTotalOrderDetailAllMonth = async (req, res) => {
+    try {
+        const year = req.query.Year;
+        const totalOrder = await getTotalOrderDetailAllMonths(year);
+        if (totalOrder.length <= 0) {
+            return res
+                .status(404)
+                .send('Empty order detail list')
+        } else {
+            res.status(200).json(totalOrder);
+        }
+
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+}
+
 const getTotalAmountOrderDetail = async (req, res) => {
     try {
         const totalAmountOrderDetail = await getTotalAmountOrderDetails();
@@ -576,6 +593,8 @@ const getTotalAmountOrderDetailByMonth = async (req, res) => {
         res.status(500).send(error.message);
     }
 }
+
+
 module.exports = {
     getAllStep,
     getStepById,
@@ -604,4 +623,5 @@ module.exports = {
     getTotalAmountOrderDetailByMonth,
     getTotalAmountOrderDetail,
     orderRequest,
+    getTotalOrderDetailAllMonth
 }

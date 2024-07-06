@@ -574,6 +574,22 @@ const getTotalOrderDetailByMonths = async (month, year) => {
     }
 }
 
+const getTotalOrderDetailAllMonths = async (year) => {
+    try {
+        const pool = await connectToDatabase();
+        const request = pool.request();
+        var sqlString = "SELECT MONTH(OrderDate) AS Month, COUNT(*) AS OrderDetailCount FROM OrderDetail WHERE YEAR(OrderDate) = @year GROUP BY MONTH(OrderDate)ORDER BY Month;";
+        request.input('year', year);
+        const result = await request.query(sqlString);
+        const totalOrder = result.recordset;
+        console.log(totalOrder);
+        return totalOrder;
+    } catch (error) {
+        console.log(error);
+        return null;
+    }
+}
+
 const getTotalOrderDetails = async () => {
     try {
         const pool = await connectToDatabase();
@@ -653,5 +669,6 @@ module.exports = {
     getTotalOrderDetails,
     getTotalAmountOrderDetailByMonths,
     getTotalAmountOrderDetails,
+    getTotalOrderDetailAllMonths,
 
 }

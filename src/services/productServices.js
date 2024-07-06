@@ -19,11 +19,13 @@ const getAllProducts = async () => {
         const products = result.recordset;
         let productList = [];
         for (const product of products) {
-            if (product.Status == 1) {
+            if (product.Status == null) {
                 const gemTemp = await getGemByIds(product.GemId);
                 // const costGemTemp = await getCostGemByIds(gemTemp[0].GemId);
                 const materialTemp = await getMaterialByIds(product.MaterialId);
                 // const costMaterialTemp = await getCostMaterialByIds(materialTemp[0].MaterialId);
+
+                const categoryTemp = await getCategoryByIds(product.CategoryId);
                 if (product.Image) {
                     try {
                         product.Image = JSON.parse(product.Image);
