@@ -2,7 +2,7 @@
 const express = require('express');
 const { pool } = require('../config/database');
 const { getDayNow, getGemByIds } = require('../services/gemServices')
-const { getProductByIds } = require('../services/productServices')
+const { getProductByIds, insertProducts, insertProductFromRequests } = require('../services/productServices')
 const { getMaterialByIds } = require('../services/materialServices')
 const { getCategoryByIds } = require('../services/categoryServices');
 const { get } = require('request');
@@ -515,6 +515,34 @@ const checkOuts = async (paymentMethods, phone, address, status, userId, descrip
         throw new Error("Error during checkout: " + error.message);
     }
 };
+
+const orderRequest = async (paymentMethods, phone, address, status, userId, description, userName, productName, materialId, gemId, categoryId, productCost, image, quantityGem, size, warrantyCard, productdescription, quantityMaterial) => {
+    const pool = await connectToDatabase();
+    const transaction = new sql.Transaction(pool);
+    try {
+        await transaction.begin();
+
+        // Thêm transaction vào hàm insertOrders để đảm bảo cùng một transaction
+        const orderId = await insertOrders(transaction, paymentMethods, phone, address, status, userId, description, userName);
+
+        const productId = await insertProductFromRequests(transaction, productName, materialId, gemId, categoryId, productCost, image, quantityGem, size, warrantyCard, productdescription, quantityMaterial, 0);
+
+        // Sử dụng orderId để truyền vào insertOrderDetailServices
+        const checkCreateOrderDetail = await insertOrderDetailServices(description, productId, status, orderId, transaction);
+
+        if (!checkCreateOrderDetail) {
+            throw new Error("Failed to insert order detail for product ID: " + productId);
+        }
+        await transaction.commit();
+        return true;
+    } catch (error) {
+        // Xử lý lỗi và rollback transaction nếu có lỗi xảy ra
+        await transaction.rollback();
+        throw new Error("Error during checkout: " + error.message);
+    }
+};
+
+
 
 const getTotalOrders = async () => {
     try {

@@ -32,6 +32,21 @@ const getCostMaterialByIds = async (costIdMaterial) => {
         return null;
     }
 }
+const getCostMaterialByMaterialIds = async (materialId) => {
+    try {
+        const pool = await connectToDatabase();
+        const request = pool.request();
+        var sqlString = " SELECT TOP 1 * FROM CostMaterial WHERE MaterialId = @materialId ORDER BY DateOfPrice DESC; ";
+        request.input('materialId', materialId);
+        const result = await request.query(sqlString);
+        const costMaterial = result.recordset;
+        console.log(costMaterial);
+        return costMaterial;
+    } catch (error) {
+        console.log("Error:", error);
+        return null;
+    }
+}
 // get day of system
 const getDayNow = () => {
     try {
@@ -212,6 +227,7 @@ module.exports = {
     insertMaterials,
     updateMaterialByIds,
     deleteMaterialByIds,
+    getCostMaterialByMaterialIds,
 }
 // Đảm bảo pool kết nối được đóng khi ứng dụng kết thúc
 process.on('exit', () => {

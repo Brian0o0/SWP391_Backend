@@ -37,10 +37,10 @@ const getProductById = async (req, res) => {
 
 const insertProduct = async (req, res) => {
     try {
-        const { Name, MaterialId, GemId, CategoryId, MaterialCost, GemCost, ProductCost, Image, QuantityGem, Size, WarrantyCard, Description, QuantityMaterial } = req.body
-        if (Name && MaterialId && GemId && CategoryId && MaterialCost && GemCost && ProductCost && Image && QuantityGem && Size && WarrantyCard && Description && QuantityMaterial) {
+        const { Name, MaterialId, GemId, CategoryId, ProductCost, Image, QuantityGem, Size, WarrantyCard, Description, QuantityMaterial } = req.body
+        if (Name && MaterialId && GemId && CategoryId && ProductCost && Image && QuantityGem && Size && WarrantyCard && Description && QuantityMaterial) {
 
-            const check = await insertProducts(Name, MaterialId, GemId, CategoryId, MaterialCost, GemCost, ProductCost, Image, QuantityGem, Size, WarrantyCard, Description, QuantityMaterial);
+            const check = await insertProducts(Name, MaterialId, GemId, CategoryId, ProductCost, Image, QuantityGem, Size, WarrantyCard, Description, QuantityMaterial, 1);
             if (check == false) {
                 return res
                     .status(500)
@@ -51,7 +51,7 @@ const insertProduct = async (req, res) => {
                     .send('Insert product successfully')
             }
         } else {
-            return res.status(400).send('Name, materialId, gemId, categoryId, materialCost, gemCost, productCost, image, quantityGem, size, warrantyCard, description and uantityMaterial is required')
+            return res.status(400).send('Name, materialId, gemId, categoryId, materialCost, gemCost, productCost, image, quantityGem, size, warrantyCard, description, quantityMaterial and status is required')
         }
 
     } catch (error) {
@@ -83,8 +83,8 @@ const deleteProductById = async (req, res) => {
 
 const updateProductById = async (req, res) => {
     try {
-        const { Name, MaterialId, GemId, CategoryId, MaterialCost, GemCost, ProductCost, Image, QuantityGem, Size, WarrantyCard, Description, QuantityMaterial, ProductId } = req.body
-        const check = await updateProductByIds(Name, MaterialId, GemId, CategoryId, MaterialCost, GemCost, ProductCost, Image, QuantityGem, Size, WarrantyCard, Description, QuantityMaterial, ProductId);
+        const { Name, MaterialId, GemId, CategoryId, MaterialCost, GemCost, ProductCost, Image, QuantityGem, Size, WarrantyCard, Description, QuantityMaterial, Status, ProductId } = req.body
+        const check = await updateProductByIds(Name, MaterialId, GemId, CategoryId, MaterialCost, GemCost, ProductCost, Image, QuantityGem, Size, WarrantyCard, Description, QuantityMaterial, Status, ProductId);
         console.log(check);
         if (check == false) {
             return res

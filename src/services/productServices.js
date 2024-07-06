@@ -2,10 +2,11 @@
 const express = require('express');
 const { pool } = require('../config/database');
 const { getCategoryByIds, getCategoryByNames } = require('../services/categoryServices');
-const { getCostGemByIds, getGemByIds } = require('../services/gemServices');
-const { getCostMaterialByIds, getMaterialByIds } = require('../services/materialServices');
+const { getCostGemByIds, getGemByIds, getCostGemByGemIds } = require('../services/gemServices');
+const { getCostMaterialByIds, getMaterialByIds, getCostMaterialByMaterialIds } = require('../services/materialServices');
 const { Int } = require('msnodesqlv8');
 const { connectToDatabase } = require('../config/database');
+const { get } = require('jquery');
 
 
 //get all product from database function
@@ -18,14 +19,38 @@ const getAllProducts = async () => {
         const products = result.recordset;
         let productList = [];
         for (const product of products) {
-            if (product.Image) {
-                try {
-                    product.Image = JSON.parse(product.Image);
-                } catch (error) {
-                    console.error(`Error parsing Image JSON for gem ID ${product.ProductId}:`, error);
+            if (product.Status == 1) {
+                const gemTemp = await getGemByIds(product.GemId);
+                // const costGemTemp = await getCostGemByIds(gemTemp[0].GemId);
+                const materialTemp = await getMaterialByIds(product.MaterialId);
+                // const costMaterialTemp = await getCostMaterialByIds(materialTemp[0].MaterialId);
+                if (product.Image) {
+                    try {
+                        product.Image = JSON.parse(product.Image);
+                    } catch (error) {
+                        product.Image = null;
+                        console.error(`Error parsing Image JSON for gem ID ${product.ProductId}:`, error);
+                    }
                 }
+                const productDetail = {
+                    ProductId: product.ProductId,
+                    Name: product.Name,
+                    GemName: gemTemp.Name,
+                    TotalGemPrice: product.GemCost,
+                    MaterialName: materialTemp[0].Name,
+                    TotalMaterialPrice: product.MaterialCost,
+                    CategoryName: categoryTemp[0].Name,
+                    ProductCost: product.ProductCost,
+                    Image: product.Image,
+                    QuantityGem: product.QuantityGem,
+                    Size: product.Size,
+                    WarrantyCard: product.WarrantyCard,
+                    Description: product.Description,
+                    QuantityMaterial: product.QuantityMaterial
+                };
+                productList.push(productDetail);
             }
-            productList.push(product);
+
         }
         console.log(productList);
         return productList;
@@ -59,21 +84,29 @@ const getProductByIds = async (productId) => {
     }
 }
 //insert product to database function
-const insertProducts = async (name, materialId, gemId, categoryId, materialCost, gemCost, productCost, image, quantityGem, size, warrantyCard, description, quantityMaterial) => {
+const insertProducts = async (name, materialId, gemId, categoryId, productCost, image, quantityGem, size, warrantyCard, description, quantityMaterial, status) => {
     try {
         const pool = await connectToDatabase();
         const request = pool.request();
+        const gemCost = await getCostGemByGemIds(gemId);
+        if (!gemCost) {
+            return false;
+        }
+        const materialCost = await getCostMaterialByMaterialIds(materialId);
+        if (!materialCost) {
+            return false;
+        }
         const imgTemp = JSON.stringify(image);
         const sqlString = `
-        INSERT INTO Product (Name, MaterialId, GemId, CategoryId, MaterialCost, GemCost, ProductCost, Image, QuantityGem, Size, WarrantyCard, Description, QuantityMaterial) 
-        VALUES (@name, @materialId, @gemId, @categoryId, @materialCost, @gemCost, @productCost, @image, @quantityGem, @size, @warrantyCard, @description, @quantityMaterial)
+        INSERT INTO Product (Name, MaterialId, GemId, CategoryId, MaterialCost, GemCost, ProductCost, Image, QuantityGem, Size, WarrantyCard, Description, QuantityMaterial, Status) 
+        VALUES (@name, @materialId, @gemId, @categoryId, @materialCost, @gemCost, @productCost, @image, @quantityGem, @size, @warrantyCard, @description, @quantityMaterial, @status)
         `;
         request.input('name', name);
         request.input('materialId', materialId);
         request.input('gemId', gemId);
         request.input('categoryId', categoryId);
-        request.input('materialCost', materialCost);
-        request.input('gemCost', gemCost);
+        request.input('materialCost', materialCost[0].Price);
+        request.input('gemCost', gemCost[0].Price);
         request.input('productCost', productCost);
         request.input('image', imgTemp);
         request.input('quantityGem', quantityGem);
@@ -81,6 +114,8 @@ const insertProducts = async (name, materialId, gemId, categoryId, materialCost,
         request.input('warrantyCard', warrantyCard);
         request.input('description', description);
         request.input('quantityMaterial', quantityMaterial);
+        request.input('status', status);
+
         // Thực hiện truy vấn
         await request.query(sqlString);
         // Gửi phản hồi
@@ -91,8 +126,52 @@ const insertProducts = async (name, materialId, gemId, categoryId, materialCost,
         return false;
     }
 }
+const insertProductFromRequests = async (transaction, name, materialId, gemId, categoryId, productCost, image, quantityGem, size, warrantyCard, description, quantityMaterial, status) => {
+    try {
+        const request = new sql.Request(transaction);
+        const gemCost = await getCostGemByGemIds(gemId);
+        if (!gemCost) {
+            return false;
+        }
+        const materialCost = await getCostMaterialByMaterialIds(materialId);
+        if (!materialCost) {
+            return false;
+        }
+        const imgTemp = JSON.stringify(image);
+        const sqlString = `
+        INSERT INTO Product (Name, MaterialId, GemId, CategoryId, MaterialCost, GemCost, ProductCost, Image, QuantityGem, Size, WarrantyCard, Description, QuantityMaterial, Status) 
+        OUTPUT INSERTED.ProductID
+        VALUES (@name, @materialId, @gemId, @categoryId, @materialCost, @gemCost, @productCost, @image, @quantityGem, @size, @warrantyCard, @description, @quantityMaterial, @status)
+        `;
+        request.input('name', name);
+        request.input('materialId', materialId);
+        request.input('gemId', gemId);
+        request.input('categoryId', categoryId);
+        request.input('materialCost', materialCost[0].Price);
+        request.input('gemCost', gemCost[0].Price);
+        request.input('productCost', productCost);
+        request.input('image', imgTemp);
+        request.input('quantityGem', quantityGem);
+        request.input('size', size);
+        request.input('warrantyCard', warrantyCard);
+        request.input('description', description);
+        request.input('quantityMaterial', quantityMaterial);
+        request.input('status', status);
+
+        // Thực hiện truy vấn và lấy productID mới được chèn
+        const result = await request.query(sqlString);
+        const productID = result.recordset[0].ProductID;
+
+        // Trả về productID
+        return productID;
+    } catch (error) {
+        // Xử lý bất kỳ lỗi nào
+        throw new Error("Error inserting product: " + error.message);
+    }
+}
+
 //update product on database function
-const updateProductByIds = async (name, materialId, gemId, categoryId, materialCost, gemCost, productCost, image, quantityGem, size, warrantyCard, description, quantityMaterial, productId) => {
+const updateProductByIds = async (name, materialId, gemId, categoryId, materialCost, gemCost, productCost, image, quantityGem, size, warrantyCard, description, quantityMaterial, productId, status) => {
     try {
         const pool = await connectToDatabase();
         const request = pool.request();
@@ -101,7 +180,7 @@ const updateProductByIds = async (name, materialId, gemId, categoryId, materialC
             UPDATE Product
             SET Name = @name, MaterialId = @materialId, GemId = @gemId, CategoryId = @categoryId
             , MaterialCost = @materialCost, GemCost = @gemCost, ProductCost = @productCost, Image = @image
-            , QuantityGem = @quantityGem, Size = @size, WarrantyCard = @warrantyCard, Description = @description, QuantityMaterial= @quantityMaterial
+            , QuantityGem = @quantityGem, Size = @size, WarrantyCard = @warrantyCard, Description = @description, QuantityMaterial= @quantityMaterial, Status= @status
             WHERE ProductId = @productId
         `;
         request.input('name', name);
@@ -117,6 +196,7 @@ const updateProductByIds = async (name, materialId, gemId, categoryId, materialC
         request.input('warrantyCard', warrantyCard);
         request.input('description', description);
         request.input('quantityMaterial', quantityMaterial);
+        request.input('status', status);
         request.input('productId', productId);
         // Thực hiện truy vấn
         await request.query(sqlString);
@@ -162,44 +242,47 @@ const getProductByNameOrIds = async (name) => {
         const productDetails = [];
 
         for (const product of productTemp) {
-            const categoryTemp = await getCategoryByIds(product.CategoryId);
-            if (!categoryTemp) {
-                return null;
-            }
-            const gemTemp = await getGemByIds(product.GemId);
-            // const costGemTemp = await getCostGemByIds(gemTemp.GemId);
-            if (!gemTemp) {
-                console.log(gemTemp);
-            }
-            const materialTemp = await getMaterialByIds(product.MaterialId);
-            // const costMaterialTemp = await getCostMaterialByIds(materialTemp[0].MaterialId);
-            if (!materialTemp) {
-                return null;
-            }
-            if (product.Image) {
-                try {
-                    product.Image = JSON.parse(product.Image);
-                } catch (error) {
-                    console.error(`Error parsing Image JSON for gem ID ${product.ProductId}:`, error);
+            if (product.Status == 1) {
+                const categoryTemp = await getCategoryByIds(product.CategoryId);
+                if (!categoryTemp) {
+                    return null;
                 }
+                const gemTemp = await getGemByIds(product.GemId);
+                // const costGemTemp = await getCostGemByIds(gemTemp.GemId);
+                if (!gemTemp) {
+                    console.log(gemTemp);
+                }
+                const materialTemp = await getMaterialByIds(product.MaterialId);
+                // const costMaterialTemp = await getCostMaterialByIds(materialTemp[0].MaterialId);
+                if (!materialTemp) {
+                    return null;
+                }
+                if (product.Image) {
+                    try {
+                        product.Image = JSON.parse(product.Image);
+                    } catch (error) {
+                        console.error(`Error parsing Image JSON for gem ID ${product.ProductId}:`, error);
+                    }
+                }
+                const productDetail = {
+                    ProductId: product.ProductId,
+                    Name: product.Name,
+                    GemName: gemTemp.Name,
+                    TotalGemPrice: product.GemCost,
+                    MaterialName: materialTemp[0].Name,
+                    TotalMaterialPrice: product.MaterialCost,
+                    CategoryName: categoryTemp[0].Name,
+                    ProductCost: product.ProductCost,
+                    Image: product.Image,
+                    QuantityGem: product.QuantityGem,
+                    Size: product.Size,
+                    WarrantyCard: product.WarrantyCard,
+                    Description: product.Description,
+                    QuantityMaterial: product.QuantityMaterial
+                };
+                productDetails.push(productDetail);
             }
-            const productDetail = {
-                ProductId: product.ProductId,
-                Name: product.Name,
-                GemName: gemTemp.Name,
-                TotalGemPrice: product.GemCost,
-                MaterialName: materialTemp[0].Name,
-                TotalMaterialPrice: product.MaterialCost,
-                CategoryName: categoryTemp[0].Name,
-                ProductCost: product.ProductCost,
-                Image: product.Image,
-                QuantityGem: product.QuantityGem,
-                Size: product.Size,
-                WarrantyCard: product.WarrantyCard,
-                Description: product.Description,
-                QuantityMaterial: product.QuantityMaterial
-            };
-            productDetails.push(productDetail);
+
         }
         return productDetails;
     } catch (error) {
@@ -223,36 +306,39 @@ const getProductByCategorys = async (categoryName) => {
         const productDetails = [];
 
         for (const product of productTemp) {
-            const gemTemp = await getGemByIds(product.GemId);
-            // const costGemTemp = await getCostGemByIds(gemTemp[0].GemId);
+            if (product.Status == 1) {
+                const gemTemp = await getGemByIds(product.GemId);
+                // const costGemTemp = await getCostGemByIds(gemTemp[0].GemId);
 
-            const materialTemp = await getMaterialByIds(product.MaterialId);
-            // const costMaterialTemp = await getCostMaterialByIds(materialTemp[0].MaterialId);
-            if (product.Image) {
-                try {
-                    product.Image = JSON.parse(product.Image);
-                } catch (error) {
-                    product.Image = null;
-                    console.error(`Error parsing Image JSON for gem ID ${product.ProductId}:`, error);
+                const materialTemp = await getMaterialByIds(product.MaterialId);
+                // const costMaterialTemp = await getCostMaterialByIds(materialTemp[0].MaterialId);
+                if (product.Image) {
+                    try {
+                        product.Image = JSON.parse(product.Image);
+                    } catch (error) {
+                        product.Image = null;
+                        console.error(`Error parsing Image JSON for gem ID ${product.ProductId}:`, error);
+                    }
                 }
+                const productDetail = {
+                    ProductId: product.ProductId,
+                    Name: product.Name,
+                    GemName: gemTemp.Name,
+                    TotalGemPrice: product.GemCost,
+                    MaterialName: materialTemp[0].Name,
+                    TotalMaterialPrice: product.MaterialCost,
+                    CategoryName: categoryTemp[0].Name,
+                    ProductCost: product.ProductCost,
+                    Image: product.Image,
+                    QuantityGem: product.QuantityGem,
+                    Size: product.Size,
+                    WarrantyCard: product.WarrantyCard,
+                    Description: product.Description,
+                    QuantityMaterial: product.QuantityMaterial
+                };
+                productDetails.push(productDetail);
             }
-            const productDetail = {
-                ProductId: product.ProductId,
-                Name: product.Name,
-                GemName: gemTemp.Name,
-                TotalGemPrice: product.GemCost,
-                MaterialName: materialTemp[0].Name,
-                TotalMaterialPrice: product.MaterialCost,
-                CategoryName: categoryTemp[0].Name,
-                ProductCost: product.ProductCost,
-                Image: product.Image,
-                QuantityGem: product.QuantityGem,
-                Size: product.Size,
-                WarrantyCard: product.WarrantyCard,
-                Description: product.Description,
-                QuantityMaterial: product.QuantityMaterial
-            };
-            productDetails.push(productDetail);
+
         }
 
         return productDetails;
@@ -270,6 +356,7 @@ module.exports = {
     updateProductByIds,
     getProductByNameOrIds,
     getProductByCategorys,
+    insertProductFromRequests
 }
 
 // Đảm bảo pool kết nối được đóng khi ứng dụng kết thúc

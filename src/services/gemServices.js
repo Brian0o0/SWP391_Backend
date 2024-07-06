@@ -35,6 +35,21 @@ const getCostGemByIds = async (costIdGem) => {
         return null;
     }
 }
+const getCostGemByGemIds = async (GemId) => {
+    try {
+        const pool = await connectToDatabase();
+        const request = pool.request();
+        var sqlString = " SELECT TOP 1 * FROM CostGem WHERE GemId = @gemId ORDER BY DateOfPrice DESC;";
+        request.input('gemId', GemId);
+        const result = await request.query(sqlString);
+        const gem = result.recordset;
+        console.log(gem);
+        return gem;
+    } catch (error) {
+        console.log("Error:", error);
+        return null;
+    }
+}
 // get day of system
 const getDayNow = () => {
     try {
@@ -150,9 +165,16 @@ const getGemByIds = async (gemId) => {
         const result = await request.query(sqlString);
         const gems = result.recordset;
         const gem = gems[0];
-        if (gem.Image) {
+        console.log(gem.Image);
+        if (gem && gem.Image) {
             try {
-                gem.Image = JSON.parse(gem.Image);
+                console.log(`Original Image JSON for gem ID ${gem.GemId}: ${gem.Image}`);
+                // Kiểm tra xem chuỗi JSON có đúng định dạng hay không
+                if (typeof gem.Image === 'string' && gem.Image.trim().startsWith('[') && gem.Image.trim().endsWith(']')) {
+                    gem.Image = JSON.parse(gem.Image);
+                } else {
+                    throw new Error('Invalid JSON format');
+                }
             } catch (error) {
                 console.error(`Error parsing Image JSON for gem ID ${gem.GemId}:`, error);
             }
@@ -310,6 +332,7 @@ module.exports = {
     deleteGemByIds,
     getGemByPrices,
     getDayNow,
+    getCostGemByGemIds,
 }
 // Đảm bảo pool kết nối được đóng khi ứng dụng kết thúc
 process.on('exit', () => {
