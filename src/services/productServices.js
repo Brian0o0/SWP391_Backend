@@ -19,7 +19,7 @@ const getAllProducts = async () => {
         const products = result.recordset;
         let productList = [];
         for (const product of products) {
-            if (product.Status == null) {
+            if (product.Status == 1) {
                 const gemTemp = await getGemByIds(product.GemId);
                 // const costGemTemp = await getCostGemByIds(gemTemp[0].GemId);
                 const materialTemp = await getMaterialByIds(product.MaterialId);
