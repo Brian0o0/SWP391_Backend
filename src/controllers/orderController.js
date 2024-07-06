@@ -2,7 +2,8 @@
 const { getAllSteps, getStepByIds, insertSteps, updateStepByIds, deleteStepByIds,
     getAllOrderProgresss, getOrderProgressByIds, insertOrderProgresss, deleteOrderProgressByIds, updateOrderProgressByIds,
     getAllOrders, getOrderByIds, insertOrders, updateOrderByIds, deleteOrderByIds,
-    getAllOrderDetails, getOrderDetailByIds, insertOrderDetails, updateOrderDetailByIds, deleteOrderDetailByIds, insertOrderDetailServices, checkOuts
+    getAllOrderDetails, getOrderDetailByIds, insertOrderDetails, updateOrderDetailByIds, deleteOrderDetailByIds, insertOrderDetailServices,
+    checkOuts, getTotalOrders, getTotalOrderDetailByMonths, getTotalOrderDetails, getTotalAmountOrderDetails, getTotalAmountOrderDetailByMonths
 } = require('../services/orderServices');
 
 const getAllStep = async (req, res) => {
@@ -458,6 +459,93 @@ const insertOrderDetail = async (req, res) => {
     }
 }
 
+const getTotalOrder = async (req, res) => {
+    try {
+        const totalOrder = await getTotalOrders();
+
+        if (totalOrder.length <= 0) {
+            return res
+                .status(404)
+                .send('Empty order list')
+        } else {
+            res.status(200).json(totalOrder);
+        }
+
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+}
+
+const getTotalOrderDetail = async (req, res) => {
+    try {
+        const totalOrderDetail = await getTotalOrderDetails();
+
+        if (totalOrderDetail.length <= 0) {
+            return res
+                .status(404)
+                .send('Empty order detail list')
+        } else {
+            res.status(200).json(totalOrderDetail);
+        }
+
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+}
+
+const getTotalOrderDetailByMonth = async (req, res) => {
+    try {
+        const month = req.query.Month;
+        const year = req.query.Year;
+        const totalOrder = await getTotalOrderDetailByMonths(month, year);
+        if (totalOrder.length <= 0) {
+            return res
+                .status(404)
+                .send('Empty order detail list')
+        } else {
+            res.status(200).json(totalOrder);
+        }
+
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+}
+
+const getTotalAmountOrderDetail = async (req, res) => {
+    try {
+        const totalAmountOrderDetail = await getTotalAmountOrderDetails();
+
+        if (totalAmountOrderDetail.length <= 0) {
+            return res
+                .status(404)
+                .send('Empty order detail list')
+        } else {
+            res.status(200).json(totalAmountOrderDetail);
+        }
+
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+}
+
+const getTotalAmountOrderDetailByMonth = async (req, res) => {
+    try {
+        const month = req.query.Month;
+        const year = req.query.Year;
+        const totalAmountOrderDetail = await getTotalAmountOrderDetailByMonths(month, year);
+
+        if (totalAmountOrderDetail.length <= 0) {
+            return res
+                .status(404)
+                .send('Empty order detail list')
+        } else {
+            res.status(200).json(totalAmountOrderDetail);
+        }
+
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+}
 module.exports = {
     getAllStep,
     getStepById,
@@ -480,4 +568,9 @@ module.exports = {
     updateOrderDetailById,
     deleteOrderDetailById,
     insertOrderDetail,
+    getTotalOrder,
+    getTotalOrderDetailByMonth,
+    getTotalOrderDetail,
+    getTotalAmountOrderDetailByMonth,
+    getTotalAmountOrderDetail
 }

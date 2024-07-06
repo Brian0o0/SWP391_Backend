@@ -507,7 +507,6 @@ const checkOuts = async (paymentMethods, phone, address, status, userId, descrip
                 throw new Error("Failed to insert order detail for product ID: " + productId);
             }
         }
-
         await transaction.commit();
         return true;
     } catch (error) {
@@ -516,6 +515,86 @@ const checkOuts = async (paymentMethods, phone, address, status, userId, descrip
         throw new Error("Error during checkout: " + error.message);
     }
 };
+
+const getTotalOrders = async () => {
+    try {
+        const pool = await connectToDatabase();
+        const request = pool.request();
+        var sqlString = "SELECT COUNT(*) AS OrderCount FROM [Order]";
+        const result = await request.query(sqlString);
+        const totalOrder = result.recordset;
+        console.log(totalOrder);
+        return totalOrder;
+    } catch (error) {
+        console.log(error);
+        return null;
+    }
+}
+
+const getTotalOrderDetailByMonths = async (month, year) => {
+    try {
+        const pool = await connectToDatabase();
+        const request = pool.request();
+        var sqlString = "SELECT COUNT(*) AS OrderDetailCount FROM OrderDetail WHERE MONTH(OrderDate) = @month AND YEAR(OrderDate) = @year;";
+        request.input('month', month);
+        request.input('year', year);
+        const result = await request.query(sqlString);
+        const totalOrder = result.recordset;
+        console.log(totalOrder);
+        return totalOrder;
+    } catch (error) {
+        console.log(error);
+        return null;
+    }
+}
+
+const getTotalOrderDetails = async () => {
+    try {
+        const pool = await connectToDatabase();
+        const request = pool.request();
+        var sqlString = "SELECT COUNT(*) AS OrderDetailCount FROM [OrderDetail]";
+        const result = await request.query(sqlString);
+        const totalOrderDetail = result.recordset;
+        console.log(totalOrderDetail);
+        return totalOrderDetail;
+    } catch (error) {
+        console.log(error);
+        return null;
+    }
+}
+
+const getTotalAmountOrderDetails = async () => {
+    try {
+        const pool = await connectToDatabase();
+        const request = pool.request();
+        var sqlString = "SELECT SUM(P.ProductCost) AS TotalProductCost FROM OrderDetail OD JOIN Product P ON OD.ProductId = P.ProductId";
+        const result = await request.query(sqlString);
+        const totalProductCost = result.recordset;
+        console.log(totalProductCost);
+        return totalProductCost;
+    } catch (error) {
+        console.log(error);
+        return null;
+    }
+}
+
+const getTotalAmountOrderDetailByMonths = async (month, year) => {
+    try {
+        const pool = await connectToDatabase();
+        const request = pool.request();
+        var sqlString = "SELECT SUM(P.ProductCost) AS TotalProductCost FROM OrderDetail OD JOIN Product P ON OD.ProductId = P.ProductId WHERE MONTH(OD.OrderDate) = @month AND YEAR(OD.OrderDate) = @year;";
+        request.input('month', month);
+        request.input('year', year);
+        const result = await request.query(sqlString);
+        const totalOrderDetail = result.recordset;
+        console.log(totalOrderDetail);
+        return totalOrderDetail;
+    } catch (error) {
+        console.log(error);
+        return null;
+    }
+}
+
 
 
 module.exports = {
@@ -541,5 +620,10 @@ module.exports = {
     deleteOrderDetailByIds,
     updateOrderStatus,
     insertOrderDetailServices,
-    checkOuts
+    checkOuts,
+    getTotalOrders,
+    getTotalOrderDetailByMonths,
+    getTotalOrderDetails,
+    getTotalAmountOrderDetailByMonths,
+    getTotalAmountOrderDetails
 }

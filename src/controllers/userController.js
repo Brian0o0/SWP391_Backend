@@ -1,7 +1,7 @@
 //User functionality handles receiving and sending data from the database to the user
 
 const express = require('express');
-const { getAllUsers, getUserByIds, updateUserByIds, deleteUserByIds, insertUsers, getUserByUserNames, checkLogin, getUserByNames } = require('../services/userServices');
+const { getAllUsers, getUserByIds, updateUserByIds, deleteUserByIds, insertUsers, getUserByUserNames, checkLogin, getUserByNames, getTotalUsers } = require('../services/userServices');
 const { generateToken } = require('../authen/methods');
 const bcrypt = require('bcrypt');
 // const { use } = require('../routers/api');
@@ -165,6 +165,22 @@ const updateUserById = async (req, res) => {
     }
 }
 
+const getTotalUser = async (req, res) => {
+    try {
+        const totalUser = await getTotalUsers();
+        if (totalUser.length <= 0) {
+            return res
+                .status(404)
+                .send('Empty user list')
+        } else {
+            res.status(200).json(totalUser);
+        }
+    } catch (error) {
+        return res
+            .status(500)
+            .send(error.message)
+    }
+}
 
 
 
@@ -411,4 +427,5 @@ module.exports = {
     deleteUserById,
     updateUserById,
     getUserByName,
+    getTotalUser,
 }

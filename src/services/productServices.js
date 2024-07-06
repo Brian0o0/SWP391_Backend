@@ -163,12 +163,19 @@ const getProductByNameOrIds = async (name) => {
 
         for (const product of productTemp) {
             const categoryTemp = await getCategoryByIds(product.CategoryId);
-
+            if (!categoryTemp) {
+                return null;
+            }
             const gemTemp = await getGemByIds(product.GemId);
             // const costGemTemp = await getCostGemByIds(gemTemp.GemId);
-
+            if (!gemTemp) {
+                console.log(gemTemp);
+            }
             const materialTemp = await getMaterialByIds(product.MaterialId);
             // const costMaterialTemp = await getCostMaterialByIds(materialTemp[0].MaterialId);
+            if (!materialTemp) {
+                return null;
+            }
             if (product.Image) {
                 try {
                     product.Image = JSON.parse(product.Image);

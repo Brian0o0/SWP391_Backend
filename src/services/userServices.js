@@ -84,8 +84,6 @@ const getUserByEmails = async (email) => {
         return null;
     }
 }
-
-
 //check email valid function
 const checkEmailValid = async (email) => {
     const isEmail = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email);
@@ -203,7 +201,6 @@ const insertUsers = async (user) => {
     }
 }
 
-
 const insertUserOnGoogles = async (user) => {
     try {
         if (user.Email) {
@@ -222,8 +219,24 @@ const insertUserOnGoogles = async (user) => {
     }
 }
 
+const getTotalUsers = async (req, res) => {
+    try {
+        const pool = await connectToDatabase();
+        const request = pool.request();
+        var sqlString = "SELECT COUNT(*) AS TotalUser FROM [User]";
+        const result = await request.query(sqlString);
+        const totalUser = result.recordset;
+        console.log(totalUser);
+        return totalUser;
+    } catch (error) {
+        console.log(error.message)
+        return null;
+    }
+}
+
 module.exports = {
     getAllUsers,
+    getTotalUsers,
     getUserByIds,
     updateUserByIds,
     deleteUserByIds,

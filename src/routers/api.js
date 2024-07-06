@@ -10,12 +10,14 @@ const express = require('express');
 const router = express.Router();
 
 
-const { register, login, logout, getAllUser, getUserById, getUserByUserName, deleteUserById, updateUserById, getUserByName, insertUserOnGoogle } = require('../controllers/userController');
+const { register, login, logout, getAllUser, getUserById, getUserByUserName, deleteUserById, updateUserById, getUserByName, insertUserOnGoogle, getTotalUser } = require('../controllers/userController');
 const { getAllProduct, getProductById, insertProduct, updateProductById, deleteProductById, getProductByNameOrId, getProductByCategory } = require('../controllers/productController');
 const { getAllCostGem, getCostGemById, insertCostGem, deleteCostGemById, updateCostGemById, getAllGem, getGemById, insertGem, updateGemById, deleteGemById, getGemByPrice } = require('../controllers/gemController');
 const { getAllCostMaterial, getCostMaterialById, insertCostMaterial, deleteCostMaterialById, updateCostMaterialById, getAllMaterial, getMaterialById, insertMaterial, updateMaterialById, deleteMaterialById } = require('../controllers/materialController');
-const { getAllStep, getStepById, insertStep, deleteStepById, updateStepById, getAllOrderProgress, getOrderProgressById, insertOrderProgress, deleteOrderProgressById, updateOrderProgressById, getAllOrder, getOrderById, insertOrder, deleteOrderById, updateOrderById, getAllOrderDetail, insertOrderDetailTemp, getOrderDetailById, insertOrderDetail, updateOrderDetailById, deleteOrderDetailById } = require('../controllers/orderController');
-const { getAllCategory, getCategoryById, insertCategory, updateCategoryById, deleteCategoryById, } = require("../controllers/categoryController");
+const { getAllStep, getStepById, insertStep, deleteStepById, updateStepById, getAllOrderProgress, getOrderProgressById, insertOrderProgress, deleteOrderProgressById, updateOrderProgressById, getAllOrder, getOrderById, insertOrder, deleteOrderById, updateOrderById,
+    getAllOrderDetail, insertOrderDetailTemp, getOrderDetailById, insertOrderDetail, updateOrderDetailById, deleteOrderDetailById, getTotalOrder, getTotalOrderDetailByMonth,
+    getTotalOrderDetail, getTotalAmountOrderDetail, getTotalAmountOrderDetailByMonth } = require('../controllers/orderController');
+const { getAllCategory, getCategoryById, insertCategory, updateCategoryById, deleteCategoryById } = require("../controllers/categoryController");
 const { getAllBlog, getBlogById, insertBlog, updateBlogById, deleteBlogById } = require('../controllers/bolgController');
 const { loginSuccess } = require('../controllers/authController')
 const { payment } = require('../controllers/zaloPay')
@@ -49,6 +51,7 @@ router.post('/login-success', loginSuccess)
 router.post("/test/payment", payment);
 
 router.get('/test/getAllUser', getAllUser);
+router.get('/test/getTotalUser', getTotalUser);
 router.get('/test/getUserById', getUserById);
 router.get('/test/getUserByUserName', getUserByUserName);
 router.get('/test/getUserByName', getUserByName);
@@ -104,6 +107,7 @@ router.delete('/test/deleteOrderProgressById', deleteOrderProgressById);
 //api order 
 router.get('/test/getAllOrder', getAllOrder);
 router.get('/test/getOrderById', getOrderById);
+router.get('/test/getTotalOrder', getTotalOrder);
 router.post('/test/insertOrder', insertOrder);
 router.put('/test/updateOrderById', updateOrderById);
 router.delete('/test/deleteOrderById', deleteOrderById);
@@ -111,6 +115,10 @@ router.delete('/test/deleteOrderById', deleteOrderById);
 //api order detail progress
 router.get('/test/getAllOrderDetail', getAllOrderDetail);
 router.get('/test/getOrderDetailById', getOrderDetailById);
+router.get('/test/getTotalOrderDetailByMonth', getTotalOrderDetailByMonth);
+router.get('/test/getTotalOrderDetail', getTotalOrderDetail);
+router.get('/test/getTotalAmountOrderDetail', getTotalAmountOrderDetail);
+router.get('/test/getTotalAmountOrderDetailByMonth', getTotalAmountOrderDetailByMonth);
 router.post('/test/insertOrderDetailTemp', insertOrderDetailTemp);
 router.post('/test/insertOrderDetail', insertOrderDetail);
 router.put('/test/updateOrderDetailById', updateOrderDetailById);
