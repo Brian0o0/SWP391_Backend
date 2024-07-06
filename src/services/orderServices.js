@@ -516,7 +516,7 @@ const checkOuts = async (paymentMethods, phone, address, status, userId, descrip
     }
 };
 
-const orderRequest = async (paymentMethods, phone, address, status, userId, description, userName, productName, materialId, gemId, categoryId, productCost, image, quantityGem, size, warrantyCard, productdescription, quantityMaterial) => {
+const orderRequests = async (paymentMethods, phone, address, status, userId, description, userName, productName, materialId, gemId, categoryId, productCost, image, quantityGem, size, warrantyCard, productdescription, quantityMaterial) => {
     const pool = await connectToDatabase();
     const transaction = new sql.Transaction(pool);
     try {
@@ -541,8 +541,6 @@ const orderRequest = async (paymentMethods, phone, address, status, userId, desc
         throw new Error("Error during checkout: " + error.message);
     }
 };
-
-
 
 const getTotalOrders = async () => {
     try {
@@ -649,9 +647,11 @@ module.exports = {
     updateOrderStatus,
     insertOrderDetailServices,
     checkOuts,
+    orderRequests,
     getTotalOrders,
     getTotalOrderDetailByMonths,
     getTotalOrderDetails,
     getTotalAmountOrderDetailByMonths,
-    getTotalAmountOrderDetails
+    getTotalAmountOrderDetails,
+
 }
