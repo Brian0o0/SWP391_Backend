@@ -251,6 +251,7 @@ const getOrderByIds = async (orderId) => {
 const insertOrders = async (transaction, paymentMethods, phone, address, status, userId, description, name) => {
     try {
         const request = new sql.Request(transaction);
+        request.timeout = 60000;
         const sqlString = `
         INSERT INTO [Order] (PaymentMethods, Phone, Address, Status, UserId, Description, Name)
         OUTPUT INSERTED.OrderId
@@ -453,7 +454,9 @@ const updateOrderStatus = async (status, orderId) => {
 
 const insertOrderDetailServices = async (description, productId, status, orderId, transaction) => {
     try {
+        console.log(productId);
         const product = await getProductByIds(productId);
+        console.log(product)
         const gem = await getGemByIds(product.GemId);
 
         const material = await getMaterialByIds(product.MaterialId);
@@ -477,8 +480,6 @@ const insertOrderDetailServices = async (description, productId, status, orderId
             getDayNow(),
             orderId
         )
-        console.log(1);
-
         if (check) {
             return true;
         } else { return false; }
@@ -525,8 +526,7 @@ const orderRequests = async (paymentMethods, phone, address, status, userId, des
         // Thêm transaction vào hàm insertOrders để đảm bảo cùng một transaction
         const orderId = await insertOrders(transaction, paymentMethods, phone, address, status, userId, description, userName);
 
-        const productId = await insertProductFromRequests(transaction, productName, materialId, gemId, categoryId, productCost, image, quantityGem, size, warrantyCard, productdescription, quantityMaterial, 0);
-
+        const productId = await insertProductFromRequests(productName, materialId, gemId, categoryId, productCost, image, quantityGem, size, warrantyCard, productdescription, quantityMaterial, 0);
         // Sử dụng orderId để truyền vào insertOrderDetailServices
         const checkCreateOrderDetail = await insertOrderDetailServices(description, productId, status, orderId, transaction);
 
@@ -574,12 +574,11 @@ const getTotalOrderDetailByMonths = async (month, year) => {
     }
 }
 
-const getTotalOrderDetailAllMonths = async (year) => {
+const getTotalOrderDetailAllMonths = async () => {
     try {
         const pool = await connectToDatabase();
         const request = pool.request();
-        var sqlString = "SELECT MONTH(OrderDate) AS Month, COUNT(*) AS OrderDetailCount FROM OrderDetail WHERE YEAR(OrderDate) = @year GROUP BY MONTH(OrderDate)ORDER BY Month;";
-        request.input('year', year);
+        var sqlString = " SELECT YEAR(OD.OrderDate) AS OrderYear,MONTH(OD.OrderDate) AS OrderMonth,COUNT(*) AS OrderDetailCount FROM OrderDetail OD GROUP BY YEAR(OD.OrderDate), MONTH(OD.OrderDate) ORDER BY OrderYear, OrderMonth;";
         const result = await request.query(sqlString);
         const totalOrder = result.recordset;
         console.log(totalOrder);
@@ -637,6 +636,20 @@ const getTotalAmountOrderDetailByMonths = async (month, year) => {
     }
 }
 
+const getTotalAmountOrderDetailAllMonths = async () => {
+    try {
+        const pool = await connectToDatabase();
+        const request = pool.request();
+        var sqlString = " SELECT YEAR(OD.OrderDate) AS OrderYear, MONTH(OD.OrderDate) AS OrderMonth,SUM(P.ProductCost) AS TotalProductCost FROM OrderDetail OD JOIN Product P ON OD.ProductId = P.ProductId GROUP BY YEAR(OD.OrderDate), MONTH(OD.OrderDate) ORDER BY OrderYear, OrderMonth;";
+        const result = await request.query(sqlString);
+        const totalOrderDetail = result.recordset;
+        console.log(totalOrderDetail);
+        return totalOrderDetail;
+    } catch (error) {
+        console.log(error);
+        return null;
+    }
+}
 
 
 module.exports = {
@@ -670,5 +683,6 @@ module.exports = {
     getTotalAmountOrderDetailByMonths,
     getTotalAmountOrderDetails,
     getTotalOrderDetailAllMonths,
+    getTotalAmountOrderDetailAllMonths,
 
 }

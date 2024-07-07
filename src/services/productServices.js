@@ -7,6 +7,7 @@ const { getCostMaterialByIds, getMaterialByIds, getCostMaterialByMaterialIds } =
 const { Int } = require('msnodesqlv8');
 const { connectToDatabase } = require('../config/database');
 const { get } = require('jquery');
+const sql = require('mssql/msnodesqlv8');
 
 
 //get all product from database function
@@ -128,9 +129,10 @@ const insertProducts = async (name, materialId, gemId, categoryId, productCost, 
         return false;
     }
 }
-const insertProductFromRequests = async (transaction, name, materialId, gemId, categoryId, productCost, image, quantityGem, size, warrantyCard, description, quantityMaterial, status) => {
+const insertProductFromRequests = async (name, materialId, gemId, categoryId, productCost, image, quantityGem, size, warrantyCard, description, quantityMaterial, status) => {
     try {
-        const request = new sql.Request(transaction);
+        const pool = await connectToDatabase();
+        const request = pool.request();
         const gemCost = await getCostGemByGemIds(gemId);
         if (!gemCost) {
             return false;
@@ -162,10 +164,15 @@ const insertProductFromRequests = async (transaction, name, materialId, gemId, c
 
         // Thực hiện truy vấn và lấy productID mới được chèn
         const result = await request.query(sqlString);
-        const productID = result.recordset[0].ProductID;
 
-        // Trả về productID
-        return productID;
+        if (result.recordset.length > 0) {
+            const productId = result.recordset[0].ProductID;
+            console.log(productId);
+            // Trả về productID
+            return productId;
+        } else {
+            throw new Error("No product ID returned.");
+        }
     } catch (error) {
         // Xử lý bất kỳ lỗi nào
         throw new Error("Error inserting product: " + error.message);

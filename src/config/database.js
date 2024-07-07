@@ -10,7 +10,8 @@ var config = {
     driver: process.env.DB_DRIVER,
     waitForConnections: true,
     connectionLimit: 10,
-    queueLimit: 0
+    queueLimit: 0,
+    requestTimeout: 60000  // Thời gian chờ là 30 giây
 };
 
 
