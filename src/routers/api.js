@@ -16,7 +16,7 @@ const { getAllCostGem, getCostGemById, insertCostGem, deleteCostGemById, updateC
 const { getAllCostMaterial, getCostMaterialById, insertCostMaterial, deleteCostMaterialById, updateCostMaterialById, getAllMaterial, getMaterialById, insertMaterial, updateMaterialById, deleteMaterialById } = require('../controllers/materialController');
 const { getAllStep, getStepById, insertStep, deleteStepById, updateStepById, getAllOrderProgress, getOrderProgressById, insertOrderProgress, deleteOrderProgressById, updateOrderProgressById, getAllOrder, getOrderById, insertOrder, deleteOrderById, updateOrderById,
     getAllOrderDetail, insertOrderDetailTemp, getOrderDetailById, insertOrderDetail, updateOrderDetailById, deleteOrderDetailById, getTotalOrder, getTotalOrderDetailByMonth,
-    getTotalOrderDetail, getTotalAmountOrderDetail, getTotalAmountOrderDetailByMonth, orderRequest, getTotalOrderDetailAllMonth, getTotalAmountOrderDetailAllMonth } = require('../controllers/orderController');
+    getTotalOrderDetail, getTotalAmountOrderDetail, getTotalAmountOrderDetailByMonth, orderRequest, getTotalOrderDetailAllMonth, getTotalAmountOrderDetailAllMonth, getOrderByUserId, getOrderByStatus } = require('../controllers/orderController');
 const { getAllCategory, getCategoryById, insertCategory, updateCategoryById, deleteCategoryById } = require("../controllers/categoryController");
 const { getAllBlog, getBlogById, insertBlog, updateBlogById, deleteBlogById } = require('../controllers/bolgController');
 const { loginSuccess } = require('../controllers/authController')
@@ -107,6 +107,8 @@ router.delete('/test/deleteOrderProgressById', deleteOrderProgressById);
 //api order 
 router.get('/test/getAllOrder', getAllOrder);
 router.get('/test/getOrderById', getOrderById);
+router.get('/test/getOrderByUserId', getOrderByUserId);
+router.get('/test/getOrderByStatus', getOrderByStatus);
 router.get('/test/getTotalOrder', getTotalOrder);
 router.post('/test/orderRequest', orderRequest);
 router.post('/test/insertOrder', insertOrder);

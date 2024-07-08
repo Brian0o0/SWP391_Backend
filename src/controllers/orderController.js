@@ -3,7 +3,8 @@ const { getAllSteps, getStepByIds, insertSteps, updateStepByIds, deleteStepByIds
     getAllOrderProgresss, getOrderProgressByIds, insertOrderProgresss, deleteOrderProgressByIds, updateOrderProgressByIds,
     getAllOrders, getOrderByIds, insertOrders, updateOrderByIds, deleteOrderByIds,
     getAllOrderDetails, getOrderDetailByIds, insertOrderDetails, updateOrderDetailByIds, deleteOrderDetailByIds, insertOrderDetailServices,
-    checkOuts, orderRequests, getTotalOrders, getTotalOrderDetailByMonths, getTotalOrderDetails, getTotalAmountOrderDetails, getTotalAmountOrderDetailByMonths, getTotalOrderDetailAllMonths, getTotalAmountOrderDetailAllMonths
+    checkOuts, orderRequests, getTotalOrders, getTotalOrderDetailByMonths, getTotalOrderDetails, getTotalAmountOrderDetails, getTotalAmountOrderDetailByMonths,
+    getTotalOrderDetailAllMonths, getTotalAmountOrderDetailAllMonths, getOrderByUserIds, getOrderByStatuss
 } = require('../services/orderServices');
 
 const getAllStep = async (req, res) => {
@@ -252,6 +253,44 @@ const getOrderById = async (req, res) => {
     }
 }
 
+const getOrderByUserId = async (req, res) => {
+    try {
+        const userId = req.query.UserId;
+        const order = await getOrderByUserIds(userId);
+        if (order.length <= 0) {
+            return res
+                .status(404)
+                .send('Empty order list')
+        } else {
+            res.status(200).json(order);
+        }
+
+    } catch (error) {
+        return res
+            .status(500)
+            .send(error.message)
+    }
+}
+
+const getOrderByStatus = async (req, res) => {
+    try {
+        const status = req.query.Status;
+        const order = await getOrderByStatuss(status);
+        if (order.length <= 0) {
+            return res
+                .status(404)
+                .send('Empty order list')
+        } else {
+            res.status(200).json(order);
+        }
+
+    } catch (error) {
+        return res
+            .status(500)
+            .send(error.message)
+    }
+}
+
 const insertOrder = async (req, res) => {
     try {
         const { PaymentMethods, Phone, Address, Status, UserId, Description, Name, ProductIds } = req.body
@@ -476,11 +515,9 @@ const getTotalOrder = async (req, res) => {
     }
 }
 
-
 const orderRequest = async (req, res) => {
     try {
         const { PaymentMethods, Phone, Address, Status, UserId, Description, UserName, ProductName, MaterialId, GemId, CategoryId, ProductCost, Image, QuantityGem, Size, WarrantyCard, Productdescription, QuantityMaterial } = req.body
-        console.log(req.body)
         if (PaymentMethods && Phone && Address && Status && UserId && Description && UserName && ProductName && MaterialId && GemId && CategoryId && ProductCost && Image && QuantityGem && Size && WarrantyCard && Productdescription && QuantityMaterial) {
             const check = await orderRequests(PaymentMethods, Phone, Address, Status, UserId, Description, UserName, ProductName, MaterialId, GemId, CategoryId, ProductCost, Image, QuantityGem, Size, WarrantyCard, Productdescription, QuantityMaterial);
             if (check == false) {
@@ -639,4 +676,6 @@ module.exports = {
     orderRequest,
     getTotalOrderDetailAllMonth,
     getTotalAmountOrderDetailAllMonth,
+    getOrderByUserId,
+    getOrderByStatus
 }

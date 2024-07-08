@@ -247,6 +247,40 @@ const getOrderByIds = async (orderId) => {
         return null;
     }
 }
+//get order by userId from database function
+const getOrderByUserIds = async (userId) => {
+    try {
+        const pool = await connectToDatabase();
+        const request = pool.request();
+        var sqlString = "select * from [Order] where UserId = @userId";
+        request.input('userId', userId);
+        const result = await request.query(sqlString);
+        const order = result.recordset;
+        console.log(order);
+        return order;
+    } catch (error) {
+        console.log("Error:", error);
+        return null;
+    }
+}
+
+//get order by status from database function
+const getOrderByStatuss = async (status) => {
+    try {
+        const pool = await connectToDatabase();
+        const request = pool.request();
+        var sqlString = "select * from [Order] where Status = @status";
+        request.input('status', status);
+        const result = await request.query(sqlString);
+        const order = result.recordset;
+        console.log(order);
+        return order;
+    } catch (error) {
+        console.log("Error:", error);
+        return null;
+    }
+}
+
 //insert order to database function
 const insertOrders = async (transaction, paymentMethods, phone, address, status, userId, description, name) => {
     try {
@@ -266,7 +300,6 @@ const insertOrders = async (transaction, paymentMethods, phone, address, status,
         request.input('name', name);
         // Trả về orderId của đơn hàng vừa mới chèn
         const result = await request.query(sqlString);
-        console.log("test");
         if (result.recordset && result.recordset.length > 0) {
             return result.recordset[0].OrderId;
         } else {
@@ -454,9 +487,8 @@ const updateOrderStatus = async (status, orderId) => {
 
 const insertOrderDetailServices = async (description, productId, status, orderId, transaction) => {
     try {
-        console.log(productId);
         const product = await getProductByIds(productId);
-        console.log(product)
+
         const gem = await getGemByIds(product.GemId);
 
         const material = await getMaterialByIds(product.MaterialId);
@@ -684,5 +716,7 @@ module.exports = {
     getTotalAmountOrderDetails,
     getTotalOrderDetailAllMonths,
     getTotalAmountOrderDetailAllMonths,
+    getOrderByUserIds,
+    getOrderByStatuss,
 
 }
