@@ -16,7 +16,8 @@ const { getAllCostGem, getCostGemById, insertCostGem, deleteCostGemById, updateC
 const { getAllCostMaterial, getCostMaterialById, insertCostMaterial, deleteCostMaterialById, updateCostMaterialById, getAllMaterial, getMaterialById, insertMaterial, updateMaterialById, deleteMaterialById } = require('../controllers/materialController');
 const { getAllStep, getStepById, insertStep, deleteStepById, updateStepById, getAllOrderProgress, getOrderProgressById, insertOrderProgress, deleteOrderProgressById, updateOrderProgressById, getAllOrder, getOrderById, insertOrder, deleteOrderById, updateOrderById,
     getAllOrderDetail, insertOrderDetailTemp, getOrderDetailById, insertOrderDetail, updateOrderDetailById, deleteOrderDetailById, getTotalOrder, getTotalOrderDetailByMonth,
-    getTotalOrderDetail, getTotalAmountOrderDetail, getTotalAmountOrderDetailByMonth, orderRequest, getTotalOrderDetailAllMonth, getTotalAmountOrderDetailAllMonth, getOrderByUserId, getOrderByStatus } = require('../controllers/orderController');
+    getTotalOrderDetail, getTotalAmountOrderDetail, getTotalAmountOrderDetailByMonth, orderRequest, getTotalOrderDetailAllMonth, getTotalAmountOrderDetailAllMonth, getOrderByUserId,
+    getOrderByStatus, getOrderDetailByOrderId } = require('../controllers/orderController');
 const { getAllCategory, getCategoryById, insertCategory, updateCategoryById, deleteCategoryById } = require("../controllers/categoryController");
 const { getAllBlog, getBlogById, insertBlog, updateBlogById, deleteBlogById } = require('../controllers/bolgController');
 const { loginSuccess } = require('../controllers/authController')
@@ -32,7 +33,7 @@ router.post('/test/insertProduct', insertProduct);
 router.put('/test/updateProductById', updateProductById);
 router.delete('/test/deleteProductById', deleteProductById);
 
-//api user
+//api login google
 router.get('/auth/google', passport.authenticate('google', {
     scope: ['profile', 'email'], session: false
 })
@@ -50,6 +51,7 @@ router.post('/login-success', loginSuccess)
 
 router.post("/test/payment", payment);
 
+//api user
 router.get('/test/getAllUser', getAllUser);
 router.get('/test/getTotalUser', getTotalUser);
 router.get('/test/getUserById', getUserById);
@@ -118,6 +120,7 @@ router.delete('/test/deleteOrderById', deleteOrderById);
 //api order detail progress
 router.get('/test/getAllOrderDetail', getAllOrderDetail);
 router.get('/test/getOrderDetailById', getOrderDetailById);
+router.get('/test/getOrderDetailByOrderId', getOrderDetailByOrderId);
 router.get('/test/getTotalOrderDetailByMonth', getTotalOrderDetailByMonth);
 router.get('/test/getTotalOrderDetail', getTotalOrderDetail);
 router.get('/test/getTotalAmountOrderDetail', getTotalAmountOrderDetail);

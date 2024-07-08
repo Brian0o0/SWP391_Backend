@@ -385,6 +385,21 @@ const getOrderDetailByIds = async (orderDetailId) => {
         return null;
     }
 }
+const getOrderDetailByOrderIds = async (orderId) => {
+    try {
+        const pool = await connectToDatabase();
+        const request = pool.request();
+        var sqlString = "select * from OrderDetail where OrderId = @orderId";
+        request.input('orderId', orderId);
+        const result = await request.query(sqlString);
+        const orderDetail = result.recordset;
+        console.log(orderDetail);
+        return orderDetail;
+    } catch (error) {
+        console.log("Error:", error);
+        return null;
+    }
+}
 //insert OrderDetail to database function
 const insertOrderDetails = async (transaction, description, productId, status, productName, categoryId, categoryName, materialId, materialName, gemId, gemName, quantityGem, quantityMaterial, orderDate, orderId) => {
     try {
@@ -718,5 +733,6 @@ module.exports = {
     getTotalAmountOrderDetailAllMonths,
     getOrderByUserIds,
     getOrderByStatuss,
+    getOrderDetailByOrderIds,
 
 }
