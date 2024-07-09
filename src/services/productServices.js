@@ -180,7 +180,7 @@ const insertProductFromRequests = async (name, materialId, gemId, categoryId, pr
 }
 
 //update product on database function
-const updateProductByIds = async (name, materialId, gemId, categoryId, materialCost, gemCost, productCost, image, quantityGem, size, warrantyCard, description, quantityMaterial, productId, status) => {
+const updateProductByIds = async (name, materialId, gemId, categoryId, materialCost, gemCost, productCost, image, quantityGem, size, warrantyCard, description, quantityMaterial, status, productId) => {
     try {
         const pool = await connectToDatabase();
         const request = pool.request();
