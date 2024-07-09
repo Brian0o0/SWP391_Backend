@@ -114,7 +114,7 @@ router.get('/test/getOrderByStatus', getOrderByStatus);
 router.get('/test/getTotalOrder', getTotalOrder);
 router.post('/test/orderRequest', orderRequest);
 router.post('/test/insertOrder', insertOrder);
-router.post('/test/updateStatusOrdeById', updateStatusOrdeById);
+router.put('/test/updateStatusOrdeById', updateStatusOrdeById);
 router.put('/test/updateOrderById', updateOrderById);
 router.delete('/test/deleteOrderById', deleteOrderById);
 
@@ -130,7 +130,7 @@ router.get('/test/getTotalAmountOrderDetailAllMonth', getTotalAmountOrderDetailA
 router.get('/test/getTotalOrderDetailAllMonth', getTotalOrderDetailAllMonth);
 router.post('/test/insertOrderDetailTemp', insertOrderDetailTemp);
 router.post('/test/insertOrderDetail', insertOrderDetail);
-router.post('/test/updateStatusOrderDetailById', updateStatusOrderDetailById);
+router.put('/test/updateStatusOrderDetailById', updateStatusOrderDetailById);
 router.put('/test/updateOrderDetailById', updateOrderDetailById);
 router.delete('/test/deleteOrderDetailById', deleteOrderDetailById);
 

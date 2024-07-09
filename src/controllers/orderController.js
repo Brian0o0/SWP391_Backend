@@ -343,8 +343,8 @@ const deleteOrderById = async (req, res) => {
 
 const updateOrderById = async (req, res) => {
     try {
-        const { PaymentMethods, Phone, Address, OrderDetailId, Status, UserId, Description, Name, OrderId } = req.body
-        const check = await updateOrderByIds(PaymentMethods, Phone, Address, OrderDetailId, Status, UserId, Description, Name, OrderId);
+        const { PaymentMethods, Phone, Address, Status, UserId, Description, Name, OrderId } = req.body
+        const check = await updateOrderByIds(PaymentMethods, Phone, Address, Status, UserId, Description, Name, OrderId);
         if (check == false) {
             return res
                 .status(500)
