@@ -17,7 +17,7 @@ const { getAllCostMaterial, getCostMaterialById, insertCostMaterial, deleteCostM
 const { getAllStep, getStepById, insertStep, deleteStepById, updateStepById, getAllOrderProgress, getOrderProgressById, insertOrderProgress, deleteOrderProgressById, updateOrderProgressById, getAllOrder, getOrderById, insertOrder, deleteOrderById, updateOrderById,
     getAllOrderDetail, insertOrderDetailTemp, getOrderDetailById, insertOrderDetail, updateOrderDetailById, deleteOrderDetailById, getTotalOrder, getTotalOrderDetailByMonth,
     getTotalOrderDetail, getTotalAmountOrderDetail, getTotalAmountOrderDetailByMonth, orderRequest, getTotalOrderDetailAllMonth, getTotalAmountOrderDetailAllMonth, getOrderByUserId,
-    getOrderByStatus, getOrderDetailByOrderId } = require('../controllers/orderController');
+    getOrderByStatus, getOrderDetailByOrderId, updateStatusOrdeById, updateStatusOrderDetailById } = require('../controllers/orderController');
 const { getAllCategory, getCategoryById, insertCategory, updateCategoryById, deleteCategoryById } = require("../controllers/categoryController");
 const { getAllBlog, getBlogById, insertBlog, updateBlogById, deleteBlogById } = require('../controllers/bolgController');
 const { loginSuccess } = require('../controllers/authController')
@@ -114,6 +114,7 @@ router.get('/test/getOrderByStatus', getOrderByStatus);
 router.get('/test/getTotalOrder', getTotalOrder);
 router.post('/test/orderRequest', orderRequest);
 router.post('/test/insertOrder', insertOrder);
+router.post('/test/updateStatusOrdeById', updateStatusOrdeById);
 router.put('/test/updateOrderById', updateOrderById);
 router.delete('/test/deleteOrderById', deleteOrderById);
 
@@ -129,6 +130,7 @@ router.get('/test/getTotalAmountOrderDetailAllMonth', getTotalAmountOrderDetailA
 router.get('/test/getTotalOrderDetailAllMonth', getTotalOrderDetailAllMonth);
 router.post('/test/insertOrderDetailTemp', insertOrderDetailTemp);
 router.post('/test/insertOrderDetail', insertOrderDetail);
+router.post('/test/updateStatusOrderDetailById', updateStatusOrderDetailById);
 router.put('/test/updateOrderDetailById', updateOrderDetailById);
 router.delete('/test/deleteOrderDetailById', deleteOrderDetailById);
 

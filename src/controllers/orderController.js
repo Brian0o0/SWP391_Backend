@@ -4,7 +4,7 @@ const { getAllSteps, getStepByIds, insertSteps, updateStepByIds, deleteStepByIds
     getAllOrders, getOrderByIds, insertOrders, updateOrderByIds, deleteOrderByIds,
     getAllOrderDetails, getOrderDetailByIds, insertOrderDetails, updateOrderDetailByIds, deleteOrderDetailByIds, insertOrderDetailServices,
     checkOuts, orderRequests, getTotalOrders, getTotalOrderDetailByMonths, getTotalOrderDetails, getTotalAmountOrderDetails, getTotalAmountOrderDetailByMonths,
-    getTotalOrderDetailAllMonths, getTotalAmountOrderDetailAllMonths, getOrderByUserIds, getOrderByStatuss, getOrderDetailByOrderIds
+    getTotalOrderDetailAllMonths, getTotalAmountOrderDetailAllMonths, getOrderByUserIds, getOrderByStatuss, getOrderDetailByOrderIds, updateStatusOrderDetailByIds, updateOrderStatus
 } = require('../services/orderServices');
 
 const getAllStep = async (req, res) => {
@@ -362,6 +362,27 @@ const updateOrderById = async (req, res) => {
     }
 }
 
+const updateStatusOrdeById = async (req, res) => {
+    try {
+        const { Status, OrderId } = req.body
+        const check = await updateOrderStatus(Status, OrderId);
+        if (check == false) {
+            return res
+                .status(500)
+                .send('Update status order fail')
+        } else {
+            return res
+                .status(200)
+                .send('Update status order successfully')
+        }
+    } catch (error) {
+        console.log(error);
+        return res
+            .status(500)
+            .send(error.message)
+    }
+}
+
 const getAllOrderDetail = async (req, res) => {
     try {
         const orderDetails = await getAllOrderDetails();
@@ -479,6 +500,27 @@ const updateOrderDetailById = async (req, res) => {
             return res
                 .status(200)
                 .send('Update order detail successfully')
+        }
+    } catch (error) {
+        console.log(error);
+        return res
+            .status(500)
+            .send(error.message)
+    }
+}
+
+const updateStatusOrderDetailById = async (req, res) => {
+    try {
+        const { Status, OrderDetailId } = req.body
+        const check = await updateStatusOrderDetailByIds(Status, OrderDetailId);
+        if (check == false) {
+            return res
+                .status(500)
+                .send('Update status order detail fail')
+        } else {
+            return res
+                .status(200)
+                .send('Update status order detail successfully')
         }
     } catch (error) {
         console.log(error);
@@ -697,5 +739,7 @@ module.exports = {
     getTotalAmountOrderDetailAllMonth,
     getOrderByUserId,
     getOrderByStatus,
-    getOrderDetailByOrderId
+    getOrderDetailByOrderId,
+    updateStatusOrderDetailById,
+    updateStatusOrdeById,
 }

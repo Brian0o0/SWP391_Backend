@@ -467,6 +467,29 @@ const updateOrderDetailByIds = async (description, productId, status, productNam
         return false;
     }
 }
+
+//update Status Order Detail on database function
+const updateStatusOrderDetailByIds = async (status, orderDetailId) => {
+    try {
+        const pool = await connectToDatabase();
+        const request = pool.request();
+        const sqlString = `
+            UPDATE OrderDetail
+            SET Status = @status
+            WHERE OrderDetailId = @orderDetailId
+        `;
+        request.input('status', status);
+        request.input('orderDetailId', orderDetailId);
+        // Thực hiện truy vấn
+        await request.query(sqlString);
+        // Gửi phản hồi
+        return true;
+    } catch (error) {
+        console.log(error.message);
+        return false;
+    }
+}
+
 //delete OrderDetail by id on database function
 const deleteOrderDetailByIds = async (orderDetailId) => {
     try {
@@ -734,5 +757,5 @@ module.exports = {
     getOrderByUserIds,
     getOrderByStatuss,
     getOrderDetailByOrderIds,
-
+    updateStatusOrderDetailByIds,
 }
