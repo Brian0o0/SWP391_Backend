@@ -579,7 +579,12 @@ const checkOuts = async (paymentMethods, phone, address, status, userId, descrip
             }
         }
         await transaction.commit();
-        return true;
+        const totalAmount = await getTotalAmountOrders(orderId);
+        const orderInfor = {
+            OrderId: orderId,
+            TotalAmount: totalAmount[0].TotalProductCost
+        }
+        return orderInfor;
     } catch (error) {
         // Xử lý lỗi và rollback transaction nếu có lỗi xảy ra
         await transaction.rollback();
@@ -604,7 +609,11 @@ const orderRequests = async (paymentMethods, phone, address, status, userId, des
             throw new Error("Failed to insert order detail for product ID: " + productId);
         }
         await transaction.commit();
-        return true;
+        const orderInfor = {
+            OrderId: orderId,
+            TotalAmount: productCost
+        }
+        return orderInfor;
     } catch (error) {
         // Xử lý lỗi và rollback transaction nếu có lỗi xảy ra
         await transaction.rollback();
@@ -721,6 +730,31 @@ const getTotalAmountOrderDetailAllMonths = async () => {
     }
 }
 
+const getTotalAmountOrders = async (orderId) => {
+    try {
+        const pool = await connectToDatabase();
+        const request = pool.request();
+        var sqlString = `SELECT SUM(p.ProductCost) AS TotalProductCost
+        FROM
+        dbo.[Order] o
+        JOIN
+        dbo.OrderDetail od ON o.OrderId = od.OrderId
+        JOIN
+        dbo.Product p ON od.ProductId = p.ProductId
+        WHERE
+        o.OrderId = @orderId
+        GROUP BY
+        o.OrderId;`
+        request.input("orderId", orderId)
+        const result = await request.query(sqlString);
+        const totalOrder = result.recordset;
+        console.log(totalOrder);
+        return totalOrder;
+    } catch (error) {
+        console.log(error);
+        return null;
+    }
+}
 
 module.exports = {
     getAllSteps,
@@ -758,4 +792,5 @@ module.exports = {
     getOrderByStatuss,
     getOrderDetailByOrderIds,
     updateStatusOrderDetailByIds,
+    getTotalAmountOrders
 }

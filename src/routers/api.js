@@ -17,7 +17,7 @@ const { getAllCostMaterial, getCostMaterialById, insertCostMaterial, deleteCostM
 const { getAllStep, getStepById, insertStep, deleteStepById, updateStepById, getAllOrderProgress, getOrderProgressById, insertOrderProgress, deleteOrderProgressById, updateOrderProgressById, getAllOrder, getOrderById, insertOrder, deleteOrderById, updateOrderById,
     getAllOrderDetail, insertOrderDetailTemp, getOrderDetailById, insertOrderDetail, updateOrderDetailById, deleteOrderDetailById, getTotalOrder, getTotalOrderDetailByMonth,
     getTotalOrderDetail, getTotalAmountOrderDetail, getTotalAmountOrderDetailByMonth, orderRequest, getTotalOrderDetailAllMonth, getTotalAmountOrderDetailAllMonth, getOrderByUserId,
-    getOrderByStatus, getOrderDetailByOrderId, updateStatusOrdeById, updateStatusOrderDetailById } = require('../controllers/orderController');
+    getOrderByStatus, getOrderDetailByOrderId, updateStatusOrdeById, updateStatusOrderDetailById, getTotalAmountOrder } = require('../controllers/orderController');
 const { getAllCategory, getCategoryById, insertCategory, updateCategoryById, deleteCategoryById } = require("../controllers/categoryController");
 const { getAllBlog, getBlogById, insertBlog, updateBlogById, deleteBlogById } = require('../controllers/bolgController');
 const { loginSuccess } = require('../controllers/authController')
@@ -112,6 +112,7 @@ router.get('/test/getOrderById', getOrderById);
 router.get('/test/getOrderByUserId', getOrderByUserId);
 router.get('/test/getOrderByStatus', getOrderByStatus);
 router.get('/test/getTotalOrder', getTotalOrder);
+router.get('/test/getTotalAmountOrder', getTotalAmountOrder);
 router.post('/test/orderRequest', orderRequest);
 router.post('/test/insertOrder', insertOrder);
 router.put('/test/updateStatusOrdeById', updateStatusOrdeById);

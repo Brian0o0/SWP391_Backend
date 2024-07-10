@@ -4,7 +4,8 @@ const { getAllSteps, getStepByIds, insertSteps, updateStepByIds, deleteStepByIds
     getAllOrders, getOrderByIds, insertOrders, updateOrderByIds, deleteOrderByIds,
     getAllOrderDetails, getOrderDetailByIds, insertOrderDetails, updateOrderDetailByIds, deleteOrderDetailByIds, insertOrderDetailServices,
     checkOuts, orderRequests, getTotalOrders, getTotalOrderDetailByMonths, getTotalOrderDetails, getTotalAmountOrderDetails, getTotalAmountOrderDetailByMonths,
-    getTotalOrderDetailAllMonths, getTotalAmountOrderDetailAllMonths, getOrderByUserIds, getOrderByStatuss, getOrderDetailByOrderIds, updateStatusOrderDetailByIds, updateOrderStatus
+    getTotalOrderDetailAllMonths, getTotalAmountOrderDetailAllMonths, getOrderByUserIds, getOrderByStatuss, getOrderDetailByOrderIds, updateStatusOrderDetailByIds,
+    updateOrderStatus, getTotalAmountOrders
 } = require('../services/orderServices');
 
 const getAllStep = async (req, res) => {
@@ -297,14 +298,14 @@ const insertOrder = async (req, res) => {
         console.log(req.body)
         if (PaymentMethods && Phone && Address && Status && UserId && Description && Name && ProductIds) {
             const check = await checkOuts(PaymentMethods, Phone, Address, Status, UserId, Description, Name, ProductIds);
-            if (check == false) {
+            if (check.length <= 0) {
                 return res
                     .status(500)
                     .send('Insert order fail')
             } else {
                 return res
                     .status(200)
-                    .send('Insert order successfully')
+                    .json(check)
             }
         } else {
             return res
@@ -581,14 +582,14 @@ const orderRequest = async (req, res) => {
         const { PaymentMethods, Phone, Address, Status, UserId, Description, UserName, ProductName, MaterialId, GemId, CategoryId, ProductCost, Image, QuantityGem, Size, WarrantyCard, Productdescription, QuantityMaterial } = req.body
         if (PaymentMethods && Phone && Address && Status && UserId && Description && UserName && ProductName && MaterialId && GemId && CategoryId && ProductCost && Image && QuantityGem && Size && WarrantyCard && Productdescription && QuantityMaterial) {
             const check = await orderRequests(PaymentMethods, Phone, Address, Status, UserId, Description, UserName, ProductName, MaterialId, GemId, CategoryId, ProductCost, Image, QuantityGem, Size, WarrantyCard, Productdescription, QuantityMaterial);
-            if (check == false) {
+            if (check.length <= 0) {
                 return res
                     .status(500)
                     .send('Create order request fail')
             } else {
                 return res
                     .status(200)
-                    .send('Create order request successfully')
+                    .json(check)
             }
         } else {
             return res
@@ -707,6 +708,23 @@ const getTotalAmountOrderDetailAllMonth = async (req, res) => {
     }
 }
 
+const getTotalAmountOrder = async (req, res) => {
+    try {
+        const orderId = req.query.OrderId
+        const totalOrder = await getTotalAmountOrders(orderId);
+        if (totalOrder.length <= 0) {
+            return res
+                .status(404)
+                .send('Order is not exits')
+        } else {
+            res.status(200).json(totalOrder);
+        }
+
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+}
+
 module.exports = {
     getAllStep,
     getStepById,
@@ -742,4 +760,5 @@ module.exports = {
     getOrderDetailByOrderId,
     updateStatusOrderDetailById,
     updateStatusOrdeById,
+    getTotalAmountOrder
 }
