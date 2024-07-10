@@ -181,6 +181,7 @@ const insertUsers = async (user) => {
         const request = pool.request();
         const sqlString = `
             INSERT INTO [User] (PassWord, Name, Phone, Address, Email, Role, UserName)
+            OUTPUT INSERTED.UserId, INSERTED.PassWord, INSERTED.Name, INSERTED.Phone, INSERTED.Address, INSERTED.Email, INSERTED.Role, INSERTED.UserName
             VALUES (@PassWord, @Name, @Phone, @Address, @Email, @Role, @UserName)
         `;
         request.input('PassWord', user.PassWord);
@@ -191,31 +192,34 @@ const insertUsers = async (user) => {
         request.input('Role', 2);
         request.input('UserName', user.UserName);
         // Thực hiện truy vấn
-        await request.query(sqlString);
-        // Gửi phản hồi
-        return true;
+        const result = await request.query(sqlString);
+        if (result.recordset && result.recordset.length > 0) {
+            return result.recordset[0];
+        } else {
+            throw new Error("Failed to insert order");
+        }
     } catch (error) {
         // Xử lý bất kỳ lỗi nào
         throw new Error("Error inserting user: " + error.message);
-        return false;
+        return null;
     }
 }
 
 const insertUserOnGoogles = async (user) => {
     try {
         if (user.Email) {
-            checkInsert = await insertUsers(user);
-            if (checkInsert) {
-                return true;
+            const checkInsert = await insertUsers(user);
+            if (checkInsert.length <= 0) {
+                return null;
             } else {
-                return false;
+                return checkInsert;
             }
         } else {
-            return false;
+            return null;
         }
     } catch (err) {
         throw new Error("Error inserting user: " + err.message);
-        return false;
+        return null;
     }
 }
 

@@ -44,8 +44,8 @@ passport.use(
                             Name: profile.name.familyName + ' ' + profile.name.givenName
                         };
                         const createdUser = await insertUserOnGoogles(user);
-                        if (createdUser) {
-                            return done(null, createdUser[0]);
+                        if (!(createdUser.length <= 0)) {
+                            return done(null, createdUser);
                         } else {
                             return done(new Error('Failed to create user'), null);
                         }

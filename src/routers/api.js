@@ -41,6 +41,7 @@ router.get('/auth/google', passport.authenticate('google', {
 router.get('/auth/google/callback', (req, res, next) => {
     passport.authenticate('google', (err, profile) => {
         req.user = profile;
+        console.log(profile);
         next()
     })(req, res, next)
 }, (req, res) => {
