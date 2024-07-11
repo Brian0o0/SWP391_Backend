@@ -563,7 +563,6 @@ const insertOrderDetailServices = async (description, productId, status, orderId
 const checkOuts = async (paymentMethods, phone, address, status, userId, description, name, productIds) => {
     const pool = await connectToDatabase();
     const transaction = new sql.Transaction(pool);
-
     try {
         await transaction.begin();
 

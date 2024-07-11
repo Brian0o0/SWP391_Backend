@@ -277,14 +277,17 @@ router.get("/vnpay_return", async function (req, res, next) {
         console.log("sss12");
         if (updateResult) {
             // Gửi phản hồi thành công
-            res.json({ success: true, message: "Transaction successful", code: vnp_Params["vnp_ResponseCode"] });
+            res.redirect(`http://localhost:3000/result?success=true&code=${vnp_Params["vnp_ResponseCode"]}`);
+            // res.json({ success: true, message: "Transaction successful", code: vnp_Params["vnp_ResponseCode"] });
         } else {
             // Gửi phản hồi lỗi do cập nhật trạng thái thất bại
-            res.json({ success: false, message: "Failed to update order status", code: "97" });
+            res.redirect(`http://localhost:3000/result?success=false&code=97`);
+            // res.json({ success: false, message: "Failed to update order status", code: "97" });
         }
     } else {
         // Gửi phản hồi lỗi do xác minh không thành công
-        res.json({ success: false, message: "Invalid transaction", code: "97" });
+        res.redirect(`http://localhost:3000/result?success=false&code=97`);
+        //res.json({ success: false, message: "Invalid transaction", code: "97" });
     }
 
 });
