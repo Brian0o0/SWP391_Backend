@@ -225,9 +225,10 @@ router.post("/create_payment_url", function (req, res, next) {
     console.log(signed)
     vnp_Params["vnp_SecureHash"] = signed;
     vnpUrl += "?" + querystring.stringify(vnp_Params, { encode: false });
-    res.redirect(vnpUrl)
+    //res.redirect(vnpUrl)
     // res.set("Content-Type", "text/html");
     // res.send(JSON.stringify(vnpUrl));
+    res.json({ paymentUrl: vnpUrl });
     console.log(JSON.stringify(vnpUrl))
 });
 
@@ -254,21 +255,38 @@ router.get("/vnpay_return", async function (req, res, next) {
     let hmac = crypto.createHmac("sha512", secretKey);
     let signed = hmac.update(new Buffer.from(signData, "utf-8")).digest("hex");
 
+    // if (secureHash === signed) {
+    //     const orderId = req.query.vnp_TxnRef;
+    //     let updateResult = await updateOrderStatus("banked", orderId);
+    //     console.log("sss12")
+    //     if (updateResult) {
+    //         // res.render("success", { code: vnp_Params["vnp_ResponseCode"] });
+    //         console.log(vnp_Params["vnp_ResponseCode"])
+    //     } else {
+    //         // res.render("success", { code: "97" });
+    //         console.log("s97")
+    //     }
+    // } else {
+    //     // res.render("success", { code: "97" });
+    //     console.log("97")
+    // }
+
     if (secureHash === signed) {
         const orderId = req.query.vnp_TxnRef;
         let updateResult = await updateOrderStatus("banked", orderId);
-        console.log("sss12")
+        console.log("sss12");
         if (updateResult) {
-            // res.render("success", { code: vnp_Params["vnp_ResponseCode"] });
-            console.log(vnp_Params["vnp_ResponseCode"])
+            // Gửi phản hồi thành công
+            res.json({ success: true, message: "Transaction successful", code: vnp_Params["vnp_ResponseCode"] });
         } else {
-            // res.render("success", { code: "97" });
-            console.log("s97")
+            // Gửi phản hồi lỗi do cập nhật trạng thái thất bại
+            res.json({ success: false, message: "Failed to update order status", code: "97" });
         }
     } else {
-        // res.render("success", { code: "97" });
-        console.log("97")
+        // Gửi phản hồi lỗi do xác minh không thành công
+        res.json({ success: false, message: "Invalid transaction", code: "97" });
     }
+
 });
 
 //Route GET xử lý IPN từ VNPAY
