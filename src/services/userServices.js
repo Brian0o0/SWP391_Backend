@@ -2,6 +2,7 @@
 const express = require('express');
 const { pool } = require('../config/database');
 const { connectToDatabase } = require('../config/database');
+const bcrypt = require('bcrypt');
 
 //get user from database function
 const getAllUsers = async (req, res) => {
@@ -135,13 +136,14 @@ const checkLogin = async (user) => {
 const updateUserByIds = async (user) => {
     try {
         const pool = await connectToDatabase();
+        const hashPassword = bcrypt.hashSync(user.PassWord, 10);
         const request = pool.request();
         const sqlString = `
             UPDATE [User]
             SET PassWord = @passWord, Name = @name, Phone = @phone, Address = @address, Role = @role, UserName = @userName,  Email = @email
             WHERE UserId = @userId
         `;
-        request.input('passWord', user.PassWord);
+        request.input('passWord', hashPassword);
         request.input('name', user.Name);
         request.input('phone', user.Phone);
         request.input('address', user.Address);
