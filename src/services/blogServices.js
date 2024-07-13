@@ -62,13 +62,14 @@ const insertBlogs = async (blog) => {
         const pool = await connectToDatabase();
         const request = pool.request();
         const sqlString = `
-        INSERT INTO Blogs (Title, Content, DateCreated, UserId) 
-        VALUES (@title, @content, @dateCreated, @userId)
+        INSERT INTO Blogs (Title, Content, DateCreated, UserId, Image) 
+        VALUES (@title, @content, @dateCreated, @userId, @image)
         `;
         request.input('title', blog.Title);
         request.input('content', blog.Content);
         request.input('dateCreated', getDayNow());
         request.input('userId', blog.UserId);
+        request.input('image', blog.Image);
         await request.query(sqlString);
         return true;
     } catch (error) {
@@ -83,13 +84,14 @@ const updateBlogByIds = async (blog) => {
         const pool = await connectToDatabase();
         const request = pool.request(); const sqlString = `
             UPDATE Blogs
-            SET Title = @title, Content = @content, DateCreated = @dateCreated, UserId = @userId
+            SET Title = @title, Content = @content, DateCreated = @dateCreated, UserId = @userId, Image = @image
             WHERE BlogId = @blogId
         `;
         request.input('title', blog.Title);
         request.input('content', blog.Content);
-        request.input('dateCreated', blog.DateCreated);
+        request.input('dateCreated', getDayNow());
         request.input('userId', blog.UserId);
+        request.input('image', blog.Image);
         request.input('blogId', blog.BlogId);
         await request.query(sqlString);
         return true;

@@ -29,9 +29,9 @@ const getBlogById = async (req, res) => {
 
 const insertBlog = async (req, res) => {
     try {
-        const { UserId, Content, Title } = req.body;
-        if (UserId && Content && Title) {
-            const blog = { UserId, Content, Title };
+        const { UserId, Content, Title, Image } = req.body;
+        if (UserId && Content && Title && Image) {
+            const blog = { UserId, Content, Title, Image };
             const check = await insertBlogs(blog);
             if (check === false) {
                 return res.status(500).send('Insert blog failed');
@@ -69,13 +69,13 @@ const deleteBlogById = async (req, res) => {
 
 const updateBlogById = async (req, res) => {
     try {
-        const { Title, Content, DateCreated, UserId, BlogId } = req.body;
+        const { Title, Content, UserId, Image, BlogId } = req.body;
         const find = await getBlogByIds(BlogId);
         if (find.length <= 0) {
             return res.status(404).send('Blog does not exist');
         } else {
-            if (Title && Content && DateCreated && UserId && BlogId) {
-                const blog = { Title, Content, DateCreated: new Date(DateCreated), UserId, BlogId };
+            if (Title && Content && UserId && Image && BlogId) {
+                const blog = { Title, Content, UserId, Image, BlogId };
                 const check = await updateBlogByIds(blog);
                 if (check === false) {
                     return res.status(500).send('Update blog failed');
