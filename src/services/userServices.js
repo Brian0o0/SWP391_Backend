@@ -77,7 +77,6 @@ const getUserByEmails = async (email) => {
         request.input('email', email);
         const result = await request.query(sqlString);
         const user = result.recordset;
-        console.log(user);
         return user;
     } catch (error) {
         // Handle any errors

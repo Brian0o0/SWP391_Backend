@@ -39,7 +39,20 @@ const getCostGemByGemIds = async (GemId) => {
     try {
         const pool = await connectToDatabase();
         const request = pool.request();
-        var sqlString = " SELECT TOP 1 * FROM CostGem WHERE GemId = @gemId ORDER BY DateOfPrice DESC;";
+        var sqlString = `SELECT TOP 1 
+                        CostGem.CostIdGem, 
+                        CostGem.DateOfPrice,
+	                    CostGem.PurchasePrice,
+	                    CostGem.Price,
+                        Gem.Name
+                        FROM 
+                        CostGem
+                        INNER JOIN 
+                        Gem ON CostGem.GemId = Gem.GemId
+	                    WHERE 
+                        CostGem.GemId = @gemId
+                        ORDER BY 
+                        CostGem.DateOfPrice DESC;`;
         request.input('gemId', GemId);
         const result = await request.query(sqlString);
         const gem = result.recordset;

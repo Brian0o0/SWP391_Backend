@@ -36,7 +36,20 @@ const getCostMaterialByMaterialIds = async (materialId) => {
     try {
         const pool = await connectToDatabase();
         const request = pool.request();
-        var sqlString = " SELECT TOP 1 * FROM CostMaterial WHERE MaterialId = @materialId ORDER BY DateOfPrice DESC; ";
+        var sqlString = ` SELECT TOP 1 
+                        CostMaterial.CostIdMaterial, 
+                        CostMaterial.DateOfPrice,
+	                    CostMaterial.PurchasePrice,
+	                    CostMaterial.Price,
+                        Material.Name
+                    FROM 
+                        CostMaterial
+                    INNER JOIN 
+                        Material ON CostMaterial.MaterialId = Material.MaterialId
+	                WHERE 
+                        CostMaterial.MaterialId = @materialId
+                    ORDER BY 
+                        CostMaterial.DateOfPrice DESC;`;
         request.input('materialId', materialId);
         const result = await request.query(sqlString);
         const costMaterial = result.recordset;

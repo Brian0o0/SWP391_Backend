@@ -39,7 +39,7 @@ const insertBlog = async (req, res) => {
                 return res.status(200).send('Insert blog successfully');
             }
         } else {
-            return res.status(400).send('UserId, Content, and Title are required');
+            return res.status(400).send('UserId, Content, Image and Title are required');
         }
     } catch (error) {
         console.log(error);
@@ -83,7 +83,7 @@ const updateBlogById = async (req, res) => {
                     return res.status(200).send('Update blog successfully');
                 }
             } else {
-                return res.status(400).send('UserId, Content, Title, DateCreated, and BlogId are required');
+                return res.status(400).send('UserId, Content, Title, Image and BlogId are required');
             }
         }
     } catch (error) {
