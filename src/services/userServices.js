@@ -142,7 +142,7 @@ const updateUserByIds = async (user) => {
             SET PassWord = @passWord, Name = @name, Phone = @phone, Address = @address, Role = @role, UserName = @userName,  Email = @email
             WHERE UserId = @userId
         `;
-        request.input('passWord', user.PassWord);
+        request.input('passWord', hashPassword);
         request.input('name', user.Name);
         request.input('phone', user.Phone);
         request.input('address', user.Address);
