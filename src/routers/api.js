@@ -12,8 +12,8 @@ const router = express.Router();
 
 const { register, login, logout, getAllUser, getUserById, getUserByUserName, deleteUserById, updateUserById, getUserByName, insertUserOnGoogle, getTotalUser } = require('../controllers/userController');
 const { getAllProduct, getProductById, insertProduct, updateProductById, deleteProductById, getProductByNameOrId, getProductByCategory } = require('../controllers/productController');
-const { getAllCostGem, getCostGemById, insertCostGem, deleteCostGemById, updateCostGemById, getAllGem, getGemById, insertGem, updateGemById, deleteGemById, getGemByPrice, getCostGemByGemId, getGemAndPriceById } = require('../controllers/gemController');
-const { getAllCostMaterial, getCostMaterialById, insertCostMaterial, deleteCostMaterialById, updateCostMaterialById, getAllMaterial, getMaterialById, insertMaterial, updateMaterialById, deleteMaterialById, getCostMaterialByMaterialId, getMaterialAndPriceById } = require('../controllers/materialController');
+const { getAllCostGem, getCostGemById, insertCostGem, deleteCostGemById, updateCostGemById, getAllGem, getGemById, insertGem, updateGemById, deleteGemById, getGemByPrice, getCostGemByGemId, getGemAndPriceById, getAllGemAndPrice } = require('../controllers/gemController');
+const { getAllCostMaterial, getCostMaterialById, insertCostMaterial, deleteCostMaterialById, updateCostMaterialById, getAllMaterial, getMaterialById, insertMaterial, updateMaterialById, deleteMaterialById, getCostMaterialByMaterialId, getMaterialAndPriceById, getAllMaterialAndPrice } = require('../controllers/materialController');
 const { getAllStep, getStepById, insertStep, deleteStepById, updateStepById, getAllOrderProgress, getOrderProgressById, insertOrderProgress, deleteOrderProgressById, updateOrderProgressById, getAllOrder, getOrderById, insertOrder, deleteOrderById, updateOrderById,
     getAllOrderDetail, insertOrderDetailTemp, getOrderDetailById, insertOrderDetail, updateOrderDetailById, deleteOrderDetailById, getTotalOrder, getTotalOrderDetailByMonth,
     getTotalOrderDetail, getTotalAmountOrderDetail, getTotalAmountOrderDetailByMonth, orderRequest, getTotalOrderDetailAllMonth, getTotalAmountOrderDetailAllMonth, getOrderByUserId,
@@ -75,6 +75,7 @@ router.put('/test/updateCostGemById', updateCostGemById);
 
 //api gem
 router.get('/test/getAllGem', getAllGem);
+router.get('/test/getAllGemAndPrice', getAllGemAndPrice);
 router.get('/test/getGemById', getGemById);
 router.get('/test/getGemAndPriceById', getGemAndPriceById);
 router.post('/test/insertGem', insertGem);
@@ -91,6 +92,7 @@ router.delete('/test/deleteCostMaterialById', deleteCostMaterialById);
 
 //api material
 router.get('/test/getAllMaterial', getAllMaterial);
+router.get('/test/getAllMaterialAndPrice', getAllMaterialAndPrice);
 router.get('/test/getMaterialById', getMaterialById);
 router.get('/test/getMaterialAndPriceById', getMaterialAndPriceById);
 router.post('/test/insertMaterial', insertMaterial);

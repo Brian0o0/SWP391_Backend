@@ -151,6 +151,54 @@ const getAllMaterials = async () => {
         return null;
     }
 }
+//get all Material and price from database function
+const getAllMaterialAndPrices = async () => {
+    try {
+        const pool = await connectToDatabase();
+        const request = pool.request();
+        var sqlString = `SELECT 
+	                        m.MaterialId,
+                            m.Name,
+                            m.Unit,
+                            cm.CostIdMaterial, 
+                            cm.DateOfPrice,
+                            cm.PurchasePrice,
+                            cm.Price   
+                        FROM 
+                            Material m
+                            LEFT JOIN 
+                        (SELECT 
+                            CostMaterial.MaterialId,
+                            CostMaterial.CostIdMaterial,
+                            CostMaterial.DateOfPrice,
+                            CostMaterial.PurchasePrice,
+                            CostMaterial.Price
+                        FROM 
+                            CostMaterial
+                        INNER JOIN 
+                        (SELECT 
+                            MaterialId, 
+                            MAX(DateOfPrice) AS LatestDate
+                        FROM 
+                            CostMaterial
+                        GROUP BY 
+                            MaterialId) AS LatestCost
+                        ON 
+                            CostMaterial.MaterialId = LatestCost.MaterialId
+                        AND CostMaterial.DateOfPrice = LatestCost.LatestDate) cm
+                        ON 
+                        m.MaterialId = cm.MaterialId
+                        ORDER BY 
+                        m.MaterialId;`;
+        const result = await request.query(sqlString);
+        const Material = result.recordset;
+        console.log(Material);
+        return Material;
+    } catch (error) {
+        console.log(error);
+        return null;
+    }
+}
 //get Material by id from database function
 const getMaterialByIds = async (materialId) => {
     try {
@@ -269,7 +317,8 @@ module.exports = {
     updateMaterialByIds,
     deleteMaterialByIds,
     getCostMaterialByMaterialIds,
-    getMaterialAndPriceByIds
+    getMaterialAndPriceByIds,
+    getAllMaterialAndPrices
 }
 // Đảm bảo pool kết nối được đóng khi ứng dụng kết thúc
 process.on('exit', () => {

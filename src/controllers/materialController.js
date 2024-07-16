@@ -1,6 +1,6 @@
 //Material functionality handles receiving and sending data from the database to the user
 
-const { getAllCostMaterials, getCostMaterialByIds, insertCostMaterials, deleteCostMaterialByIds, updateCostMaterialByIds, getAllMaterials, getMaterialByIds, insertMaterials, updateMaterialByIds, deleteMaterialByIds, getCostMaterialByMaterialIds, getMaterialAndPriceByIds } = require('../services/materialServices');
+const { getAllCostMaterials, getCostMaterialByIds, insertCostMaterials, deleteCostMaterialByIds, updateCostMaterialByIds, getAllMaterials, getMaterialByIds, insertMaterials, updateMaterialByIds, deleteMaterialByIds, getCostMaterialByMaterialIds, getMaterialAndPriceByIds, getAllMaterialAndPrices } = require('../services/materialServices');
 
 const getAllCostMaterial = async (req, res) => {
     try {
@@ -147,6 +147,25 @@ const getAllMaterial = async (req, res) => {
     }
 }
 
+const getAllMaterialAndPrice = async (req, res) => {
+    try {
+        const cost = await getAllMaterialAndPrices();
+
+        if (cost.length <= 0) {
+            return res
+                .status(404)
+                .send('Empty material list')
+        } else {
+            res.status(200).json(cost);
+        }
+
+    } catch (error) {
+        return res
+            .status(500)
+            .send(error.message)
+    }
+}
+
 const getMaterialById = async (req, res) => {
     try {
         const materialId = req.query.MaterialId;
@@ -273,6 +292,7 @@ module.exports = {
     deleteMaterialById,
     updateMaterialById,
     getCostMaterialByMaterialId,
-    getMaterialAndPriceById
+    getMaterialAndPriceById,
+    getAllMaterialAndPrice
 
 }

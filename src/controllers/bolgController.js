@@ -83,7 +83,7 @@ const updateBlogById = async (req, res) => {
                     return res.status(200).send('Update blog successfully');
                 }
             } else {
-return res.status(400).send('UserId, Content, Title, Image and BlogId are required');
+                return res.status(400).send('UserId, Content, Title, Image and BlogId are required');
             }
         }
     } catch (error) {

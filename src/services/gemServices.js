@@ -164,6 +164,73 @@ const getAllGems = async () => {
         return null;
     }
 }
+// get all gem and price function
+const getAllGemAndPrices = async () => {
+    try {
+        const pool = await connectToDatabase();
+        const request = pool.request();
+        var sqlString = `SELECT 
+                            g.GemId,
+                            g.Name,
+                            g.Color,
+                            g.CaraWeight,
+                            g.Clarity,
+                            g.Cut,
+                            g.AddedDate,
+                            g.Origin,
+                            g.Image,
+                            g.Identification,
+                            g.Size,
+                            cg.CostIdGem,
+                            cg.DateOfPrice,
+                            cg.PurchasePrice,
+                            cg.Price
+                        FROM 
+                            Gem g
+                        LEFT JOIN 
+                        (SELECT 
+                            CostGem.GemId,
+                            CostGem.CostIdGem,
+                            CostGem.DateOfPrice,
+                            CostGem.PurchasePrice,
+                            CostGem.Price
+                        FROM 
+                            CostGem
+                        INNER JOIN 
+                        (SELECT 
+                            GemId, 
+                            MAX(DateOfPrice) AS LatestDate
+                        FROM 
+                            CostGem
+                        GROUP BY 
+                            GemId) AS LatestCost
+                        ON 
+                            CostGem.GemId = LatestCost.GemId
+                        AND CostGem.DateOfPrice = LatestCost.LatestDate) cg
+                        ON 
+                            g.GemId = cg.GemId
+                        ORDER BY 
+                            g.GemId;`;
+        const result = await request.query(sqlString);
+        const gems = result.recordset;
+        let gemList = [];
+        for (const gem of gems) {
+            if (gem.Image) {
+                try {
+                    gem.Image = JSON.parse(gem.Image);
+                } catch (error) {
+                    console.error(`Error parsing Image JSON for gem ID ${gem.GemId}:`, error);
+                }
+            }
+            gemList.push(gem);
+        }
+        console.log(gemList);
+        return gemList;
+    } catch (error) {
+        console.log(error);
+        return null;
+    }
+}
 //get gem by id from database function
 const getGemByIds = async (gemId) => {
     try {
@@ -373,7 +440,8 @@ module.exports = {
     getGemByPrices,
     getDayNow,
     getCostGemByGemIds,
-    getGemAndPriceByIds
+    getGemAndPriceByIds,
+    getAllGemAndPrices
 }
 // Đảm bảo pool kết nối được đóng khi ứng dụng kết thúc
 process.on('exit', () => {
