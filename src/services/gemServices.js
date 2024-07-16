@@ -18,7 +18,6 @@ const getAllCostGems = async () => {
         return null;
     }
 }
-
 //get cost gem by id from database function
 const getCostGemByIds = async (costIdGem) => {
     try {
@@ -77,7 +76,6 @@ const getDayNow = () => {
         return null;
     }
 }
-
 //insert cost gem to database function
 const insertCostGems = async (purchasePrice, price, gemId) => {
     try {
@@ -140,7 +138,6 @@ const deleteCostGemByIds = async (costGemId) => {
         return false;
     }
 }
-
 // get all gem function
 const getAllGems = async () => {
     try {
@@ -167,7 +164,6 @@ const getAllGems = async () => {
         return null;
     }
 }
-
 //get gem by id from database function
 const getGemByIds = async (gemId) => {
     try {
@@ -192,6 +188,41 @@ const getGemByIds = async (gemId) => {
                 console.error(`Error parsing Image JSON for gem ID ${gem.GemId}:`, error);
             }
         }
+        console.log(gem);
+        return gem;
+    } catch (error) {
+        console.log("Error:", error);
+        return null;
+    }
+}
+const getGemAndPriceByIds = async (gemId) => {
+    try {
+        const pool = await connectToDatabase();
+        const request = pool.request();
+        var sqlString = `	SELECT TOP 1 
+                            Gem.GemId,
+	                        Gem.Name,
+	                        Gem.Color,
+	                        Gem.CaraWeight,
+	                        Gem.Clarity,
+	                        Gem.Cut,
+	                        Gem.AddedDate,
+	                        Gem.Origin,
+	                        Gem.Image,
+	                        Gem.Identification,
+	                        Gem.Size,
+	                        CostGem.Price
+                        FROM 
+                            CostGem
+                        INNER JOIN 
+                            Gem ON CostGem.GemId = Gem.GemId
+	                    WHERE 
+                            CostGem.GemId = @gemId
+                        ORDER BY 
+                            CostGem.DateOfPrice DESC;`;
+        request.input('gemId', gemId);
+        const result = await request.query(sqlString);
+        const gem = result.recordset;
         console.log(gem);
         return gem;
     } catch (error) {
@@ -229,7 +260,6 @@ VALUES (@name, @color, @caraWeight, @clarity, @cut, @addedDate, @origin, @image,
         return false;
     }
 }
-
 //update gem on database function
 const updateGemByIds = async (gem) => {
     try {
@@ -262,7 +292,6 @@ const updateGemByIds = async (gem) => {
         return false;
     }
 }
-
 //delete gem by id on database function
 const deleteGemByIds = async (gemId) => {
     try {
@@ -279,7 +308,6 @@ const deleteGemByIds = async (gemId) => {
         return false;
     }
 }
-
 const getGemByCostId = async (costId) => {
     try {
         const pool = await connectToDatabase();
@@ -295,7 +323,6 @@ const getGemByCostId = async (costId) => {
         return null;
     }
 }
-
 const getGemByPrices = async (firstPrice, secondPrice) => {
     try {
         const pool = await connectToDatabase();
@@ -346,6 +373,7 @@ module.exports = {
     getGemByPrices,
     getDayNow,
     getCostGemByGemIds,
+    getGemAndPriceByIds
 }
 // Đảm bảo pool kết nối được đóng khi ứng dụng kết thúc
 process.on('exit', () => {

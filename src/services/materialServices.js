@@ -168,6 +168,34 @@ const getMaterialByIds = async (materialId) => {
     }
 }
 
+const getMaterialAndPriceByIds = async (materialId) => {
+    try {
+        const pool = await connectToDatabase();
+        const request = pool.request();
+        var sqlString = `SELECT TOP 1 
+	                        Material.MaterialId,
+                            Material.Name,
+	                        Material.Unit,
+	                        CostMaterial.Price
+                        FROM 
+                            CostMaterial
+                        INNER JOIN 
+                            Material ON CostMaterial.MaterialId = Material.MaterialId
+	                    WHERE 
+                            CostMaterial.MaterialId = @materialId
+                        ORDER BY 
+                            CostMaterial.DateOfPrice DESC;`;
+        request.input('materialId', materialId);
+        const result = await request.query(sqlString);
+        const material = result.recordset;
+        console.log(material);
+        return material;
+    } catch (error) {
+        console.log("Error:", error);
+        return null;
+    }
+}
+
 //insert Material to database function
 const insertMaterials = async (material) => {
     try {
@@ -241,6 +269,7 @@ module.exports = {
     updateMaterialByIds,
     deleteMaterialByIds,
     getCostMaterialByMaterialIds,
+    getMaterialAndPriceByIds
 }
 // Đảm bảo pool kết nối được đóng khi ứng dụng kết thúc
 process.on('exit', () => {
