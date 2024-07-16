@@ -1,96 +1,148 @@
+//Gem functionality handles receiving and sending data from the database to the user
 const { getAllBlogs, getBlogByIds, insertBlogs, updateBlogByIds, deleteBlogByIds } = require('../services/blogServices');
 
 const getAllBlog = async (req, res) => {
     try {
-        const blogs = await getAllBlogs();
-        if (blogs.length <= 0) {
-            return res.status(404).send('Empty blog list');
+        const blog = await getAllBlogs();
+
+        if (blog.length <= 0) {
+            return res
+                .status(404)
+                .send('Empty blog list')
         } else {
-            res.status(200).json(blogs);
+            res.json(blog);
         }
+
     } catch (error) {
-        res.status(500).send(error.message);
+        res.status(500).json(error);
     }
-};
+}
 
 const getBlogById = async (req, res) => {
     try {
-        const blogId = req.query.BlogId;
+        const blogId = req.query.BlogId
         const blog = await getBlogByIds(blogId);
+        console.log(blog);
         if (blog.length <= 0) {
-            return res.status(404).send('Empty blog');
+            return res
+                .status(404)
+                .send('Empty blog')
         } else {
-            res.status(200).json(blog);
+            res.json(blog);
         }
+
     } catch (error) {
-        res.status(500).send(error.message);
+        return res
+            .status(500)
+            .send(error)
     }
-};
+}
 
 const insertBlog = async (req, res) => {
     try {
-        const { UserId, Content, Title, Image } = req.body;
-        if (UserId && Content && Title && Image) {
-            const blog = { UserId, Content, Title, Image };
+        const { UserId, Content, Title } = req.body
+
+        if (UserId && Content && Title) {
+            const blog = {
+                UserId: UserId,
+                Content: Content,
+                Title: Title
+            }
             const check = await insertBlogs(blog);
-            if (check === false) {
-                return res.status(500).send('Insert blog failed');
+            if (check == false) {
+                return res
+                    .status(500)
+                    .send('Insert blog fail')
             } else {
-                return res.status(200).send('Insert blog successfully');
+                return res
+                    .status(200)
+                    .send('Insert blog successfully')
             }
         } else {
-            return res.status(400).send('UserId, Content, Image and Title are required');
+            return res
+                .status(400)
+                .send('UserId,content and title is required')
         }
+
     } catch (error) {
         console.log(error);
-        res.status(500).send(error.message);
+        return res
+            .status(500)
+            .send(error)
     }
-};
+}
 
 const deleteBlogById = async (req, res) => {
     try {
         const { BlogId } = req.body;
-        const find = await getBlogByIds(BlogId);
+        const find = await getBlogById(BlogId);
         if (find.length <= 0) {
-            return res.status(404).send('Blog does not exist');
+            return res
+                .status(404)
+                .send('Blog does not exist')
         } else {
             const check = await deleteBlogByIds(BlogId);
-            if (check === false) {
-                return res.status(500).send('Delete blog failed');
+            if (check == false) {
+                return res
+                    .status(500)
+                    .send('Delete blog fail')
             } else {
-                return res.status(200).send('Delete blog successfully');
+                return res
+                    .status(200)
+                    .send('Delete blog successfully')
             }
         }
+
     } catch (error) {
         console.log(error);
-        res.status(500).send(error.message);
+        return res
+            .status(500)
+            .send(error)
     }
-};
+}
 
 const updateBlogById = async (req, res) => {
     try {
-        const { Title, Content, UserId, Image, BlogId } = req.body;
-        const find = await getBlogByIds(BlogId);
+        const { Title, Content, DateCreated, UserId, BlogId } = req.body
+        let find = await getBlogById(BlogId);
         if (find.length <= 0) {
-            return res.status(404).send('Blog does not exist');
+            return res
+                .status(404)
+                .send('Blog does not exist')
         } else {
-            if (Title && Content && UserId && Image && BlogId) {
-                const blog = { Title, Content, UserId, Image, BlogId };
+if (Title && Content && DateCreated && UserId && BlogId) {
+                const blog = {
+                    Title: Title,
+                    Content: Content,
+                    DateCreated: DateCreated,
+                    UserID: UserId,
+                    BlogId: BlogId,
+                }
                 const check = await updateBlogByIds(blog);
-                if (check === false) {
-                    return res.status(500).send('Update blog failed');
+                if (check == false) {
+                    return res
+                        .status(500)
+                        .send('Update cost gem fail')
                 } else {
-                    return res.status(200).send('Update blog successfully');
+                    return res
+                        .status(200)
+                        .send('Update cost gem successfully')
                 }
             } else {
-                return res.status(400).send('UserId, Content, Title, Image and BlogId are required');
+                return res
+                    .status(400)
+                    .send('UserId,content and title is required')
             }
+
         }
+
     } catch (error) {
         console.log(error);
-        res.status(500).send(error.message);
+        return res
+            .status(500)
+            .send(error)
     }
-};
+}
 
 module.exports = {
     getAllBlog,
@@ -98,4 +150,4 @@ module.exports = {
     insertBlog,
     deleteBlogById,
     updateBlogById,
-};
+}
