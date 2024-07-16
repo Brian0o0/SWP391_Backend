@@ -289,7 +289,21 @@ const getGemAndPriceByIds = async (gemId) => {
                             CostGem.DateOfPrice DESC;`;
         request.input('gemId', gemId);
         const result = await request.query(sqlString);
-        const gem = result.recordset;
+        const gems = result.recordset;
+        const gem = gems[0];
+        if (gem && gem.Image) {
+            try {
+                console.log(`Original Image JSON for gem ID ${gem.GemId}: ${gem.Image}`);
+                // Kiểm tra xem chuỗi JSON có đúng định dạng hay không
+                if (typeof gem.Image === 'string' && gem.Image.trim().startsWith('[') && gem.Image.trim().endsWith(']')) {
+                    gem.Image = JSON.parse(gem.Image);
+                } else {
+                    throw new Error('Invalid JSON format');
+                }
+            } catch (error) {
+                console.error(`Error parsing Image JSON for gem ID ${gem.GemId}:`, error);
+            }
+        }
         console.log(gem);
         return gem;
     } catch (error) {
