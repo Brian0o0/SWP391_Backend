@@ -317,6 +317,8 @@ module.exports = {
     updateMaterialByIds,
     deleteMaterialByIds,
     getCostMaterialByMaterialIds,
+    getMaterialAndPriceByIds,
+    getAllMaterialAndPrices
 }
 // Đảm bảo pool kết nối được đóng khi ứng dụng kết thúc
 process.on('exit', () => {

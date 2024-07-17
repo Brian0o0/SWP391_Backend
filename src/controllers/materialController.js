@@ -293,5 +293,6 @@ module.exports = {
     updateMaterialById,
     getCostMaterialByMaterialId,
     getMaterialAndPriceById,
+    getAllMaterialAndPrice
 
 }
