@@ -145,7 +145,7 @@ const updateUserById = async (req, res) => {
             UserId: parseInt(UserId),
             PassWord: PassWord,
             Email: Email,
-            UserName: UserName
+            UserName: UserName.toLowerCase()
         }
         const check = await updateUserByIds(user);
         if (check == false) {
