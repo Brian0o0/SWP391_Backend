@@ -651,13 +651,38 @@ const getTotalOrderDetailByMonths = async (month, year) => {
         return null;
     }
 }
-
-const getTotalOrderDetailAllMonths = async () => {
+const getTotalOrderDetailAllMonths = async (year) => {
     try {
         const pool = await connectToDatabase();
         const request = pool.request();
-        var sqlString = " SELECT YEAR(OD.OrderDate) AS OrderYear,MONTH(OD.OrderDate) AS OrderMonth,COUNT(*) AS OrderDetailCount FROM OrderDetail OD GROUP BY YEAR(OD.OrderDate), MONTH(OD.OrderDate) ORDER BY OrderYear, OrderMonth;";
+        var sqlString = `SELECT
+    CASE
+        WHEN MONTH(OD.OrderDate) = 1 THEN 'Jan'
+        WHEN MONTH(OD.OrderDate) = 2 THEN 'Feb'
+        WHEN MONTH(OD.OrderDate) = 3 THEN 'Mar'
+        WHEN MONTH(OD.OrderDate) = 4 THEN 'Apr'
+        WHEN MONTH(OD.OrderDate) = 5 THEN 'May'
+        WHEN MONTH(OD.OrderDate) = 6 THEN 'Jun'
+        WHEN MONTH(OD.OrderDate) = 7 THEN 'Jul'
+        WHEN MONTH(OD.OrderDate) = 8 THEN 'Aug'
+        WHEN MONTH(OD.OrderDate) = 9 THEN 'Sep'
+        WHEN MONTH(OD.OrderDate) = 10 THEN 'Oct'
+        WHEN MONTH(OD.OrderDate) = 11 THEN 'Nov'
+        WHEN MONTH(OD.OrderDate) = 12 THEN 'Dec'
+    END AS MonthName,
+    COUNT(*) AS OrderDetailCount
+FROM
+    OrderDetail OD
+WHERE
+    YEAR(OD.OrderDate) = @year
+GROUP BY
+    MONTH(OD.OrderDate)
+ORDER BY
+    MONTH(OD.OrderDate);
+`;
+        request.input('year', year)
         const result = await request.query(sqlString);
+
         const totalOrder = result.recordset;
         console.log(totalOrder);
         return totalOrder;
@@ -686,7 +711,13 @@ const getTotalAmountOrderDetails = async () => {
     try {
         const pool = await connectToDatabase();
         const request = pool.request();
-        var sqlString = "SELECT SUM(P.ProductCost) AS TotalProductCost FROM OrderDetail OD JOIN Product P ON OD.ProductId = P.ProductId";
+        var sqlString = `SELECT SUM(P.ProductCost) AS TotalProductCost 
+	FROM OrderDetail OD 
+	JOIN
+	[Order] O ON OD.OrderId = O.OrderId 
+	JOIN Product P ON OD.ProductId = P.ProductId
+	WHERE 
+	O.Status = 'banked'`;
         const result = await request.query(sqlString);
         const totalProductCost = result.recordset;
         console.log(totalProductCost);
@@ -714,11 +745,40 @@ const getTotalAmountOrderDetailByMonths = async (month, year) => {
     }
 }
 
-const getTotalAmountOrderDetailAllMonths = async () => {
+const getTotalAmountOrderDetailAllMonths = async (year) => {
     try {
         const pool = await connectToDatabase();
         const request = pool.request();
-        var sqlString = " SELECT YEAR(OD.OrderDate) AS OrderYear, MONTH(OD.OrderDate) AS OrderMonth,SUM(P.ProductCost) AS TotalProductCost FROM OrderDetail OD JOIN Product P ON OD.ProductId = P.ProductId GROUP BY YEAR(OD.OrderDate), MONTH(OD.OrderDate) ORDER BY OrderYear, OrderMonth;";
+        var sqlString = `SELECT 
+    CASE 
+        WHEN MONTH(OD.OrderDate) = 1 THEN 'Jan'
+        WHEN MONTH(OD.OrderDate) = 2 THEN 'Feb'
+        WHEN MONTH(OD.OrderDate) = 3 THEN 'Mar'
+        WHEN MONTH(OD.OrderDate) = 4 THEN 'Apr'
+        WHEN MONTH(OD.OrderDate) = 5 THEN 'May'
+        WHEN MONTH(OD.OrderDate) = 6 THEN 'Jun'
+        WHEN MONTH(OD.OrderDate) = 7 THEN 'Jul'
+        WHEN MONTH(OD.OrderDate) = 8 THEN 'Aug'
+        WHEN MONTH(OD.OrderDate) = 9 THEN 'Sep'
+        WHEN MONTH(OD.OrderDate) = 10 THEN 'Oct'
+        WHEN MONTH(OD.OrderDate) = 11 THEN 'Nov'
+        WHEN MONTH(OD.OrderDate) = 12 THEN 'Dec'
+    END AS MonthName,
+    SUM(P.ProductCost) AS TotalProductCost
+FROM 
+    OrderDetail OD
+JOIN
+	[Order] O ON OD.OrderId = O.OrderId
+JOIN 
+    Product P ON OD.ProductId = P.ProductId
+WHERE 
+    YEAR(OD.OrderDate) = @year
+	AND O.Status = 'banked'
+GROUP BY 
+    MONTH(OD.OrderDate)
+ORDER BY 
+    MONTH(OD.OrderDate);`;
+        request.input('year', year)
         const result = await request.query(sqlString);
         const totalOrderDetail = result.recordset;
         console.log(totalOrderDetail);

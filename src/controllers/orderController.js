@@ -642,7 +642,8 @@ const getTotalOrderDetailByMonth = async (req, res) => {
 
 const getTotalOrderDetailAllMonth = async (req, res) => {
     try {
-        const totalOrder = await getTotalOrderDetailAllMonths();
+        const year = req.query.Year
+        const totalOrder = await getTotalOrderDetailAllMonths(year);
         if (totalOrder.length <= 0) {
             return res
                 .status(404)
@@ -694,7 +695,8 @@ const getTotalAmountOrderDetailByMonth = async (req, res) => {
 
 const getTotalAmountOrderDetailAllMonth = async (req, res) => {
     try {
-        const totalOrder = await getTotalAmountOrderDetailAllMonths();
+        const year = req.query.Year
+        const totalOrder = await getTotalAmountOrderDetailAllMonths(year);
         if (totalOrder.length <= 0) {
             return res
                 .status(404)

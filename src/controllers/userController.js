@@ -24,6 +24,23 @@ const getAllUser = async (req, res) => {
     }
 }
 
+const getTotalUser = async (req, res) => {
+    try {
+        const user = await getTotalUsers();
+        if (user.length <= 0) {
+            return res
+                .status(404)
+                .send('Empty user list')
+        } else {
+            res.status(200).json(user);
+        }
+    } catch (error) {
+        return res
+            .status(500)
+            .send(error.message)
+    }
+}
+
 const getUserById = async (req, res) => {
     try {
         const userId = req.query.UserId;
@@ -159,23 +176,6 @@ const updateUserById = async (req, res) => {
         }
     } catch (error) {
         console.log(error);
-        return res
-            .status(500)
-            .send(error.message)
-    }
-}
-
-const getTotalUser = async (req, res) => {
-    try {
-        const totalUser = await getTotalUsers();
-        if (totalUser.length <= 0) {
-            return res
-                .status(404)
-                .send('Empty user list')
-        } else {
-            res.status(200).json(totalUser);
-        }
-    } catch (error) {
         return res
             .status(500)
             .send(error.message)

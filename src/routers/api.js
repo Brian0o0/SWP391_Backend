@@ -65,6 +65,8 @@ router.post('/test/register', register)
 // router.post('/test/insertUserOnGoogle', insertUserOnGoogle)
 router.post('/test/login', login);
 router.post('/test/logout', logout);
+
+
 //api cost gem
 router.get('/test/getAllCostGem', getAllCostGem);
 router.get('/test/getCostGemById', getCostGemById);
