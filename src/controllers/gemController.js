@@ -369,6 +369,6 @@ module.exports = {
     deleteGemById,
     getGemByPrice,
     getCostGemByGemId,
-    getGemAndPriceById,
-    getAllGemAndPrice
+    getGemAndPriceById,   
+    getAllGemAndPrice 
 }
